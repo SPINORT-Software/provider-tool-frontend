@@ -24,7 +24,7 @@ import InputLabel from 'ui-component/extended/Form/InputLabel';
 import { gridSpacing } from 'store/constant';
 import SubCard from 'ui-component/cards/SubCard';
 // ===========================|| Layouts ||=========================== //
-function ConfigurableComponent({title}) {
+function ConfigurableComponent({title, uuid}) {
     return (
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
@@ -33,7 +33,7 @@ function ConfigurableComponent({title}) {
                         <Grid item xs={8}>
                             <Grid container spacing={2} alignItems="center">
                                 <Grid item xs={12} sm={3} lg={4} sx={{ pt: { xs: 2, sm: '0 !important' } }}>
-                                    <InputLabel horizontal>{title}</InputLabel>
+                                    <InputLabel horizontal>{title} - {uuid}</InputLabel>
                                 </Grid>
                                 <Grid item xs={12} sm={9} lg={6}>
                                     <TextField fullWidth placeholder="" />

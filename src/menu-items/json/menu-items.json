@@ -8,8 +8,10 @@
           {
             "id": "daily-workload",
             "title": "daily-workload",
+            "formatted_title": "Daily Workload",
+            "uuid": "2e454e63aa894194a9fb507e2ff94a42",
             "type": "item",
-            "url": "/daily-workload",
+            "url": "daily-workload",
             "breadcrumbs": false
           }
         ]
@@ -22,6 +24,7 @@
             "id": "client-assessment",
             "title": "client-assessment",
             "type": "item",
+            "formatted_title": "Client Assessment",
             "url": "/client-assessment",
             "breadcrumbs": false
           }
@@ -34,6 +37,7 @@
           {
             "id": "client-intervention",
             "title": "client-intervention",
+            "formatted_title": "Client Intervention",
             "type": "item",
             "url": "/client-intervention",
             "breadcrumbs": false

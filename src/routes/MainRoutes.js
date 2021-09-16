@@ -5,6 +5,7 @@ import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
 import AuthGuard from 'utils/route-guard/AuthGuard';
 import menuData from '../menu-items/json/menu-items.json';
+import {FormattedMessage} from "react-intl";
 
 // sample page routing
 const ConfigurableComponent = Loadable(lazy(() => import('views/configurable-component')));
@@ -18,6 +19,16 @@ const ConfigurableComponent = Loadable(lazy(() => import('views/configurable-com
  */
 
 // ===========================|| MAIN ROUTING ||=========================== //
+const configurableUrl = []
+const makeConfigurableUrl = menuItem => {
+    menuItem.children.map(menuChildren =>
+        configurableUrl.push({
+            path: menuChildren.url,
+            element: <ConfigurableComponent uuid={menuChildren.uuid} title={menuChildren.formatted_title} />
+        })
+    )
+}
+menuData.roles['case-manager'].map(makeConfigurableUrl);
 
 const MainRoutes = {
     path: '/',
@@ -26,20 +37,7 @@ const MainRoutes = {
             <MainLayout />
         </AuthGuard>
     ),
-    children: [
-        {
-            path: '/client-assessment',
-            element: <ConfigurableComponent title="Assessment" />
-        },
-        {
-            path: '/daily-workload',
-            element: <ConfigurableComponent title="Daily Workload"/>
-        },
-        {
-            path: '/client-intervention',
-            element: <ConfigurableComponent title="Intervention"/>
-        }
-    ]
+    children: configurableUrl
 };
 
 export default MainRoutes;
