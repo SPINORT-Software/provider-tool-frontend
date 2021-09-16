@@ -1,0 +1,48 @@
+{
+  "roles": {
+    "case-manager": [
+      {
+        "id": "daily-workload",
+        "type": "group",
+        "children": [
+          {
+            "id": "daily-workload",
+            "title": "daily-workload",
+            "type": "item",
+            "url": "/daily-workload",
+            "breadcrumbs": false
+          }
+        ]
+      },
+      {
+        "id": "client-assessment",
+        "type": "group",
+        "children": [
+          {
+            "id": "client-assessment",
+            "title": "client-assessment",
+            "type": "item",
+            "url": "/client-assessment",
+            "breadcrumbs": false
+          }
+        ]
+      },
+      {
+        "id": "client-intervention",
+        "type": "group",
+        "children": [
+          {
+            "id": "client-intervention",
+            "title": "client-intervention",
+            "type": "item",
+            "url": "/client-intervention",
+            "breadcrumbs": false
+          }
+        ]
+      }
+    ],
+    "client": {},
+    "clinician": {},
+    "community-paramedic": {}
+  }
+}
