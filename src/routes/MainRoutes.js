@@ -19,6 +19,7 @@ const ConfigurableForms = Loadable(lazy(() => import('views/configurable-forms')
 
 // ===========================|| MAIN ROUTING ||=========================== //
 const configurableUrl = []
+
 const makeConfigurableUrl = menuItem => {
     menuItem.children.map(menuChildren =>
         configurableUrl.push({

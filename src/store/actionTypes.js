@@ -36,3 +36,4 @@ export const RESET_CART = '@cart/RESET_CART';
 
 // actions - sections
 export const FETCH_SECTION_ATTRIBUTES = '@sections/FETCH_SECTION_ATTRIBUTES';
+export const FETCH_ROLE_SECTION_ATTRIBUTES = '@sections/FETCH_ROLE_SECTION_ATTRIBUTES';

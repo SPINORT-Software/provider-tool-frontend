@@ -1,8 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 
-import { ThemeProvider } from '@material-ui/core/styles';
-import { CssBaseline, StyledEngineProvider } from '@material-ui/core';
+import {ThemeProvider} from '@material-ui/core/styles';
+import {CssBaseline, StyledEngineProvider} from '@material-ui/core';
 
 // routing
 import Routes from 'routes';
@@ -17,26 +17,34 @@ import NavigationScroll from 'layout/NavigationScroll';
 import Snackbar from 'ui-component/extended/Snackbar';
 
 // auth provider
-import { FirebaseProvider } from 'contexts/FirebaseContext';
+import {FirebaseProvider} from 'contexts/FirebaseContext';
 // import {JWTProvider} from 'contexts/JWTContext';
 // import {Auth0Provider} from 'contexts/Auth0Context';
 
+import * as actions from './store/actions';
+import {fetchSectionAttributes, fetchSectionAttributesByRole} from "store/actions";
+
+
 // ===========================|| APP ||=========================== //
 
-const App = () => {
+const App = ({fetchSectionAttributesByRole}) => {
     const customization = useSelector((state) => state.customization);
+
+    React.useEffect(() => {
+        fetchSectionAttributesByRole('43701c82-01c7-484e-9aaf-c90901542216')
+    }, []);
 
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={themes(customization)}>
-                <CssBaseline />
+                <CssBaseline/>
                 {/* RTL layout */}
                 {/* <RTLLayout> */}
                 <Locales>
                     <NavigationScroll>
                         <FirebaseProvider>
-                            <Routes />
-                            <Snackbar />
+                            <Routes/>
+                            <Snackbar/>
                         </FirebaseProvider>
                     </NavigationScroll>
                 </Locales>
@@ -46,4 +54,12 @@ const App = () => {
     );
 };
 
-export default App;
+const mapStateToProps = state => ({
+    sectionData: state.sectionForm
+})
+
+const mapDispatchToProps = dispatch => ({
+    fetchSectionAttributesByRole: (roleID) => dispatch(actions.fetchSectionAttributesByRole(roleID))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)

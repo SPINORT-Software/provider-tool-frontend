@@ -1,5 +1,4 @@
 import * as actionTypes from '../actionTypes';
-import axios from 'axios';
 import apiClient from '../api-client';
 
 export const fetchMenuItems = () => ({
@@ -9,24 +8,44 @@ export const fetchMenuItems = () => ({
     }
 });
 
-export const fetchSectionAttributes = () => {
-    console.log("OK")
+export const fetchSectionAttributes = (sectionUuid) => function(dispatch) {
+        apiClient.getAttributeGroupsDataBySection(sectionUuid).then(response => {
+            // eslint-disable-next-line camelcase
+            const {value: {attribute_groups, attribute_set}} = response.data
 
-    return {
-        type: actionTypes.ADD_PRODUCTS,
-        data: {
-            menu: 'Menu items'
-        }
+            dispatch(
+                {
+                    type: actionTypes.FETCH_SECTION_ATTRIBUTES,
+                    data: {
+                        sectionUuid,
+                        attribute_groups,
+                        attribute_set
+                    }
+                }
+            )
+        })
     }
 
-    // eslint-disable-next-line no-unused-expressions
-    // async (dispatch) => {
-    //     await apiClient.getAttributeGroupsDataBySection()
-    //     dispatch({
-    //         type: '',
-    //         payload: response.data
-    //     })
-    // }
+export const fetchSectionAttributesByRole = (roleID) => function(dispatch) {
+    apiClient.getSectionsAndAttributeGroupsDataByRole(roleID).then(response => {
+        // eslint-disable-next-line camelcase
+        const {value: {data_type_attributes}} = response.data
+
+        dispatch(
+            {
+                type: actionTypes.FETCH_ROLE_SECTION_ATTRIBUTES,
+                data: {
+                    sectionAttributes: data_type_attributes
+                }
+            }
+        )
+    })
 }
+
+
+
+
+
+
 
 

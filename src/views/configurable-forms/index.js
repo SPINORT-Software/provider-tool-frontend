@@ -7,7 +7,7 @@ import {Grid, Button, Step, Stepper, StepLabel, Stack, Typography} from '@materi
 import ConfigurableForm from './ConfigurableForm';
 import MainCard from 'ui-component/cards/MainCard';
 import AnimateButton from 'ui-component/extended/AnimateButton';
-import { gridSpacing } from 'store/constant';
+import {gridSpacing} from 'store/constant';
 
 import {connect} from 'react-redux';
 
@@ -32,11 +32,8 @@ function getStepContent(step) {
 
 // ===========================|| FORMS WIZARD - BASIC ||=========================== //
 
-const ConfigurableForms = ({uuid, title}) => {
-    React.useEffect(() => {
-        fetchSectionAttributes()
-    }, [])
-
+const ConfigurableForms = ({uuid, title, sectionData}) => {
+    const sectionAttributeGroups = sectionData.sections[uuid]
     const [activeStep, setActiveStep] = React.useState(0);
 
     const handleNext = () => {
@@ -102,7 +99,6 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    fetchSectionAttributes: () => dispatch(actions.fetchSectionAttributes())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConfigurableForms)
