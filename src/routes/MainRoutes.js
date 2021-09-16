@@ -7,8 +7,7 @@ import AuthGuard from 'utils/route-guard/AuthGuard';
 import menuData from '../menu-items/json/menu-items.json';
 import {FormattedMessage} from "react-intl";
 
-// sample page routing
-const ConfigurableComponent = Loadable(lazy(() => import('views/configurable-component')));
+const ConfigurableForms = Loadable(lazy(() => import('views/configurable-forms')));
 
 /**
  * Fetch list of all menu items from API.
@@ -24,7 +23,7 @@ const makeConfigurableUrl = menuItem => {
     menuItem.children.map(menuChildren =>
         configurableUrl.push({
             path: menuChildren.url,
-            element: <ConfigurableComponent uuid={menuChildren.uuid} title={menuChildren.formatted_title} />
+            element: <ConfigurableForms uuid={menuChildren.uuid} title={menuChildren.formatted_title} />
         })
     )
 }

@@ -9,7 +9,7 @@ import { Button, CardContent, CardMedia, Grid, Rating, Stack, Typography } from 
 // project import
 import MainCard from './MainCard';
 import SkeletonProductPlaceholder from 'ui-component/cards/Skeleton/ProductPlaceholder';
-import { ADD_PRODUCTS, SNACKBAR_OPEN } from 'store/actions';
+import { ADD_PRODUCTS, SNACKBAR_OPEN } from 'store/actionTypes';
 
 // assets
 import ShoppingCartTwoToneIcon from '@material-ui/icons/ShoppingCartTwoTone';

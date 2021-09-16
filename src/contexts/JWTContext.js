@@ -5,8 +5,8 @@ import React, { createContext, useEffect, useReducer } from 'react';
 import jwtDecode from 'jwt-decode';
 
 // reducer - state management
-import { ACCOUNT_INITIALIZE, LOGIN, LOGOUT } from 'store/actions';
-import accountReducer from 'store/accountReducer';
+import { ACCOUNT_INITIALIZE, LOGIN, LOGOUT } from 'store/actionTypes';
+import accountReducer from 'store/reducers/accountReducer';
 
 // project imports
 import axios from 'utils/axios';

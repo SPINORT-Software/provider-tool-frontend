@@ -15,7 +15,7 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import navigation from 'menu-items';
 import { drawerWidth } from 'store/constant';
-import { SET_MENU } from 'store/actions';
+import { SET_MENU } from 'store/actionTypes';
 
 // assets
 import { IconChevronRight } from '@tabler/icons';

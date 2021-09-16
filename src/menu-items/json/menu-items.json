@@ -9,7 +9,7 @@
             "id": "daily-workload",
             "title": "daily-workload",
             "formatted_title": "Daily Workload",
-            "uuid": "2e454e63aa894194a9fb507e2ff94a42",
+            "uuid": "2e454e63-aa89-4194-a9fb-507e2ff94a42",
             "type": "item",
             "url": "daily-workload",
             "breadcrumbs": false
@@ -25,6 +25,7 @@
             "title": "client-assessment",
             "type": "item",
             "formatted_title": "Client Assessment",
+            "uuid": "d90d44e8-480a-4748-9844-e03ff6b03647",
             "url": "/client-assessment",
             "breadcrumbs": false
           }
@@ -38,6 +39,7 @@
             "id": "client-intervention",
             "title": "client-intervention",
             "formatted_title": "Client Intervention",
+            "uuid": "cbc8a7ab-9e76-4a3e-b478-6fe8b419da23",
             "type": "item",
             "url": "/client-intervention",
             "breadcrumbs": false

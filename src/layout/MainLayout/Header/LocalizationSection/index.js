@@ -20,7 +20,7 @@ import ListItemButton from '@material-ui/core/ListItemButton';
 
 // project imports
 import Transitions from 'ui-component/extended/Transitions';
-import * as actionTypes from 'store/actions';
+import * as actionTypes from 'store/actionTypes';
 
 // assets
 import TranslateTwoToneIcon from '@material-ui/icons/TranslateTwoTone';

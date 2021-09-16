@@ -6,10 +6,10 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 
 // action - state management
-import { ACCOUNT_INITIALIZE } from 'store/actions';
+import { ACCOUNT_INITIALIZE } from 'store/actionTypes';
 
 // project imports
-import accountReducer from 'store/accountReducer';
+import accountReducer from 'store/reducers/accountReducer';
 import Loader from 'ui-component/Loader';
 import config from 'config';
 

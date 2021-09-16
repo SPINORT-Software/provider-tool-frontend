@@ -1,5 +1,5 @@
 // action - state management
-import * as actionTypes from './actions';
+import * as actionTypes from '../actionTypes';
 
 const initialState = {
     action: false,

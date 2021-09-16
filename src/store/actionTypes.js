@@ -33,3 +33,6 @@ export const SET_SHIPPING_CHARGE = '@cart/SET_SHIPPING_CHARGE';
 export const SET_PAYMENT_METHOD = '@cart/SET_PAYMENT_METHOD';
 export const SET_PAYMENT_CARD = '@cart/SET_PAYMENT_CARD';
 export const RESET_CART = '@cart/RESET_CART';
+
+// actions - sections
+export const FETCH_SECTION_ATTRIBUTES = '@sections/FETCH_SECTION_ATTRIBUTES';
