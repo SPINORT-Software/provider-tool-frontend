@@ -8,32 +8,14 @@ import ConfigurableForm from './ConfigurableForm';
 import MainCard from 'ui-component/cards/MainCard';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import {gridSpacing} from 'store/constant';
-
 import {connect} from 'react-redux';
-
 import * as actions from 'store/actions';
 import {fetchSectionAttributes} from "store/actions";
-
-// step options
-const steps = ['Shipping address', 'Payment details', 'Review your order'];
-
-function getStepContent(step) {
-    switch (step) {
-        case 0:
-            return <ConfigurableForm/>;
-        case 1:
-            return <ConfigurableForm/>;
-        case 2:
-            return <ConfigurableForm/>;
-        default:
-            throw new Error('Unknown step');
-    }
-}
 
 // ===========================|| FORMS WIZARD - BASIC ||=========================== //
 
 const ConfigurableForms = ({uuid, title, sectionData}) => {
-    const sectionAttributeGroups = sectionData.sections[uuid]
+    const sectionAttributeGroups = sectionData.sections[uuid].attribute_groups
     const [activeStep, setActiveStep] = React.useState(0);
 
     const handleNext = () => {
@@ -43,6 +25,45 @@ const ConfigurableForms = ({uuid, title, sectionData}) => {
     const handleBack = () => {
         setActiveStep(activeStep - 1);
     };
+
+    const processAttributeGroups = () => {
+        const steps = []
+        const stepFields = {}
+
+        Object.entries(sectionAttributeGroups).map(attributeGroupItem => {
+            const attributeGroupCode = attributeGroupItem[0]
+            const attributeGroup = attributeGroupItem[1]
+
+            const title = attributeGroup.group_detail.attribute_group_name;
+            steps.push(title)
+
+            stepFields[attributeGroupCode] = {
+                defaultAttributes:attributeGroup.default_attributes,
+                childAttributeGroups:attributeGroup.child_attribute_groups
+            }
+            return true;
+        })
+
+        return {steps, stepFields}
+    }
+
+    const attributeStepsAndGroupData = processAttributeGroups()
+
+    // step options
+    const {steps} = attributeStepsAndGroupData
+
+    function getStepContent(step) {
+        switch (step) {
+            case 0:
+                return <ConfigurableForm/>;
+            case 1:
+                return <ConfigurableForm/>;
+            case 2:
+                return <ConfigurableForm/>;
+            default:
+                throw new Error('Unknown step');
+        }
+    }
 
     return (
         <Grid container spacing={gridSpacing} justifyContent="center">
@@ -98,7 +119,6 @@ const mapStateToProps = state => ({
     sectionData: state.sectionForm
 })
 
-const mapDispatchToProps = dispatch => ({
-})
+const mapDispatchToProps = dispatch => ({})
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConfigurableForms)
