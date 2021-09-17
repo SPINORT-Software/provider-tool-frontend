@@ -55,11 +55,14 @@ const ConfigurableForms = ({uuid, title, sectionData}) => {
         if(step < steps.length){
             return <ConfigurableForm groupData={stepFields[step]}/>;
         }
-        throw new Error('Unknown step');
+        // throw new Error('Unknown step');
+        return <div>
+            Unknown Step
+        </div>
     }
 
     return (
-        <Grid container spacing={gridSpacing} justifyContent="center">
+        <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} md={9} lg={9}>
                 <MainCard title={title}>
                     <Stepper activeStep={activeStep} sx={{pt: 3, pb: 5}}>
@@ -95,7 +98,7 @@ const ConfigurableForms = ({uuid, title, sectionData}) => {
                                     )}
                                     <AnimateButton>
                                         <Button variant="contained" onClick={handleNext} sx={{my: 3, ml: 1}}>
-                                            {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
+                                            {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
                                         </Button>
                                     </AnimateButton>
                                 </Stack>

@@ -21,40 +21,45 @@ const makeFields = (attributes) => attributes.map(attributeItem => (
 ))
 
 const makeGroupFields = (childAttributeGroups) => Object.keys(childAttributeGroups).map(childGroupKey => {
-        // eslint-disable-next-line camelcase
-        const {group_detail, attributes} = childAttributeGroups[childGroupKey];
+    // eslint-disable-next-line camelcase
+    const {group_detail, attributes} = childAttributeGroups[childGroupKey];
 
-        return <><Grid container spacing={5}>
-            <Grid item xs={12}>
-                <Typography variant="h5" gutterBottom sx={{mb: 2}}>
-                    {group_detail.attribute_group_name}
-                </Typography>
-                <Grid container spacing={3} alignItems="center">
-                    {makeFields(attributes)}
-                </Grid>
+    return (<Grid container mb={1} spacing={5}>
+        <Grid item xs={12}>
+            <Typography variant="h5" component="div" sx={{ mb: 3 }}>
+                {group_detail.attribute_group_name}
+            </Typography>
+            <Grid container spacing={3} alignItems="center">
+                {makeFields(attributes)}
             </Grid>
         </Grid>
         <Grid item xs={12}>
             <Divider />
         </Grid>
-        </>
-    })
+    </Grid>)
+})
 
 
-const makeGroupDataForm = (groupData) => {
+const makeElements = (groupData) => {
     const {childAttributeGroups, defaultAttributes} = groupData;
 
-    return (<>
+    return (
         <Grid container spacing={3}>
-            <Grid item xs={12} lg={6}>
-             {makeGroupFields(childAttributeGroups)}
+            <Grid item xs={12} lg={12}>
+                {makeGroupFields(childAttributeGroups)}
+            </Grid>
+
+            <Grid item xs={12} lg={12}>
+                <Grid container spacing={3}>
+                    {makeFields(defaultAttributes)}
+                </Grid>
             </Grid>
         </Grid>
-    </>)
+    )
 }
 
 function ConfigurableForm({sectionData, fetchSectionAttributes, groupData}) {
-    return makeGroupDataForm(groupData);
+    return makeElements(groupData);
 }
 
 const mapStateToProps = state => ({
