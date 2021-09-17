@@ -28,7 +28,7 @@ const ConfigurableForms = ({uuid, title, sectionData}) => {
 
     const processAttributeGroups = () => {
         const steps = []
-        const stepFields = {}
+        const stepFields = []
 
         Object.entries(sectionAttributeGroups).map(attributeGroupItem => {
             const attributeGroupCode = attributeGroupItem[0]
@@ -37,32 +37,25 @@ const ConfigurableForms = ({uuid, title, sectionData}) => {
             const title = attributeGroup.group_detail.attribute_group_name;
             steps.push(title)
 
-            stepFields[attributeGroupCode] = {
+            stepFields.push({
                 defaultAttributes:attributeGroup.default_attributes,
                 childAttributeGroups:attributeGroup.child_attribute_groups
-            }
+            })
             return true;
         })
 
         return {steps, stepFields}
     }
-
-    const attributeStepsAndGroupData = processAttributeGroups()
+    const attributeStepsAndGroupData = processAttributeGroups();
 
     // step options
-    const {steps} = attributeStepsAndGroupData
+    const {steps, stepFields} = attributeStepsAndGroupData;
 
     function getStepContent(step) {
-        switch (step) {
-            case 0:
-                return <ConfigurableForm/>;
-            case 1:
-                return <ConfigurableForm/>;
-            case 2:
-                return <ConfigurableForm/>;
-            default:
-                throw new Error('Unknown step');
+        if(step < steps.length){
+            return <ConfigurableForm groupData={stepFields[step]}/>;
         }
+        throw new Error('Unknown step');
     }
 
     return (
