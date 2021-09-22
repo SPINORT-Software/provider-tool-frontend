@@ -7,7 +7,7 @@ import NavMotion from 'layout/NavMotion';
 import Loadable from 'ui-component/Loadable';
 
 // login routing
-const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/login')));
+const AuthLogin = Loadable(lazy(() => import('views/authentication/authentication2/Login2')));
 
 // ===========================|| AUTH ROUTING ||=========================== //
 

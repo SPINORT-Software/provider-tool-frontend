@@ -29,6 +29,18 @@ const makeConfigurableUrl = menuItem => {
     )
 }
 menuData.roles['case-manager'].map(makeConfigurableUrl);
+const AppChat = Loadable(lazy(() => import('views/chat')));
+const DisplayTable = Loadable(lazy(() => import('views/tables/DisplayTable')));
+
+configurableUrl.push({
+    path: 'chat',
+    element: <AppChat />
+})
+
+configurableUrl.push({
+    path: 'table',
+    element: <DisplayTable />
+})
 
 const MainRoutes = {
     path: '/',

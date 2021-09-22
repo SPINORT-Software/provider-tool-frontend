@@ -1,29 +1,107 @@
 import React from 'react';
 
-// material-ui
-import {Grid, Button, Step, Stepper, StepLabel, Stack, Typography} from '@material-ui/core';
+import {Button, CardActions, CardContent, Divider, Grid, Tab, Tabs, Typography} from '@material-ui/core';
 
 // project imports
 import ConfigurableForm from './ConfigurableForm';
 import MainCard from 'ui-component/cards/MainCard';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import {gridSpacing} from 'store/constant';
-import {connect} from 'react-redux';
 import * as actions from 'store/actions';
 import {fetchSectionAttributes} from "store/actions";
 
-// ===========================|| FORMS WIZARD - BASIC ||=========================== //
+import PropTypes from 'prop-types';
+import {connect, useSelector} from 'react-redux';
+
+// material-ui
+import {makeStyles} from '@material-ui/styles';
+
+// assets
+import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
+import DescriptionTwoToneIcon from '@material-ui/icons/DescriptionTwoTone';
+import CreditCardTwoToneIcon from '@material-ui/icons/CreditCardTwoTone';
+import VpnKeyTwoToneIcon from '@material-ui/icons/VpnKeyTwoTone';
+
+import SubCard from 'ui-component/cards/SubCard';
+
+// style constant
+const useStyles = makeStyles((theme) => ({
+    profileTab: {
+        '& .MuiTabs-flexContainer': {
+            borderBottom: 'none'
+        },
+        '& button': {
+            color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : theme.palette.grey[600],
+            minHeight: 'auto',
+            minWidth: '100%',
+            padding: '12px 16px',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            textAlign: 'left',
+            justifyContent: 'flex-start'
+        },
+        '& button.Mui-selected': {
+            color: theme.palette.primary.main,
+            background: theme.palette.mode === 'dark' ? theme.palette.dark.main : theme.palette.grey[50]
+        },
+        '& button > svg': {
+            marginBottom: '0px !important',
+            marginRight: '10px',
+            marginTop: '10px',
+            height: '20px',
+            width: '20px'
+        },
+        '& button > div > span': {
+            display: 'block'
+        },
+        '& > div > span': {
+            display: 'none'
+        }
+    },
+    cardPanels: {
+        borderLeft: '1px solid',
+        borderLeftColor: theme.palette.mode === 'dark' ? '#333d5e' : '#eeeeee',
+        height: '100%'
+    }
+}));
+
+// tabs
+function TabPanel(props) {
+    const {children, value, index, ...other} = props;
+
+    return (
+        <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`}
+             aria-labelledby={`simple-tab-${index}`} {...other}>
+            {value === index && <div>{children}</div>}
+        </div>
+    );
+}
+
+TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired
+};
+
+function a11yProps(index) {
+    return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`
+    };
+}
+
+// ===========================|| PROFILE 2 ||=========================== //
 
 const ConfigurableForms = ({uuid, title, sectionData}) => {
     const sectionAttributeGroups = sectionData.sections[uuid].attribute_groups
-    const [activeStep, setActiveStep] = React.useState(0);
+    const classes = useStyles();
+    const customization = useSelector((state) => state.customization);
+    const [value, setValue] = React.useState(0);
+    const tabsOption = [];
 
-    const handleNext = () => {
-        setActiveStep(activeStep + 1);
-    };
-
-    const handleBack = () => {
-        setActiveStep(activeStep - 1);
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
     };
 
     const processAttributeGroups = () => {
@@ -37,9 +115,16 @@ const ConfigurableForms = ({uuid, title, sectionData}) => {
             const title = attributeGroup.group_detail.attribute_group_name;
             steps.push(title)
 
+            tabsOption.push({
+                label: title,
+                icon: <DescriptionTwoToneIcon/>,
+                caption: 'Profile Settings'
+            })
+
             stepFields.push({
-                defaultAttributes:attributeGroup.default_attributes,
-                childAttributeGroups:attributeGroup.child_attribute_groups
+                title,
+                defaultAttributes: attributeGroup.default_attributes,
+                childAttributeGroups: attributeGroup.child_attribute_groups
             })
             return true;
         })
@@ -51,65 +136,93 @@ const ConfigurableForms = ({uuid, title, sectionData}) => {
     // step options
     const {steps, stepFields} = attributeStepsAndGroupData;
 
-    function getStepContent(step) {
-        if(step < steps.length){
-            return <ConfigurableForm groupData={stepFields[step]}/>;
-        }
-        // throw new Error('Unknown step');
-        return <div>
-            Unknown Step
-        </div>
+    function getStepContent(value) {
+        return <TabPanel value={value} index={value}>
+            <SubCard title={stepFields[value].title}>
+                <ConfigurableForm groupData={stepFields[value]}/>
+            </SubCard>
+        </TabPanel>
     }
 
     return (
-        <Grid container spacing={3} justifyContent="center">
-            <Grid item xs={12} md={9} lg={9}>
-                <MainCard title={title}>
-                    <Stepper activeStep={activeStep} sx={{pt: 3, pb: 5}}>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-                    <>
-                        {activeStep === steps.length ? (
-                            <>
-                                <Typography variant="h5" gutterBottom>
-                                    After submission.
-                                </Typography>
-                                <Stack direction="row" justifyContent="flex-end">
+        <Grid container spacing={gridSpacing}>
+            <Grid item xs={12}>
+                <MainCard title={title} content={false}>
+                    <Grid container spacing={gridSpacing}>
+                        <Grid item xs={12} lg={4}>
+                            <CardContent>
+                                <Tabs
+                                    value={value}
+                                    onChange={handleChange}
+                                    orientation="vertical"
+                                    className={classes.profileTab}
+                                    variant="scrollable"
+                                    sx={{
+                                        '& button': {
+                                            borderRadius: `${customization.borderRadius}px`
+                                        }
+                                    }}
+                                >
+                                    {tabsOption.map((tab, index) => (
+                                        <Tab
+                                            key={index}
+                                            icon={tab.icon}
+                                            label={
+                                                <Grid container direction="column">
+                                                    <Typography variant="subtitle1" color="inherit"
+                                                                sx={{textTransform: 'capitalize'}}>
+                                                        {tab.label}
+                                                    </Typography>
+                                                    <Typography component="div" variant="caption"
+                                                                sx={{textTransform: 'capitalize'}}>
+                                                        {tab.caption}
+                                                    </Typography>
+                                                </Grid>
+                                            }
+                                            {...a11yProps(index)}
+                                        />
+                                    ))}
+                                </Tabs>
+                            </CardContent>
+                        </Grid>
+                        <Grid item xs={12} lg={8}>
+                            <CardContent className={classes.cardPanels}>
+                                {getStepContent(value)}
+
+                            </CardContent>
+                        </Grid>
+                    </Grid>
+                    <Divider/>
+                    <CardActions>
+                        <Grid container justifyContent="space-between" spacing={0}>
+                            <Grid item>
+                                {value > 0 && (
                                     <AnimateButton>
-                                        <Button variant="contained" color="error" onClick={() => setActiveStep(0)}
-                                                sx={{my: 3, ml: 1}}>
-                                            Reset
-                                        </Button>
-                                    </AnimateButton>
-                                </Stack>
-                            </>
-                        ) : (
-                            <>
-                                {getStepContent(activeStep)}
-                                <Stack direction="row" justifyContent={activeStep !== 0 ? 'space-between' : 'flex-end'}>
-                                    {activeStep !== 0 && (
-                                        <Button onClick={handleBack} sx={{my: 3, ml: 1}}>
+                                        <Button variant="outlined" size="large"
+                                                onClick={(e) => handleChange(e, parseInt(value, 10) - 1)}>
                                             Back
                                         </Button>
-                                    )}
+                                    </AnimateButton>
+                                )}
+                            </Grid>
+                            <Grid item>
+                                {value < 3 && (
                                     <AnimateButton>
-                                        <Button variant="contained" onClick={handleNext} sx={{my: 3, ml: 1}}>
-                                            {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
+                                        <Button variant="contained" size="large"
+                                                onClick={(e) => handleChange(e, 1 + parseInt(value, 10))}>
+                                            Continue
                                         </Button>
                                     </AnimateButton>
-                                </Stack>
-                            </>
-                        )}
-                    </>
+                                )}
+                            </Grid>
+                        </Grid>
+                    </CardActions>
                 </MainCard>
             </Grid>
         </Grid>
     );
 };
+
 
 const mapStateToProps = state => ({
     sectionData: state.sectionForm

@@ -21,7 +21,7 @@ const BackgroundPattern2 = ({ children }) => {
                 minHeight: '100%',
                 height: '100vh',
                 bgcolor: theme.palette.mode === 'dark' ? theme.palette.dark.dark : '#fff',
-                backgroundImage: theme.palette.mode === 'dark' ? `url(${AuthPatternDark})` : `url(${AuthPattern})`,
+                // backgroundImage: theme.palette.mode === 'dark' ? `url(${AuthPatternDark})` : `url(${AuthPattern})`,
                 position: 'absolute',
                 backgroundPosition: 'bottom left',
                 backgroundRepeat: 'no-repeat',
