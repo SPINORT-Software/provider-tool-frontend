@@ -94,10 +94,10 @@ function a11yProps(index) {
 // ===========================|| PROFILE 2 ||=========================== //
 
 const ConfigurableForms = ({uuid, title, sectionData}) => {
-    const sectionAttributeGroups = sectionData.sections[uuid].attribute_groups
+    const sectionNonConditionalAttributeGroups = sectionData.sections[uuid].groups;
+    const [value, setValue] = React.useState(0);
     const classes = useStyles();
     const customization = useSelector((state) => state.customization);
-    const [value, setValue] = React.useState(0);
     const tabsOption = [];
 
     const handleChange = (event, newValue) => {
@@ -108,23 +108,22 @@ const ConfigurableForms = ({uuid, title, sectionData}) => {
         const steps = []
         const stepFields = []
 
-        Object.entries(sectionAttributeGroups).map(attributeGroupItem => {
+        Object.entries(sectionNonConditionalAttributeGroups).map(attributeGroupItem => {
             const attributeGroupCode = attributeGroupItem[0]
-            const attributeGroup = attributeGroupItem[1]
-
-            const title = attributeGroup.group_detail.attribute_group_name;
+            const attributeGroupData = attributeGroupItem[1]
+            const title = attributeGroupData.group_detail.attribute_group_name;
             steps.push(title)
 
             tabsOption.push({
                 label: title,
                 icon: <DescriptionTwoToneIcon/>,
-                caption: 'Profile Settings'
+                caption: 'Add Caption to this group'
             })
 
             stepFields.push({
                 title,
-                defaultAttributes: attributeGroup.default_attributes,
-                childAttributeGroups: attributeGroup.child_attribute_groups
+                defaultAttributes: attributeGroupData.default_attributes,
+                childAttributeGroups: attributeGroupData.attribute_groups
             })
             return true;
         })
@@ -137,6 +136,11 @@ const ConfigurableForms = ({uuid, title, sectionData}) => {
     const {steps, stepFields} = attributeStepsAndGroupData;
 
     function getStepContent(value) {
+        console.log(value, stepFields.length);
+        if (value > (stepFields.length - 1)){
+            value = 0;
+            setValue(0)
+        }
         return <TabPanel value={value} index={value}>
             <SubCard title={stepFields[value].title}>
                 <ConfigurableForm groupData={stepFields[value]}/>
@@ -188,7 +192,6 @@ const ConfigurableForms = ({uuid, title, sectionData}) => {
                         <Grid item xs={12} lg={8}>
                             <CardContent className={classes.cardPanels}>
                                 {getStepContent(value)}
-
                             </CardContent>
                         </Grid>
                     </Grid>

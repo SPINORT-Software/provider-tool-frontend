@@ -23,12 +23,12 @@ const sectionFormReducer = (state = initialState, action) => {
         }
         case FETCH_ROLE_SECTION_ATTRIBUTES: {
             // eslint-disable-next-line camelcase
-            const {sectionAttributes} = action.data;
+            const {sections} = action.data;
             return {
                 ...state,
                 sections: {
                     ...state.sections,
-                    ...sectionAttributes
+                    ...sections
                 }
             };
         }

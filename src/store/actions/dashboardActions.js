@@ -29,13 +29,12 @@ export const fetchSectionAttributes = (sectionUuid) => function(dispatch) {
 export const fetchSectionAttributesByRole = (roleID) => function(dispatch) {
     apiClient.getSectionsAndAttributeGroupsDataByRole(roleID).then(response => {
         // eslint-disable-next-line camelcase
-        const {value: {data_type_attributes}} = response.data
-
+        const {value} = response.data
         dispatch(
             {
                 type: actionTypes.FETCH_ROLE_SECTION_ATTRIBUTES,
                 data: {
-                    sectionAttributes: data_type_attributes
+                    sections: value
                 }
             }
         )
