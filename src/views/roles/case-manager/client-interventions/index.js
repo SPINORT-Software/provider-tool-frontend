@@ -7,11 +7,9 @@ import { makeStyles } from '@material-ui/styles';
 import { Button, CardActions, CardContent, Divider, Grid, Tab, Tabs, Typography } from '@material-ui/core';
 
 // project imports
-import ClientCaseLoad from './forms/client-caseload';
-import ProjectClinicalActivities from './forms/project-clinical-activities';
-import ProjectActivities from './forms/project-activities';
-import Details from './forms/details';
-
+import ClientSelect from './forms/client';
+import InterventionDetails from './forms/intervention-details';
+import TypeOfClinicalInterventions from './forms/type-clinical-interventions';
 
 import MainCard from 'ui-component/cards/MainCard';
 import AnimateButton from 'ui-component/extended/AnimateButton';
@@ -93,30 +91,24 @@ function a11yProps(index) {
 // tabs option
 const tabsOption = [
     {
-        label: 'Details',
+        label: 'Client Select',
         icon: <DescriptionTwoToneIcon />,
         caption: 'Caption here'
     },
     {
-        label: 'Client Caseload',
+        label: 'Intervention Details',
         icon: <DescriptionTwoToneIcon />,
-        caption: 'Billing Information'
+        caption: 'Fill in the intervention details'
     },
     {
-        label: 'Project Related Clinical Activities',
-        icon: <CreditCardTwoToneIcon />,
-        caption: 'Add & Update Card'
-    },
-    {
-        label: 'Research Related Activities',
-        icon: <VpnKeyTwoToneIcon />,
-        caption: 'Update Profile Security'
+        label: 'Type of Clinical Intervention',
+        icon: <DescriptionTwoToneIcon />,
+        caption: 'List of clinial interventions'
     }
 ];
 
-// ===========================|| PROFILE 2 ||=========================== //
 
-const Profile2 = () => {
+const ClientIntervention = () => {
     const classes = useStyles();
     const customization = useSelector((state) => state.customization);
     const [value, setValue] = React.useState(0);
@@ -128,7 +120,7 @@ const Profile2 = () => {
     return (
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
-                <MainCard title='Daily Workload' content={false}>
+                <MainCard title='Client Intervention' content={false}>
                     <Grid container spacing={gridSpacing}>
                         <Grid item xs={12} lg={4}>
                             <CardContent>
@@ -150,7 +142,8 @@ const Profile2 = () => {
                                             icon={tab.icon}
                                             label={
                                                 <Grid container direction='column'>
-                                                    <Typography sx={{ textTransform: 'capitalize' }} variant='subtitle1' color='inherit'>
+                                                    <Typography sx={{ textTransform: 'capitalize' }} variant='subtitle1'
+                                                                color='inherit'>
                                                         {tab.label}
                                                     </Typography>
                                                     <Typography component='div' variant='caption'
@@ -168,16 +161,13 @@ const Profile2 = () => {
                         <Grid item xs={12} lg={8}>
                             <CardContent className={classes.cardPanels}>
                                 <TabPanel value={value} index={0}>
-                                    <Details />
+                                    <ClientSelect />
                                 </TabPanel>
                                 <TabPanel value={value} index={1}>
-                                    <ClientCaseLoad />
+                                    <InterventionDetails />
                                 </TabPanel>
                                 <TabPanel value={value} index={2}>
-                                    <ProjectClinicalActivities />
-                                </TabPanel>
-                                <TabPanel value={value} index={3}>
-                                    <ProjectActivities />
+                                    <TypeOfClinicalInterventions />
                                 </TabPanel>
                             </CardContent>
                         </Grid>
@@ -196,7 +186,7 @@ const Profile2 = () => {
                                 )}
                             </Grid>
                             <Grid item>
-                                {value < 3 && (
+                                {value < 2 && (
                                     <AnimateButton>
                                         <Button variant='contained' size='large'
                                                 onClick={(e) => handleChange(e, 1 + parseInt(value, 10))}>
@@ -213,4 +203,4 @@ const Profile2 = () => {
     );
 };
 
-export default Profile2;
+export default ClientIntervention;

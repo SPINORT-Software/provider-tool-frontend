@@ -7,15 +7,15 @@ import { makeStyles } from '@material-ui/styles';
 import { Button, CardActions, CardContent, Divider, Grid, Tab, Tabs, Typography } from '@material-ui/core';
 
 // project imports
-import ClientCaseLoad from './forms/client-caseload';
-import ProjectClinicalActivities from './forms/project-clinical-activities';
-import ProjectActivities from './forms/project-activities';
-import Details from './forms/details';
-
+import ReviewReferralDetails from './forms/referral-details';
+import OrganizationsDetails from './forms/organizations';
+import CaseManagementDecision from './forms/decision';
+import ClientDetail from './forms/client-detail';
 
 import MainCard from 'ui-component/cards/MainCard';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import { gridSpacing } from 'store/constant';
+
 
 // assets
 import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
@@ -93,30 +93,30 @@ function a11yProps(index) {
 // tabs option
 const tabsOption = [
     {
-        label: 'Details',
+        label: 'Client',
         icon: <DescriptionTwoToneIcon />,
-        caption: 'Caption here'
+        caption: 'Enter Client Details'
     },
     {
-        label: 'Client Caseload',
+        label: 'Referral Details',
         icon: <DescriptionTwoToneIcon />,
         caption: 'Billing Information'
     },
     {
-        label: 'Project Related Clinical Activities',
-        icon: <CreditCardTwoToneIcon />,
-        caption: 'Add & Update Card'
+        label: 'Case Discussion',
+        icon: <DescriptionTwoToneIcon />,
+        caption: 'Billing Information'
     },
     {
-        label: 'Research Related Activities',
-        icon: <VpnKeyTwoToneIcon />,
-        caption: 'Update Profile Security'
-    }
+        label: 'Decision',
+        icon: <DescriptionTwoToneIcon />,
+        caption: 'Billing Information'
+    },
 ];
 
 // ===========================|| PROFILE 2 ||=========================== //
 
-const Profile2 = () => {
+const ReviewBoardReferral = () => {
     const classes = useStyles();
     const customization = useSelector((state) => state.customization);
     const [value, setValue] = React.useState(0);
@@ -128,7 +128,7 @@ const Profile2 = () => {
     return (
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
-                <MainCard title='Daily Workload' content={false}>
+                <MainCard title='Client Referral' content={false}>
                     <Grid container spacing={gridSpacing}>
                         <Grid item xs={12} lg={4}>
                             <CardContent>
@@ -150,7 +150,8 @@ const Profile2 = () => {
                                             icon={tab.icon}
                                             label={
                                                 <Grid container direction='column'>
-                                                    <Typography sx={{ textTransform: 'capitalize' }} variant='subtitle1' color='inherit'>
+                                                    <Typography sx={{ textTransform: 'capitalize' }} variant='subtitle1'
+                                                                color='inherit'>
                                                         {tab.label}
                                                     </Typography>
                                                     <Typography component='div' variant='caption'
@@ -168,16 +169,16 @@ const Profile2 = () => {
                         <Grid item xs={12} lg={8}>
                             <CardContent className={classes.cardPanels}>
                                 <TabPanel value={value} index={0}>
-                                    <Details />
+                                    <ClientDetail />
                                 </TabPanel>
                                 <TabPanel value={value} index={1}>
-                                    <ClientCaseLoad />
+                                    <ReviewReferralDetails />
                                 </TabPanel>
                                 <TabPanel value={value} index={2}>
-                                    <ProjectClinicalActivities />
+                                    <div>Content</div>
                                 </TabPanel>
                                 <TabPanel value={value} index={3}>
-                                    <ProjectActivities />
+                                    <CaseManagementDecision />
                                 </TabPanel>
                             </CardContent>
                         </Grid>
@@ -213,4 +214,4 @@ const Profile2 = () => {
     );
 };
 
-export default Profile2;
+export default ReviewBoardReferral;

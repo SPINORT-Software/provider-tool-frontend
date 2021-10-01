@@ -11,7 +11,6 @@ import menuData from './json/menu-items.json';
 // constant
 const icons = {IconBrandChrome};
 
-// ===========================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||=========================== //
 const makeMenuItems = menuItem => {
     const menuItemChildren = menuItem.children.map(menuChildren => ({
             "id": menuChildren.id,
@@ -21,6 +20,7 @@ const makeMenuItems = menuItem => {
             "icon": icons.IconBrandChrome,
             "breadcrumbs": menuChildren.breadcrumbs,
         }))
+
     return {
         id: menuItem.id,
         type: menuItem.type,
@@ -28,5 +28,6 @@ const makeMenuItems = menuItem => {
     }
 }
 
-export default menuData.roles['case-manager'].map(makeMenuItems);
+// export default menuData.roles['case-manager'].map(makeMenuItems);
+export default menuData.roles['review-board'].map(makeMenuItems);
 

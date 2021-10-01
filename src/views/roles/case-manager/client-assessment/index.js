@@ -7,11 +7,10 @@ import { makeStyles } from '@material-ui/styles';
 import { Button, CardActions, CardContent, Divider, Grid, Tab, Tabs, Typography } from '@material-ui/core';
 
 // project imports
-import ClientCaseLoad from './forms/client-caseload';
-import ProjectClinicalActivities from './forms/project-clinical-activities';
-import ProjectActivities from './forms/project-activities';
-import Details from './forms/details';
-
+import ClientSelect from './forms/client';
+import ExistingExtraMural from './forms/conditional-display/existing-extra-mural';
+import NewExtraMural from './forms/conditional-display/new-extra-mural';
+import ClientReasessment from './forms/conditional-display/client-reassessment';
 
 import MainCard from 'ui-component/cards/MainCard';
 import AnimateButton from 'ui-component/extended/AnimateButton';
@@ -93,30 +92,30 @@ function a11yProps(index) {
 // tabs option
 const tabsOption = [
     {
-        label: 'Details',
+        label: 'Client',
         icon: <DescriptionTwoToneIcon />,
         caption: 'Caption here'
     },
     {
-        label: 'Client Caseload',
+        label: 'Existing Extra-Mural Client',
         icon: <DescriptionTwoToneIcon />,
         caption: 'Billing Information'
     },
     {
-        label: 'Project Related Clinical Activities',
+        label: 'New Extra-Mural Client',
         icon: <CreditCardTwoToneIcon />,
         caption: 'Add & Update Card'
     },
     {
-        label: 'Research Related Activities',
-        icon: <VpnKeyTwoToneIcon />,
+        label: 'Client Re-Assessment',
+        icon: <DescriptionTwoToneIcon />,
         caption: 'Update Profile Security'
     }
 ];
 
 // ===========================|| PROFILE 2 ||=========================== //
 
-const Profile2 = () => {
+const ClientAssessment = () => {
     const classes = useStyles();
     const customization = useSelector((state) => state.customization);
     const [value, setValue] = React.useState(0);
@@ -128,7 +127,7 @@ const Profile2 = () => {
     return (
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
-                <MainCard title='Daily Workload' content={false}>
+                <MainCard title='Client Assessment' content={false}>
                     <Grid container spacing={gridSpacing}>
                         <Grid item xs={12} lg={4}>
                             <CardContent>
@@ -150,7 +149,8 @@ const Profile2 = () => {
                                             icon={tab.icon}
                                             label={
                                                 <Grid container direction='column'>
-                                                    <Typography sx={{ textTransform: 'capitalize' }} variant='subtitle1' color='inherit'>
+                                                    <Typography sx={{ textTransform: 'capitalize' }} variant='subtitle1'
+                                                                color='inherit'>
                                                         {tab.label}
                                                     </Typography>
                                                     <Typography component='div' variant='caption'
@@ -168,16 +168,16 @@ const Profile2 = () => {
                         <Grid item xs={12} lg={8}>
                             <CardContent className={classes.cardPanels}>
                                 <TabPanel value={value} index={0}>
-                                    <Details />
+                                    <ClientSelect />
                                 </TabPanel>
                                 <TabPanel value={value} index={1}>
-                                    <ClientCaseLoad />
+                                    <ExistingExtraMural />
                                 </TabPanel>
                                 <TabPanel value={value} index={2}>
-                                    <ProjectClinicalActivities />
+                                    <NewExtraMural />
                                 </TabPanel>
                                 <TabPanel value={value} index={3}>
-                                    <ProjectActivities />
+                                    <ClientReasessment />
                                 </TabPanel>
                             </CardContent>
                         </Grid>
@@ -213,4 +213,4 @@ const Profile2 = () => {
     );
 };
 
-export default Profile2;
+export default ClientAssessment;
