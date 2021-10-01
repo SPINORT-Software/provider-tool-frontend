@@ -7,20 +7,21 @@ import { CardContent, Checkbox, FormControlLabel, Grid, MenuItem, TextField } fr
 import { gridSpacing } from 'store/constant';
 import SubCard from 'ui-component/cards/SubCard';
 import MaskedInput from 'react-text-mask';
+import FileInput from '../../../common/file-input';
 
 const ReferralForms = () => (
-    <SubCard>
+    <SubCard title='Referral Forms'>
         <CardContent>
             <Grid container spacing={gridSpacing}>
-                <Grid item xs={12} sm={12} lg={8} md={8}>
-                    Referral Forms
+                <Grid item xs={12} sm={12} lg={12} md={12}>
+                    <Grid container spacing={gridSpacing}>
+                        <FileInput title='EMP Referral Request' />
 
+                        <FileInput title='Familiar Faces - Social Needs Assessment Tool' />
 
-                    EMP Referral Request (Linked with user Dashboards BUT NOT CLIENT)
+                        <FileInput title='Familiar Faces - Screening Tool: Social Determinants of Health' />
+                    </Grid>
 
-                    Familiar Faces - Social Needs Assessment Tool (Linked with users Dashboards BUT NOT CLIENT)
-
-                    Familiar Faces – Screening Tool: Social Determinants of Health (Linked with (Linked with users Dashboards BUT NOT CLIENT)
                 </Grid>
             </Grid>
         </CardContent>

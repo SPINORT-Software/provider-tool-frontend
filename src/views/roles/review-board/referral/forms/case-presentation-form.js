@@ -8,12 +8,16 @@ import { gridSpacing } from 'store/constant';
 import SubCard from 'ui-component/cards/SubCard';
 import MaskedInput from 'react-text-mask';
 
+import FileInput from '../../../common/file-input';
+
 const CasePresentationForm = () => (
-    <Grid container spacing={gridSpacing}>
-        <Grid item xs={12} sm={12} lg={8} md={8}>
-                Case presentation form
-        </Grid>
-    </Grid>
+    <SubCard title='Case Presentation Form'>
+        <CardContent>
+            <Grid container spacing={gridSpacing}>
+                <FileInput title='Case Management Presentation Sheet' />
+            </Grid>
+        </CardContent>
+    </SubCard>
 );
 
 export default CasePresentationForm;

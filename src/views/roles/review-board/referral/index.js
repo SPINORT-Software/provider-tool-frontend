@@ -8,7 +8,6 @@ import { Button, CardActions, CardContent, Divider, Grid, Tab, Tabs, Typography 
 
 // project imports
 import ReviewReferralDetails from './forms/referral-details';
-import OrganizationsDetails from './forms/organizations';
 import CaseManagementDecision from './forms/decision';
 import ClientDetail from './forms/client-detail';
 
@@ -103,11 +102,6 @@ const tabsOption = [
         caption: 'Billing Information'
     },
     {
-        label: 'Case Discussion',
-        icon: <DescriptionTwoToneIcon />,
-        caption: 'Billing Information'
-    },
-    {
         label: 'Decision',
         icon: <DescriptionTwoToneIcon />,
         caption: 'Billing Information'
@@ -130,7 +124,7 @@ const ReviewBoardReferral = () => {
             <Grid item xs={12}>
                 <MainCard title='Client Referral' content={false}>
                     <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} lg={4}>
+                        <Grid item xs={12} lg={3}>
                             <CardContent>
                                 <Tabs
                                     value={value}
@@ -166,16 +160,13 @@ const ReviewBoardReferral = () => {
                                 </Tabs>
                             </CardContent>
                         </Grid>
-                        <Grid item xs={12} lg={8}>
+                        <Grid item xs={12} lg={9}>
                             <CardContent className={classes.cardPanels}>
                                 <TabPanel value={value} index={0}>
                                     <ClientDetail />
                                 </TabPanel>
                                 <TabPanel value={value} index={1}>
                                     <ReviewReferralDetails />
-                                </TabPanel>
-                                <TabPanel value={value} index={2}>
-                                    <div>Content</div>
                                 </TabPanel>
                                 <TabPanel value={value} index={3}>
                                     <CaseManagementDecision />
@@ -197,7 +188,7 @@ const ReviewBoardReferral = () => {
                                 )}
                             </Grid>
                             <Grid item>
-                                {value < 3 && (
+                                {value < 2 && (
                                     <AnimateButton>
                                         <Button variant='contained' size='large'
                                                 onClick={(e) => handleChange(e, 1 + parseInt(value, 10))}>
