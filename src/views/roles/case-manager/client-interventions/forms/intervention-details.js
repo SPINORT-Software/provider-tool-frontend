@@ -10,6 +10,7 @@ import AssessmentForms from '../../../common/assessment-forms';
 import TypeOfClinicalInterventions from './type-clinical-interventions';
 import TypeOfTherapeuticInterventions from './type-therapeutic-intervention';
 import MaskedInput from 'react-text-mask';
+import FileInput from '../../../common/file-input';
 
 const modeOfInterventionSelectList = [
     {
@@ -86,20 +87,29 @@ const InterventionDetails = () => {
 
             </Grid>
 
-            <Grid item xs={12} sm={8}>
-                <TextField id='client-intervention-mode-of-assessment' select label='Mode of Clinical Intervention'
-                           value={city} fullWidth onChange={handleChangeCity}>
-                    {modeOfInterventionSelectList.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
-            </Grid>
 
             <Grid item xs={12} sm={12} lg={8} md={8}>
-                <TextField id='client-reassessment-mode-of-assessment-other' type='text' fullWidth label='Other'
-                           defaultValue='' />
+                <SubCard title='Mode of Clinical Intervention'>
+                    <CardContent>
+                        <Grid container spacing={gridSpacing}>
+                            <Grid item xs={12} sm={8}>
+                                <TextField id='client-intervention-mode-of-assessment' select label='Mode of Clinical Intervention'
+                                           value={city} fullWidth onChange={handleChangeCity}>
+                                    {modeOfInterventionSelectList.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+
+                            <Grid item xs={12} sm={8}>
+                                <TextField id='client-reassessment-mode-of-assessment-other' type='text' fullWidth label='Other'
+                                           defaultValue='' />
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </SubCard>
             </Grid>
 
             <Grid item xs={12} sm={8}>
@@ -107,7 +117,15 @@ const InterventionDetails = () => {
             </Grid>
 
             <Grid item xs={12} sm={8}>
-                <AssessmentForms />
+                <SubCard title='Assessment Forms'>
+                    <CardContent>
+                        <Grid container spacing={gridSpacing}>
+                            <FileInput title='EMP Progress Notes' />
+
+                            <FileInput title='Team Communication' />
+                        </Grid>
+                    </CardContent>
+                </SubCard>
             </Grid>
         </Grid>
     );

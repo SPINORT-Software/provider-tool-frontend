@@ -73,6 +73,7 @@ const JWTLogin = ({ loginIndex, ...others }) => {
                     await login(values.email, values.password);
 
                     if (scriptedRef.current) {
+                        console.log("LOGIN SUCCESS");
                         setStatus({ success: true });
                         setSubmitting(false);
                     }

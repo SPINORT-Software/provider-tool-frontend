@@ -24,7 +24,7 @@ const verifyToken = (serviceToken) => {
         return false;
     }
     const decoded = jwtDecode(serviceToken);
-    return decoded.exp > Date.now() / 1000;
+    return decoded.exp > Date.now() / 36000;
 };
 
 const setSession = (serviceToken) => {
@@ -42,16 +42,28 @@ const setSession = (serviceToken) => {
 const JWTContext = createContext({
     ...initialState,
     login: () => Promise.resolve(),
-    logout: () => {}
+    logout: () => {
+    }
 });
 
 export const JWTProvider = ({ children }) => {
     const [state, dispatch] = useReducer(accountReducer, initialState);
 
     const login = async (email, password) => {
-        const response = await axios.post('/api/account/login', { email, password });
-        const { serviceToken, user } = response.data;
-        setSession(serviceToken);
+        const loginFormData = new FormData();
+        loginFormData.append('username', 'admin');
+        loginFormData.append('password', 'admin123');
+
+        const rawResponse = await fetch('http://127.0.0.1:8000/token-auth/', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username: 'admin', password: 'admin123' })
+        });
+        const { token, user } = await rawResponse.json();
+        setSession(token);
         dispatch({
             type: LOGIN,
             payload: {
@@ -71,8 +83,11 @@ export const JWTProvider = ({ children }) => {
                 const serviceToken = window.localStorage.getItem('serviceToken');
                 if (serviceToken && verifyToken(serviceToken)) {
                     setSession(serviceToken);
-                    const response = await axios.get('/api/account/me');
-                    const { user } = response.data;
+                    // const response = await axios.get('/api/account/me');
+                    // const { user } = response.data;
+                    const user = {
+                        "username": "admin"
+                    }
                     dispatch({
                         type: ACCOUNT_INITIALIZE,
                         payload: {

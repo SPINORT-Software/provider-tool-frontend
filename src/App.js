@@ -18,7 +18,7 @@ import Snackbar from 'ui-component/extended/Snackbar';
 
 // auth provider
 import {FirebaseProvider} from 'contexts/FirebaseContext';
-// import {JWTProvider} from 'contexts/JWTContext';
+import {JWTProvider} from 'contexts/JWTContext';
 // import {Auth0Provider} from 'contexts/Auth0Context';
 
 import * as actions from './store/actions';
@@ -30,9 +30,9 @@ import {fetchSectionAttributes, fetchSectionAttributesByRole} from "store/action
 const App = ({fetchSectionAttributesByRole}) => {
     const customization = useSelector((state) => state.customization);
 
-    React.useEffect(() => {
-        fetchSectionAttributesByRole('43701c82-01c7-484e-9aaf-c90901542216')
-    }, []);
+    // React.useEffect(() => {
+    //     fetchSectionAttributesByRole('43701c82-01c7-484e-9aaf-c90901542216')
+    // }, []);
 
     return (
         <StyledEngineProvider injectFirst>
@@ -42,10 +42,10 @@ const App = ({fetchSectionAttributesByRole}) => {
                 {/* <RTLLayout> */}
                 <Locales>
                     <NavigationScroll>
-                        <FirebaseProvider>
+                        <JWTProvider>
                             <Routes/>
                             <Snackbar/>
-                        </FirebaseProvider>
+                        </JWTProvider>
                     </NavigationScroll>
                 </Locales>
                 {/* </RTLLayout> */}

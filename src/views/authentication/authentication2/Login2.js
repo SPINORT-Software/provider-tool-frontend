@@ -9,6 +9,7 @@ import { Box, Divider, Grid, Stack, Typography, useMediaQuery } from '@material-
 import AuthWrapper2 from '../AuthWrapper2';
 import AuthCardWrapper from '../AuthCardWrapper';
 import FirebaseLogin from '../login/FirebaseLogin';
+import JWTLogin from '../login/JWTLogin';
 import Logo from 'ui-component/Logo';
 import BackgroundPattern2 from 'ui-component/cards/BackgroundPattern2';
 import AuthSlider from 'ui-component/cards/AuthSlider';
@@ -96,7 +97,7 @@ const Login = () => {
                                             </Stack>
                                         </Grid>
                                         <Grid item xs={12}>
-                                            <FirebaseLogin loginIndex={2} />
+                                            <JWTLogin loginIndex={2} />
                                         </Grid>
                                         <Grid item xs={12}>
                                             <Divider />

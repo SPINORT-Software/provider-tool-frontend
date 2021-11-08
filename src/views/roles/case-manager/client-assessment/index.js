@@ -94,22 +94,22 @@ const tabsOption = [
     {
         label: 'Client',
         icon: <DescriptionTwoToneIcon />,
-        caption: 'Caption here'
+        caption: 'Enter Client Details'
     },
     {
         label: 'Existing Extra-Mural Client',
         icon: <DescriptionTwoToneIcon />,
-        caption: 'Billing Information'
+        caption: 'Existing Client Details'
     },
     {
         label: 'New Extra-Mural Client',
         icon: <CreditCardTwoToneIcon />,
-        caption: 'Add & Update Card'
+        caption: 'New Client Details'
     },
     {
         label: 'Client Re-Assessment',
         icon: <DescriptionTwoToneIcon />,
-        caption: 'Update Profile Security'
+        caption: 'Client Reassessment Details'
     }
 ];
 

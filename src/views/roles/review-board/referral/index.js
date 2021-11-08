@@ -10,10 +10,15 @@ import { Button, CardActions, CardContent, Divider, Grid, Tab, Tabs, Typography 
 import ReviewReferralDetails from './forms/referral-details';
 import CaseManagementDecision from './forms/decision';
 import ClientDetail from './forms/client-detail';
+import ReferralForms from './forms/referral-forms';
+import CasePresentationForm from './forms/case-presentation-form';
 
 import MainCard from 'ui-component/cards/MainCard';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import { gridSpacing } from 'store/constant';
+
+import { Form, Field, ErrorMessage, useFormik } from 'formik';
+import * as Yup from 'yup';
 
 
 // assets
@@ -21,6 +26,8 @@ import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
 import DescriptionTwoToneIcon from '@material-ui/icons/DescriptionTwoTone';
 import CreditCardTwoToneIcon from '@material-ui/icons/CreditCardTwoTone';
 import VpnKeyTwoToneIcon from '@material-ui/icons/VpnKeyTwoTone';
+
+
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -99,13 +106,23 @@ const tabsOption = [
     {
         label: 'Referral Details',
         icon: <DescriptionTwoToneIcon />,
-        caption: 'Billing Information'
+        caption: 'Add Referral Details'
+    },
+    {
+        label: 'Referral Forms',
+        icon: <DescriptionTwoToneIcon />,
+        caption: 'Upload Referral Forms'
+    },
+    {
+        label: 'Case Presentation Form',
+        icon: <DescriptionTwoToneIcon />,
+        caption: 'Upload the Presentation Form'
     },
     {
         label: 'Decision',
         icon: <DescriptionTwoToneIcon />,
-        caption: 'Billing Information'
-    },
+        caption: 'Choose Client Referral Decision'
+    }
 ];
 
 // ===========================|| PROFILE 2 ||=========================== //
@@ -118,6 +135,18 @@ const ReviewBoardReferral = () => {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const clientFormik = useFormik({
+        initialValues: {
+            referral_client_first_name: '',
+            referral_client_last_name: '',
+            referral_client_email: ''
+        },
+
+        onSubmit: (values) => {
+            alert(JSON.stringify(values, null, 2));
+        }
+    });
 
     return (
         <Grid container spacing={gridSpacing}>
@@ -163,12 +192,18 @@ const ReviewBoardReferral = () => {
                         <Grid item xs={12} lg={9}>
                             <CardContent className={classes.cardPanels}>
                                 <TabPanel value={value} index={0}>
-                                    <ClientDetail />
+                                    <ClientDetail/>
                                 </TabPanel>
                                 <TabPanel value={value} index={1}>
                                     <ReviewReferralDetails />
                                 </TabPanel>
+                                <TabPanel value={value} index={2}>
+                                    <ReferralForms />
+                                </TabPanel>
                                 <TabPanel value={value} index={3}>
+                                    <CasePresentationForm />
+                                </TabPanel>
+                                <TabPanel value={value} index={4}>
                                     <CaseManagementDecision />
                                 </TabPanel>
                             </CardContent>

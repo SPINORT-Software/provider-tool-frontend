@@ -8,12 +8,15 @@ import snackbarReducer from './reducers/snackbarReducer';
 import cartReducer from './reducers/cartReducer';
 import sectionFormReducer from './reducers/sectionFormReducer';
 
+import reviewBoardReducers from './reducers/reviewBoard';
+
 // ===========================|| COMBINE REDUCER ||=========================== //
 
 const reducer = combineReducers({
     customization: customizationReducer,
     snackbar: snackbarReducer,
     sectionForm: sectionFormReducer,
+    reviewBoard: reviewBoardReducers,
     cart: persistReducer(
         {
             key: 'cart',

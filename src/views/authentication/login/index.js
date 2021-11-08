@@ -10,6 +10,7 @@ import AuthWrapper1 from '../AuthWrapper1';
 import Logo from 'ui-component/Logo';
 import AuthCardWrapper from '../AuthCardWrapper';
 import FirebaseLogin from './FirebaseLogin';
+import JWTLogin from './JWTLogin';
 import AuthFooter from 'ui-component/cards/AuthFooter';
 
 // ================================|| LOGIN MAIN ||================================ //
@@ -55,7 +56,7 @@ const Login = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <FirebaseLogin />
+                                        <JWTLogin />
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Divider />
