@@ -13,7 +13,7 @@ import clsx from 'clsx';
 import Breadcrumbs from 'ui-component/extended/Breadcrumbs';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import navigation from 'menu-items';
+import navigation from 'menu-items/case-manager';
 import { drawerWidth } from 'store/constant';
 import { SET_MENU } from 'store/actionTypes';
 

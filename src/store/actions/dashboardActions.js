@@ -1,6 +1,6 @@
 import * as actionTypes from '../actionTypes';
 import apiClient from '../api-client';
-import {REVIEW_BOARD_CLIENT_REFERRAL_SET_DECISION} from "../actionTypes";
+// import {REVIEW_BOARD_CLIENT_REFERRAL_SET_DECISION} from "../actionTypes";
 
 export const fetchMenuItems = () => ({
     type: actionTypes.ADD_PRODUCTS,
@@ -8,8 +8,6 @@ export const fetchMenuItems = () => ({
         menu: 'Menu items'
     }
 });
-
-
 
 
 export const fetchSectionAttributes = (sectionUuid) => function (dispatch) {

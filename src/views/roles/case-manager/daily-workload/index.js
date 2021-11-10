@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import JWTContext from 'contexts/JWTContext';
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
@@ -124,6 +125,8 @@ const Profile2 = () => {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const userAuthContext = React.useContext(JWTContext)
 
     return (
         <Grid container spacing={gridSpacing}>

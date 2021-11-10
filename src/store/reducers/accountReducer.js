@@ -2,7 +2,6 @@
 import { ACCOUNT_INITIALIZE, LOGIN, LOGOUT } from '../actionTypes';
 
 // ===========================|| ACCOUNT REDUCER ||=========================== //
-
 const accountReducer = (state, action) => {
     switch (action.type) {
         case ACCOUNT_INITIALIZE: {
@@ -23,6 +22,7 @@ const accountReducer = (state, action) => {
             };
         }
         case LOGOUT: {
+            console.log("Logout 25")
             return {
                 ...state,
                 isLoggedIn: false,

@@ -50,19 +50,19 @@ export const JWTProvider = ({ children }) => {
     const [state, dispatch] = useReducer(accountReducer, initialState);
 
     const login = async (email, password) => {
-        const loginFormData = new FormData();
-        loginFormData.append('username', 'admin');
-        loginFormData.append('password', 'admin123');
-
         const rawResponse = await fetch('http://127.0.0.1:8000/token-auth/', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ username: 'admin', password: 'admin123' })
+            body: JSON.stringify({ username: 'schitta', password: 'Password123!@#' })
         });
         const { token, user } = await rawResponse.json();
+
+        console.log("Login --- ")
+        console.log(token, user)
+
         setSession(token);
         dispatch({
             type: LOGIN,
@@ -73,6 +73,7 @@ export const JWTProvider = ({ children }) => {
     };
 
     const logout = () => {
+        console.log("Logout - 76")
         setSession(null);
         dispatch({ type: LOGOUT });
     };
@@ -83,11 +84,17 @@ export const JWTProvider = ({ children }) => {
                 const serviceToken = window.localStorage.getItem('serviceToken');
                 if (serviceToken && verifyToken(serviceToken)) {
                     setSession(serviceToken);
-                    // const response = await axios.get('/api/account/me');
-                    // const { user } = response.data;
-                    const user = {
-                        "username": "admin"
-                    }
+
+                    const rawResponse = await fetch('http://127.0.0.1:8000/core/current_user/', {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': `jwt ${serviceToken}`
+                        }
+                    });
+                    const user = await rawResponse.json();
+
                     dispatch({
                         type: ACCOUNT_INITIALIZE,
                         payload: {
