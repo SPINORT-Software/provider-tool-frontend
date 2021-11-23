@@ -17,16 +17,77 @@ import {gridSpacing} from 'store/constant';
 import SubCard from 'ui-component/cards/SubCard';
 import MaskedInput from 'react-text-mask';
 
-
-import ReferralSource from './referral-source';
 import CasePresentationForm from './case-presentation-form';
 import OrganizationResponsible from './organization-responsible';
-import {setClientDetail, setReferralDetail} from "store/actions/reviewBoard/referralActions";
-import {connect} from "react-redux";
+import {setReferralDetails} from "store/actions/reviewBoard/referralActions";
+import {connect, useDispatch, useSelector} from "react-redux";
 import {useFormik} from "formik";
 
 
+const organizationResponsible = [
+    {label: 'Ability NB', id: 1},
+    {label: 'Addic', id: 2},
+    {label: 'Ambulance New Brunswick (ANB)', id: 3},
+    {label: 'Community Health Centers', id: 4},
+    {label: 'Specify: Nurse Practitioner or Family Physician', id: 5},
+    {label: 'Department of Veteran Affairs', id: 6},
+    {label: 'Emergency Department', id: 7},
+    {label: 'Extra-Mural Program', id: 8},
+    {label: 'Family Physician (Outside Community Health Centers)', id: 9},
+    {label: 'First Nations', id: 10},
+    {label: 'Homecare Agency', id: 11},
+    {label: 'Hospital (Inpatient)', id: 12},
+    {label: 'Nursing Home', id: 13},
+    {label: 'Public Health Services', id: 14},
+    {label: 'Residential Facility', id: 15},
+    {label: 'Self-referral or Referral by Family Member', id: 16},
+    {label: 'Social Development - Home Adaptations for Seniors Independence Program', id: 17},
+    {label: 'Social Development - Homeowner Repair Program', id: 18},
+    {label: 'Social Development - Housing Program', id: 19},
+    {label: 'Social Development - Long-Term Care Program', id: 20},
+    {label: 'Social Development - Mobility and Adaptive Equipment Loan Program', id: 21},
+    {label: 'Social Development - Social Assistance Program', id: 21},
+    {label: 'Volunteer Organizations', id: 22},
+    {label: 'Other', id: 23}
+];
+
 const referralSourcesList = [
+    {label: 'Ability NB', id: 'referral_source_ability_nb'},
+    {label: 'Ambulatory Clinic (Outpatient)', id: 'referral_source_ambulatory_clinic_outpatient'},
+    {label: 'Ambulance New Brunswick (ANB)', id: 'referral_source_anb'},
+    {label: 'Community Health Centers', id: 'referral_source_community_health_centers'},
+    {
+        label: 'Specify: Nurse Practitioner or Family Physician',
+        id: 'referral_source_nurse_practitioner_family_physician'
+    },
+    {label: 'Department of Veteran Affairs', id: 'referral_source_department_of_veteran_affairs'},
+    {label: 'Emergency Department', id: 'referral_source_emergency_department'},
+    {label: 'Extra-Mural Program', id: 'referral_source_extra_mural_program'},
+    {label: 'Family Physician (Outside Community Health Centers)', id: 'referral_source_family_physician_outside'},
+    {label: 'First Nations', id: 'referral_source_first_nations'},
+    {label: 'Homecare Agency', id: 'referral_source_homecare_agency'},
+    {label: 'Hospital (Inpatient)', id: 'referral_source_hospital_inpatient'},
+    {label: 'Nursing Home', id: 'referral_source_nursing_home'},
+    {label: 'Public Health Services', id: 'referral_source_public_health_services'},
+    {label: 'Residential Facility', id: 'referral_source_residential_facility'},
+    {label: 'Self-referral or Referral by Family Member', id: 'referral_source_self_referral'},
+    {
+        label: 'Social Development - Home Adaptations for Seniors Independence Program',
+        id: 'referral_source_social_home_adaptations'
+    },
+    {label: 'Social Development - Homeowner Repair Program', id: 'referral_source_social_homeowner_repair'},
+    {label: 'Social Development - Housing Program', id: 'referral_source_social_housing_program'},
+    {label: 'Social Development - Long-Term Care Program', id: 'referral_source_social_long_term_care'},
+    {
+        label: 'Social Development - Mobility and Adaptive Equipment Loan Program',
+        id: 'referral_source_social_mobility_loan'
+    },
+    {label: 'Social Development - Social Assistance Program', id: 'referral_source_social_assistance'},
+    {label: 'Volunteer Organizations', id: 'referral_source_volunter_organizations'},
+    {label: 'Other', id: 'referral_source_other'}
+];
+
+const referralOrganizationsList = [
     {label: 'Ability NB', id: 1},
     {label: 'Ambulatory Clinic (Outpatient)', id: 2},
     {label: 'Ambulance New Brunswick (ANB)', id: 3},
@@ -83,27 +144,32 @@ const caseDiscussionMembersPresentList = [
 ];
 
 const ReviewReferralDetails = ({referralDetails, setReferralDetail}) => {
+    const referralData = useSelector(state => state.reviewBoard.referrals.add.referralData)
+    const dispatch = useDispatch()
+
     const formik = useFormik({
         initialValues: {
-            referralDate: '',
-            discussionDate: '',
+            referral_date: referralData.referral_date,
+            date_of_case_discussion: referralData.date_of_case_discussion,
 
-            referralSource: 'referral_source_ability_nb',
+            referral_source: referralData.referral_source,
+            referral_source_detail: referralData.referral_source_detail,
 
-            referralOrganizations: [],
-            referralOrganizationsDetail: '',
+            organizations_upon_referral: referralData.organizations_upon_referral,
+            organizations_upon_referral_detail: referralData.organizations_upon_referral_detail,
 
-            membersPresentCaseDiscussion: [],
-            membersPresentCaseDiscussionDetail: '',
+            members_present_case_discussion: referralData.members_present_case_discussion,
+            members_present_case_discussion_detail: referralData.members_present_case_discussion_detail,
 
-            caseManagementOrganization: '',
-            caseManagementOrganizationDetail: '',
-
-            decision: '',
-            decisionDetail: ''
+            case_management_organization_responsible: referralData.case_management_organization_responsible,
+            case_management_organization_person_responsible: referralData.case_management_organization_person_responsible,
         },
-        onSubmit: (values) => {
-            setReferralDetail(values)
+        validate: values => {
+            const valuesData = {
+                ...referralData,
+                ...values
+            }
+            dispatch(setReferralDetails(valuesData));
         }
     });
 
@@ -116,8 +182,9 @@ const ReviewReferralDetails = ({referralDetails, setReferralDetail}) => {
                         className='form-control'
                         label='Date of Referral'
                         guide={false}
-                        id='referralDate'
-                        name='referralDate'
+                        value={formik.values.referral_date}
+                        id='referral_date'
+                        name='referral_date'
                         onChange={formik.handleChange}
                         render={(ref, props) => <TextField fullWidth inputRef={ref} {...props}/>}
                     />
@@ -129,34 +196,50 @@ const ReviewReferralDetails = ({referralDetails, setReferralDetail}) => {
                         className='form-control'
                         label='Date of Case Discussion'
                         guide={false}
-                        value={formik.values.client_referral_first_name}
-                        id='discussionDate'
-                        name='discussionDate'
+                        value={formik.values.date_of_case_discussion}
+                        id='date_of_case_discussion'
+                        name='date_of_case_discussion'
                         onChange={formik.handleChange}
                         render={(ref, props) => <TextField fullWidth inputRef={ref} {...props} />}
                     />
                 </Grid>
 
-                <Grid item xs={12} md={8} lg={10}>
-                    <ReferralSource name='referralSource' id='referralSource' formik={formik}
-                                    value={formik.values.referralSource}/>
+                <Grid item xs={12} md={8} lg={6}>
+                    <SubCard title='Referral Source'>
+                        <CardContent>
+                            <Grid item xs={12} sm={12} lg={12} md={12}>
+                                <Autocomplete
+                                    disablePortal
+                                    options={referralSourcesList}
+                                    name='referral_source'
+                                    id='referral_source'
+                                    value={formik.values.referral_source}
+                                    onChange={(e, value) => {
+                                        formik.setFieldValue('referral_source', value)
+                                    }}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </Grid>
+                        </CardContent>
+                    </SubCard>
                 </Grid>
 
-                <Grid item xs={12} sm={10} lg={10}>
+                <Grid item xs={12} sm={10} lg={6}>
                     <SubCard title='Organizations Involved Upon Referral'>
                         <CardContent>
                             <Grid container spacing={gridSpacing}>
                                 <Grid item xs={12} sm={12} lg={12} md={12}>
                                     <Autocomplete
                                         multiple
-                                        options={referralSourcesList}
+                                        options={referralOrganizationsList}
+                                        value={formik.values.organizations_upon_referral}
                                         getOptionLabel={(option) => option.label}
-                                        renderInput={(params) => <TextField {...params} />}
                                         onChange={(e, value) => {
-                                            formik.setFieldValue('referralOrganizations', value)
+                                            formik.setFieldValue('organizations_upon_referral', value)
                                         }}
-                                        name='referralOrganizations'
-                                        id='referralOrganizations'
+                                        renderInput={(params) => <TextField {...params} />}
+                                        name='organizations_upon_referral'
+                                        id='organizations_upon_referral'
                                         sx={{
                                             '& .MuiOutlinedInput-root': {
                                                 pr: '30px !important'
@@ -169,7 +252,7 @@ const ReviewReferralDetails = ({referralDetails, setReferralDetail}) => {
                     </SubCard>
                 </Grid>
 
-                <Grid item xs={12} sm={10} lg={10}>
+                <Grid item xs={12} sm={10} lg={6}>
                     <SubCard title='Members Present for Case Discussion'>
                         <CardContent>
                             <Grid container spacing={gridSpacing}>
@@ -178,9 +261,12 @@ const ReviewReferralDetails = ({referralDetails, setReferralDetail}) => {
                                         multiple
                                         options={caseDiscussionMembersPresentList}
                                         getOptionLabel={(option) => option.label}
+                                        value={formik.values.members_present_case_discussion}
+                                        name='members_present_case_discussion'
+                                        id='members_present_case_discussion'
                                         renderInput={(params) => <TextField {...params} />}
                                         onChange={(e, value) => {
-                                            formik.setFieldValue('membersPresentCaseDiscussion', value)
+                                            formik.setFieldValue('members_present_case_discussion', value)
                                         }}
                                         sx={{
                                             '& .MuiOutlinedInput-root': {
@@ -194,34 +280,32 @@ const ReviewReferralDetails = ({referralDetails, setReferralDetail}) => {
                     </SubCard>
                 </Grid>
 
-                <Grid item xs={12} sm={10} lg={10}>
-                    <OrganizationResponsible name='caseManagementOrganization' id='caseManagementOrganization' formik={formik} value={formik.values.referralSource}/>
+
+                <Grid item xs={12} sm={10} lg={6}>
+                    <SubCard title='Organization responsible for Client Case Management'>
+                        <CardContent>
+                            <Grid container spacing={gridSpacing}>
+                                <Grid item xs={12} sm={12} lg={12} md={12}>
+                                    <Autocomplete
+                                        disablePortal
+                                        options={organizationResponsible}
+                                        name='case_management_organization_responsible'
+                                        value={formik.values.case_management_organization_responsible}
+                                        id='case_management_organization_responsible'
+                                        onChange={(e, value) => {
+                                            formik.setFieldValue('case_management_organization_responsible', value)
+                                        }}
+                                        renderInput={(params) => <TextField {...params} label="Organization"/>}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </CardContent>
+                    </SubCard>
                 </Grid>
 
-                <Grid item xs={6} sm={6} lg={6} md={4}>
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} sm={12} lg={8} md={8}>
-                            <Button color='primary' variant='contained' fullWidth type='submit'>
-                                Save
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </Grid>
             </Grid>
         </form>
     );
 };
 
-function mapStateToProps(state) {
-    return {
-        referralDetails: state.reviewBoard.referralActivity.referralDetail
-    };
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        setReferralDetail: (values) => dispatch(setReferralDetail(values))
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ReviewReferralDetails);
+export default ReviewReferralDetails;

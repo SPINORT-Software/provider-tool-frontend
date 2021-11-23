@@ -5,7 +5,8 @@ import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
 import AuthGuard from 'utils/route-guard/AuthGuard';
 
-const ReviewBoardReferral = Loadable(lazy(() => import('views/roles/review-board/referral')));
+const ReviewBoardReferralList = Loadable(lazy(() => import('views/roles/review-board/referral')));
+const ReviewBoardReferralCreate = Loadable(lazy(() => import('views/roles/review-board/referral/add-referral')));
 
 // ===========================|| MAIN ROUTING ||=========================== //
 
@@ -19,7 +20,11 @@ const CaseManagerRoutes = {
     children: [
         {
             path: '/referral',
-            element: <ReviewBoardReferral />
+            element: <ReviewBoardReferralList />
+        },
+        {
+            path: 'referral/add-referral',
+            element: <ReviewBoardReferralCreate />
         },
     ]
 };

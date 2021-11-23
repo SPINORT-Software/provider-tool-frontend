@@ -1,4 +1,4 @@
-import axios from 'axios' // some http client lib
+import axios from 'axios'
 
 const endpoint = `http://127.0.0.1:8000`;
 

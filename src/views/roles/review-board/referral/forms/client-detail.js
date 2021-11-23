@@ -11,20 +11,26 @@ import MaskedInput from 'react-text-mask';
 
 import {useFormik, withFormik} from 'formik';
 import * as Yup from 'yup';
-import {connect} from 'react-redux';
-import {setClientDecision, setClientDetail} from "store/actions/reviewBoard/referralActions";
+import {useSelector, useDispatch} from "react-redux";
+import {setReferralDetails} from 'store/actions/reviewBoard/referralActions';
 
 
-const ClientDetail = ({clientDetails, setClientDetail}) => {
+const ClientDetail = () => {
+    const referralData = useSelector(state => state.reviewBoard.referrals.add.referralData)
+    const dispatch = useDispatch()
+
     const formik = useFormik({
         initialValues: {
-            client_referral_first_name: '',
-            client_referral_last_name: '',
-            client_referral_email: '',
+            client_first_name: referralData.client_first_name,
+            client_last_name: referralData.client_last_name,
+            client_email: referralData.client_email,
         },
-        onSubmit: (values) => {
-            // eslint-disable-next-line camelcase
-            setClientDetail(values)
+        validate: values => {
+            const valuesData = {
+                ...referralData,
+                ...values
+            }
+            dispatch(setReferralDetails(valuesData));
         }
     });
 
@@ -37,16 +43,16 @@ const ClientDetail = ({clientDetails, setClientDetail}) => {
                             <Grid item xs={8} sm={10} lg={10} md={10}>
                                 <Grid container spacing={gridSpacing}>
                                     <Grid item xs={6} sm={8} lg={6} md={8}>
-                                        <TextField name='client_referral_first_name' id='client_referral_first_name'
+                                        <TextField name='client_first_name' id='client_first_name'
                                                    fullWidth label='First Name'
-                                                   value={formik.values.client_referral_first_name}
+                                                   value={formik.values.client_first_name}
                                                    onChange={formik.handleChange}
                                         />
                                     </Grid>
                                     <Grid item xs={6} sm={8} lg={6} md={8}>
-                                        <TextField name='client_referral_last_name' id='client_referral_last_name'
+                                        <TextField name='client_last_name' id='client_last_name'
                                                    fullWidth label='Last Name'
-                                                   value={formik.values.client_referral_last_name}
+                                                   value={formik.values.client_last_name}
                                                    onChange={formik.handleChange}
                                         />
                                     </Grid>
@@ -56,22 +62,11 @@ const ClientDetail = ({clientDetails, setClientDetail}) => {
                             <Grid item xs={8} sm={8} lg={8} md={8}>
                                 <Grid container spacing={gridSpacing}>
                                     <Grid item xs={12} sm={12} lg={8} md={8}>
-                                        <TextField name='client_referral_email' id='client_referral_email' fullWidth
+                                        <TextField name='client_email' id='client_email' fullWidth
                                                    label='Email'
-                                                   value={formik.values.client_referral_email}
+                                                   value={formik.values.client_email}
                                                    onChange={formik.handleChange}
                                         />
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-
-
-                            <Grid item xs={6} sm={6} lg={6} md={4}>
-                                <Grid container spacing={gridSpacing}>
-                                    <Grid item xs={12} sm={12} lg={8} md={8}>
-                                        <Button color='primary' variant='contained' fullWidth type='submit'>
-                                            Save
-                                        </Button>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -84,18 +79,5 @@ const ClientDetail = ({clientDetails, setClientDetail}) => {
     </Grid>);
 };
 
-
-function mapStateToProps(state) {
-    return {
-        clientDetails: state.reviewBoard.referralActivity.clientDetail
-    };
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        setClientDetail: (values) => dispatch(setClientDetail(values))
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ClientDetail);
+export default ClientDetail;
 

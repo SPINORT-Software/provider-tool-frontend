@@ -1,243 +1,539 @@
 import PropTypes from 'prop-types';
-import React from 'react';
-import { useSelector } from 'react-redux';
+import * as React from 'react';
+import {useSelector, useDispatch} from "react-redux";
+import {listReferralsByReviewBoardID} from 'store/actions/reviewBoard/referralActions';
+import { useNavigate } from 'react-router-dom';
 
 // material-ui
-import { makeStyles } from '@material-ui/styles';
-import { Button, CardActions, CardContent, Divider, Grid, Tab, Tabs, Typography } from '@material-ui/core';
+import {makeStyles, useTheme} from '@material-ui/styles';
+import {
+    CardContent,
+    Checkbox,
+    Fab,
+    Grid,
+    IconButton,
+    InputAdornment,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TablePagination,
+    TableRow,
+    TableSortLabel,
+    TextField,
+    Toolbar,
+    Tooltip,
+    Typography
+} from '@material-ui/core';
+import {visuallyHidden} from '@material-ui/utils';
+
+// third-party
+import clsx from 'clsx';
 
 // project imports
-import ReviewReferralDetails from './forms/referral-details';
-import CaseManagementDecision from './forms/decision';
-import ClientDetail from './forms/client-detail';
-import ReferralForms from './forms/referral-forms';
-import CasePresentationForm from './forms/case-presentation-form';
 
 import MainCard from 'ui-component/cards/MainCard';
-import AnimateButton from 'ui-component/extended/AnimateButton';
-import { gridSpacing } from 'store/constant';
-
-import { Form, Field, ErrorMessage, useFormik } from 'formik';
-import * as Yup from 'yup';
-
 
 // assets
-import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
-import DescriptionTwoToneIcon from '@material-ui/icons/DescriptionTwoTone';
-import CreditCardTwoToneIcon from '@material-ui/icons/CreditCardTwoTone';
-import VpnKeyTwoToneIcon from '@material-ui/icons/VpnKeyTwoTone';
+import DeleteIcon from '@material-ui/icons/Delete';
+import FilterListIcon from '@material-ui/icons/FilterListTwoTone';
+import PrintIcon from '@material-ui/icons/PrintTwoTone';
+import FileCopyIcon from '@material-ui/icons/FileCopyTwoTone';
+import SearchIcon from '@material-ui/icons/Search';
+import AddIcon from '@material-ui/icons/AddTwoTone';
+import MoreHorizOutlinedIcon from '@material-ui/icons/MoreHorizOutlined';
+import {useContext, useEffect} from "react";
 
+// axios api
+import reviewBoardApi from 'store/api-calls/review-board';
+import JWTContext from "contexts/JWTContext";
 
+// table data
+function createData(id, name, category, price, date, qty) {
+    return {id, name, category, price, date, qty};
+}
 
-// style constant
-const useStyles = makeStyles((theme) => ({
-    profileTab: {
-        '& .MuiTabs-flexContainer': {
-            borderBottom: 'none'
-        },
-        '& button': {
-            color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : theme.palette.grey[600],
-            minHeight: 'auto',
-            minWidth: '100%',
-            padding: '12px 16px',
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'flex-start',
-            textAlign: 'left',
-            justifyContent: 'flex-start'
-        },
-        '& button.Mui-selected': {
-            color: theme.palette.primary.main,
-            background: theme.palette.mode === 'dark' ? theme.palette.dark.main : theme.palette.grey[50]
-        },
-        '& button > svg': {
-            marginBottom: '0px !important',
-            marginRight: '10px',
-            marginTop: '10px',
-            height: '20px',
-            width: '20px'
-        },
-        '& button > div > span': {
-            display: 'block'
-        },
-        '& > div > span': {
-            display: 'none'
-        }
+const rowsInitial = [
+    createData('790841', 'Samsung TV 32” LED Retina', 'Television', 2500, '12.07.2018', 5),
+];
+
+// table sort
+function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+        return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+        return 1;
+    }
+    return 0;
+}
+
+function getComparator(order, orderBy) {
+    return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+        const order = comparator(a[0], b[0]);
+        if (order !== 0) return order;
+        return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+}
+
+// table header options
+const headCells = [
+    {
+        id: 'id',
+        numeric: true,
+        label: 'ID',
+        align: 'center'
     },
-    cardPanels: {
-        borderLeft: '1px solid',
-        borderLeftColor: theme.palette.mode === 'dark' ? '#333d5e' : '#eeeeee',
-        height: '100%'
+    {
+        id: 'name',
+        numeric: false,
+        label: 'First Name',
+        align: 'left'
+    },
+    {
+        id: 'name',
+        numeric: false,
+        label: 'Last Name',
+        align: 'left'
+    },
+    {
+        id: 'name',
+        numeric: false,
+        label: 'Referral Date',
+        align: 'left'
+    },
+];
+
+// style const
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: '100%'
+    },
+    paper: {
+        width: '100%',
+        marginBottom: theme.spacing(2)
+    },
+    table: {
+        minWidth: 750
+    },
+    sortSpan: visuallyHidden
+}));
+
+const useToolbarStyles = makeStyles((theme) => ({
+    root: {
+        padding: 0,
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(1)
+    },
+    highlight: {
+        color: theme.palette.secondary.main
+    },
+    title: {
+        flex: '1 1 100%'
     }
 }));
 
-// tabs
-function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+// ===========================|| TABLE HEADER ||=========================== //
+
+function EnhancedTableHead({
+                               classes,
+                               onSelectAllClick,
+                               order,
+                               orderBy,
+                               numSelected,
+                               rowCount,
+                               onRequestSort,
+                               theme,
+                               selected
+                           }) {
+    const createSortHandler = (property) => (event) => {
+        onRequestSort(event, property);
+    };
 
     return (
-        <div role='tabpanel' hidden={value !== index} id={`simple-tabpanel-${index}`}
-             aria-labelledby={`simple-tab-${index}`} {...other}>
-            {value === index && <div>{children}</div>}
-        </div>
+        <TableHead>
+            <TableRow>
+                <TableCell padding="checkbox" sx={{pl: 3}}>
+                    <Checkbox
+                        color="primary"
+                        indeterminate={numSelected > 0 && numSelected < rowCount}
+                        checked={rowCount > 0 && numSelected === rowCount}
+                        onChange={onSelectAllClick}
+                        inputProps={{
+                            'aria-label': 'select all desserts'
+                        }}
+                    />
+                </TableCell>
+                {numSelected > 0 && (
+                    <TableCell padding="none" colSpan={7}>
+                        <EnhancedTableToolbar numSelected={selected.length}/>
+                    </TableCell>
+                )}
+                {numSelected <= 0 &&
+                headCells.map((headCell) => (
+                    <TableCell
+                        key={headCell.id}
+                        align={headCell.align}
+                        padding={headCell.disablePadding ? 'none' : 'normal'}
+                        sortDirection={orderBy === headCell.id ? order : false}
+                    >
+                        <TableSortLabel
+                            active={orderBy === headCell.id}
+                            direction={orderBy === headCell.id ? order : 'asc'}
+                            onClick={createSortHandler(headCell.id)}
+                        >
+                            {headCell.label}
+                            {orderBy === headCell.id ? (
+                                <span
+                                    className={classes.sortSpan}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>
+                            ) : null}
+                        </TableSortLabel>
+                    </TableCell>
+                ))}
+                {numSelected <= 0 && (
+                    <TableCell sortDirection={false} align="center" sx={{pr: 3}}>
+                        <Typography
+                            variant="subtitle1"
+                            sx={{color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900'}}
+                        >
+                            Action
+                        </Typography>
+                    </TableCell>
+                )}
+            </TableRow>
+        </TableHead>
     );
 }
 
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired
+EnhancedTableHead.propTypes = {
+    theme: PropTypes.object,
+    selected: PropTypes.array,
+    classes: PropTypes.object.isRequired,
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    rowCount: PropTypes.number.isRequired
 };
 
-function a11yProps(index) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`
-    };
-}
+// ===========================|| TABLE HEADER TOOLBAR ||=========================== //
 
-// tabs option
-const tabsOption = [
-    {
-        label: 'Client',
-        icon: <DescriptionTwoToneIcon />,
-        caption: 'Enter Client Details'
-    },
-    {
-        label: 'Referral Details',
-        icon: <DescriptionTwoToneIcon />,
-        caption: 'Add Referral Details'
-    },
-    {
-        label: 'Referral Forms',
-        icon: <DescriptionTwoToneIcon />,
-        caption: 'Upload Referral Forms'
-    },
-    {
-        label: 'Case Presentation Form',
-        icon: <DescriptionTwoToneIcon />,
-        caption: 'Upload the Presentation Form'
-    },
-    {
-        label: 'Decision',
-        icon: <DescriptionTwoToneIcon />,
-        caption: 'Choose Client Referral Decision'
-    }
-];
+const EnhancedTableToolbar = (props) => {
+    const classes = useToolbarStyles();
+    const {numSelected} = props;
 
-// ===========================|| PROFILE 2 ||=========================== //
+    return (
+        <Toolbar
+            className={clsx(classes.root, {
+                [classes.highlight]: numSelected > 0
+            })}
+        >
+            {numSelected > 0 ? (
+                <Typography className={classes.title} color="inherit" variant="h4" component="div">
+                    {numSelected} Selected
+                </Typography>
+            ) : (
+                <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+                    Nutrition
+                </Typography>
+            )}
 
-const ReviewBoardReferral = () => {
+            {numSelected > 0 && (
+                <Tooltip title="Delete">
+                    <IconButton>
+                        <DeleteIcon fontSize="small"/>
+                    </IconButton>
+                </Tooltip>
+            )}
+        </Toolbar>
+    );
+};
+
+EnhancedTableToolbar.propTypes = {
+    numSelected: PropTypes.number.isRequired
+};
+
+// ===========================|| PRODUCT LIST ||=========================== //
+
+const ReviewBoardReferralList = () => {
+    const jwtContext = React.useContext(JWTContext);
+    const {user} = jwtContext;
+    const navigate = useNavigate();
+    const reviewBoardRedux = useSelector(state => state.reviewBoard)
+    const dispatch = useDispatch();
+
     const classes = useStyles();
-    const customization = useSelector((state) => state.customization);
-    const [value, setValue] = React.useState(0);
+    const theme = useTheme();
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
+    // show a right sidebar when clicked on new product
+    const [open, setOpen] = React.useState(false);
+    const handleClickOpenDialog = () => {
+        navigate('add-referral');
+    };
+    const handleCloseDialog = () => {
+        setOpen(false);
     };
 
-    const clientFormik = useFormik({
-        initialValues: {
-            referral_client_first_name: '',
-            referral_client_last_name: '',
-            referral_client_email: ''
-        },
+    const [order, setOrder] = React.useState('asc');
+    const [orderBy, setOrderBy] = React.useState('calories');
+    const [selected, setSelected] = React.useState([]);
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [search, setSearch] = React.useState('');
+    const [rows, setRows] = React.useState([]);
 
-        onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
+    const handleSearch = (event) => {
+        const newString = event.target.value;
+        setSearch(newString);
+
+        if (newString) {
+            const newRows = rows.filter((row) => {
+                let matches = true;
+
+                const properties = ['name', 'category', 'price', 'qty', 'id'];
+                let containsQuery = false;
+
+                properties.forEach((property) => {
+                    if (row[property].toString().toLowerCase().includes(newString.toString().toLowerCase())) {
+                        containsQuery = true;
+                    }
+                });
+
+                if (!containsQuery) {
+                    matches = false;
+                }
+                return matches;
+            });
+            setRows(newRows);
+        } else {
+            setRows(rowsInitial);
         }
-    });
+    };
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
+
+    const handleSelectAllClick = (event) => {
+        if (event.target.checked) {
+            const newSelectedId = rows.map((n) => n.name);
+            setSelected(newSelectedId);
+            return;
+        }
+        setSelected([]);
+    };
+
+    const handleClick = (event, name) => {
+        const selectedIndex = selected.indexOf(name);
+        let newSelected = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selected, name);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+            newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+        }
+
+        setSelected(newSelected);
+    };
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    const fetchListData = async (reviewBoardID) => {
+        const response = await reviewBoardApi.listReferralsByReviewBoardID(reviewBoardID);
+        setRows(response)
+
+        // Set this response to redux and display in table
+        dispatch(listReferralsByReviewBoardID(response))
+    }
+
+    useEffect(() => {
+        // eslint-disable-next-line camelcase
+        const {user_type_pk} = user;
+        fetchListData(user_type_pk)
+    }, [])
+
+    const isSelected = (name) => selected.indexOf(name) !== -1;
+    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
     return (
-        <Grid container spacing={gridSpacing}>
-            <Grid item xs={12}>
-                <MainCard title='Client Referral' content={false}>
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} lg={3}>
-                            <CardContent>
-                                <Tabs
-                                    value={value}
-                                    onChange={handleChange}
-                                    orientation='vertical'
-                                    className={classes.profileTab}
-                                    variant='scrollable'
-                                    sx={{
-                                        '& button': {
-                                            borderRadius: `${customization.borderRadius}px`
-                                        }
-                                    }}
-                                >
-                                    {tabsOption.map((tab, index) => (
-                                        <Tab
-                                            key={index}
-                                            icon={tab.icon}
-                                            label={
-                                                <Grid container direction='column'>
-                                                    <Typography sx={{ textTransform: 'capitalize' }} variant='subtitle1'
-                                                                color='inherit'>
-                                                        {tab.label}
-                                                    </Typography>
-                                                    <Typography component='div' variant='caption'
-                                                                sx={{ textTransform: 'capitalize' }}>
-                                                        {tab.caption}
-                                                    </Typography>
-                                                </Grid>
-                                            }
-                                            {...a11yProps(index)}
-                                        />
-                                    ))}
-                                </Tabs>
-                            </CardContent>
-                        </Grid>
-                        <Grid item xs={12} lg={9}>
-                            <CardContent className={classes.cardPanels}>
-                                <TabPanel value={value} index={0}>
-                                    <ClientDetail/>
-                                </TabPanel>
-                                <TabPanel value={value} index={1}>
-                                    <ReviewReferralDetails />
-                                </TabPanel>
-                                <TabPanel value={value} index={2}>
-                                    <ReferralForms />
-                                </TabPanel>
-                                <TabPanel value={value} index={3}>
-                                    <CasePresentationForm />
-                                </TabPanel>
-                                <TabPanel value={value} index={4}>
-                                    <CaseManagementDecision />
-                                </TabPanel>
-                            </CardContent>
-                        </Grid>
+        <MainCard title="Client Referrals" content={false}>
+            <CardContent>
+                <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SearchIcon fontSize="small"/>
+                                    </InputAdornment>
+                                )
+                            }}
+                            onChange={handleSearch}
+                            placeholder="Search Referral"
+                            value={search}
+                            size="small"
+                        />
                     </Grid>
-                    <Divider />
-                    <CardActions>
-                        <Grid container justifyContent='space-between' spacing={0}>
-                            <Grid item>
-                                {value > 0 && (
-                                    <AnimateButton>
-                                        <Button variant='outlined' size='large'
-                                                onClick={(e) => handleChange(e, parseInt(value, 10) - 1)}>
-                                            Back
-                                        </Button>
-                                    </AnimateButton>
-                                )}
-                            </Grid>
-                            <Grid item>
-                                {value < 2 && (
-                                    <AnimateButton>
-                                        <Button variant='contained' size='large'
-                                                onClick={(e) => handleChange(e, 1 + parseInt(value, 10))}>
-                                            Continue
-                                        </Button>
-                                    </AnimateButton>
-                                )}
-                            </Grid>
-                        </Grid>
-                    </CardActions>
-                </MainCard>
-            </Grid>
-        </Grid>
+                    <Grid item xs={12} sm={6} sx={{textAlign: 'right'}}>
+                        <Tooltip title="Copy">
+                            <IconButton>
+                                <FileCopyIcon/>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Print">
+                            <IconButton>
+                                <PrintIcon/>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Filter">
+                            <IconButton>
+                                <FilterListIcon/>
+                            </IconButton>
+                        </Tooltip>
+
+                        {/* product add & dialog */}
+                        <Tooltip title="Add Referral">
+                            <Fab
+                                color="primary"
+                                size="small"
+                                onClick={handleClickOpenDialog}
+                                sx={{boxShadow: 'none', ml: 1, width: '32px', height: '32px', minHeight: '32px'}}
+                            >
+                                <AddIcon fontSize="small"/>
+                            </Fab>
+                        </Tooltip>
+
+                    </Grid>
+                </Grid>
+            </CardContent>
+
+            {/* table */}
+            <TableContainer>
+                <Table className={classes.table} aria-labelledby="tableTitle">
+                    <EnhancedTableHead
+                        classes={classes}
+                        numSelected={selected.length}
+                        order={order}
+                        orderBy={orderBy}
+                        onSelectAllClick={handleSelectAllClick}
+                        onRequestSort={handleRequestSort}
+                        rowCount={rows.length}
+                        theme={theme}
+                        selected={selected}
+                    />
+                    <TableBody>
+                        {stableSort(rows, getComparator(order, orderBy))
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .map((row, index) => {
+                                const isItemSelected = isSelected(row.referral_id);
+                                const labelId = `enhanced-table-checkbox-${index}`;
+
+                                return (
+                                    <TableRow
+                                        hover
+                                        role="checkbox"
+                                        aria-checked={isItemSelected}
+                                        tabIndex={-1}
+                                        key={index}
+                                        selected={isItemSelected}
+                                    >
+                                        <TableCell padding="checkbox" sx={{pl: 3}}
+                                                   onClick={(event) => handleClick(event, row.referral_id)}>
+                                            <Checkbox
+                                                color="primary"
+                                                checked={isItemSelected}
+                                                inputProps={{
+                                                    'aria-labelledby': labelId
+                                                }}
+                                            />
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            component="th"
+                                            id={labelId}
+                                            scope="row"
+                                            onClick={(event) => handleClick(event, row.referral_id)}
+                                            sx={{cursor: 'pointer'}}
+                                        >
+                                            <Typography
+                                                variant="subtitle1"
+                                                sx={{color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900'}}
+                                            >
+                                                {' '}
+                                                {row.referral_id}{' '}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell
+                                            component="th"
+                                            id={labelId}
+                                            scope="row"
+                                            onClick={(event) => handleClick(event, row.client_first_name)}
+                                            sx={{cursor: 'pointer'}}
+                                        >
+                                            <Typography
+                                                variant="subtitle1"
+                                                sx={{color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900'}}
+                                            >
+                                                {' '}
+                                                {row.client_first_name}{' '}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell>{row.client_last_name}</TableCell>
+                                        <TableCell align="left">{row.referral_date}</TableCell>
+                                        <TableCell align="center" sx={{pr: 3}}>
+                                            <IconButton>
+                                                <MoreHorizOutlinedIcon sx={{fontSize: '1.3rem'}}/>
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        {emptyRows > 0 && (
+                            <TableRow
+                                style={{
+                                    height: 53 * emptyRows
+                                }}
+                            >
+                                <TableCell colSpan={6}/>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+
+            {/* table pagination */}
+            <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+        </MainCard>
     );
 };
 
-export default ReviewBoardReferral;
+export default ReviewBoardReferralList;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 
 // material-ui
 import {Typography} from '@material-ui/core';
@@ -8,23 +8,26 @@ import NavGroup from './NavGroup';
 import caseManagerMenuItems from 'menu-items/case-manager';
 import reviewBoardMenuItems from 'menu-items/review-board';
 import JWTContext from "contexts/JWTContext";
-
+import useAuth from 'hooks/useAuth';
 
 // ===========================|| SIDEBAR MENU LIST ||=========================== //
 
 const MenuList = () => {
-    const userAuthContext = React.useContext(JWTContext)
-    const {user} = userAuthContext;
+    let roleMenuItems = caseManagerMenuItems;
+    const jwtContext = useContext(JWTContext);
+    const {user} = jwtContext;
+
     // eslint-disable-next-line camelcase
     const {user_type: userType} = user;
-    let roleMenuItems = caseManagerMenuItems;
 
-    switch (userType) {
-        case 'TYPE_REVIEW_BOARD':
-            roleMenuItems = reviewBoardMenuItems
-            break;
-        default:
-            roleMenuItems = caseManagerMenuItems
+    if (typeof(user) === 'object' && ('user_type' in user) && user) {
+        switch (userType) {
+            case 'TYPE_REVIEW_BOARD':
+                roleMenuItems = reviewBoardMenuItems
+                break;
+            default:
+                roleMenuItems = caseManagerMenuItems
+        }
     }
 
     /**

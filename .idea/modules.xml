@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/skeleton.iml" filepath="$PROJECT_DIR$/.idea/skeleton.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../react-theme/javascript/full-package/src/.idea/src.iml" filepath="$PROJECT_DIR$/../react-theme/javascript/full-package/src/.idea/src.iml" />
     </modules>
   </component>
 </project>

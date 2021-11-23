@@ -17,16 +17,11 @@ import {
 import {gridSpacing} from 'store/constant';
 import SubCard from 'ui-component/cards/SubCard';
 import MaskedInput from 'react-text-mask';
-
-
 import {useFormik, withFormik} from 'formik';
 import * as Yup from 'yup';
-
-
 import {makeStyles} from '@material-ui/styles';
-import * as referralActions from 'store/actions/reviewBoard/referralActions'
-import {connect} from 'react-redux';
-import {setClientDecision} from "store/actions/reviewBoard/referralActions";
+import {connect, useDispatch, useSelector} from 'react-redux';
+import {setReferralDetails} from "store/actions/reviewBoard/referralActions";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -39,18 +34,20 @@ const useStyles = makeStyles((theme) => ({
 
 const CaseManagementDecision = ({referralDetails, setClientDecision}) => {
     const classes = useStyles();
+    const referralData = useSelector(state => state.reviewBoard.referrals.add.referralData)
+    const dispatch = useDispatch()
 
     const formik = useFormik({
         initialValues: {
-            client_referral_decision_radio: '',
-            client_referral_decision_reason: '',
+            decision: referralData.decision,
+            decision_detail: referralData.decision_detail
         },
-        onSubmit: (values) => {
-            // eslint-disable-next-line camelcase
-            setClientDecision(
-                values.client_referral_decision_radio,
-                values.client_referral_decision_reason
-            )
+        validate: (values) => {
+            const valuesData = {
+                ...referralData,
+                ...values
+            }
+            dispatch(setReferralDetails(valuesData))
         }
     });
 
@@ -64,11 +61,11 @@ const CaseManagementDecision = ({referralDetails, setClientDecision}) => {
                                 <RadioGroup
                                     row
                                     aria-label='case-management-decision-radio'
-                                    value={formik.values.client_referral_decision_radio}
-                                    name='client_referral_decision_radio'
-                                    id='client_referral_decision_radio'
+                                    value={formik.values.decision}
+                                    name='decision'
+                                    id='decision'
                                     onChange={(event) => {
-                                        formik.setFieldValue('client_referral_decision_radio', event.currentTarget.value)
+                                        formik.setFieldValue('decision', event.currentTarget.value)
                                     }}
                                 >
                                     <FormControlLabel value='decision-accepted' control={<Radio/>}
@@ -78,22 +75,22 @@ const CaseManagementDecision = ({referralDetails, setClientDecision}) => {
                                 </RadioGroup>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={4}>
                             <TextField
                                 fullWidth
                                 maxRows={10}
-                                id='client_referral_decision_reason'
-                                name='client_referral_decision_reason'
+                                id='decision_detail'
+                                name='decision_detail'
                                 label='Reason for Client Refusal'
                                 placeholder='Enter reason here'
                                 multiline
-                                value={formik.values.client_referral_decision_reason}
+                                value={formik.values.decision_detail}
                                 onChange={formik.handleChange}
                             />
                         </Grid>
 
                         <Grid item xs={6} md={6} lg={6}>
-                            <Button color='primary' variant='contained' fullWidth type='submit'>
+                            <Button color='primary' variant='contained' type='submit'>
                                 Submit
                             </Button>
                         </Grid>
@@ -104,16 +101,4 @@ const CaseManagementDecision = ({referralDetails, setClientDecision}) => {
     );
 };
 
-function mapStateToProps(state) {
-    return {
-        referralDetails: state.reviewBoard.referralActivity.referralDetail
-    };
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        setClientDecision: (decisionValue, decisionReason) => dispatch(referralActions.setClientDecision(decisionValue, decisionReason))
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CaseManagementDecision);
+export default CaseManagementDecision;

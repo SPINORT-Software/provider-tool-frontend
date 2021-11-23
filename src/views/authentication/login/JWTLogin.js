@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 // material-ui
-import { makeStyles } from '@material-ui/styles';
+import {makeStyles} from '@material-ui/styles';
 import {
     Box,
     Button,
@@ -21,7 +21,7 @@ import {
 
 // third party
 import * as Yup from 'yup';
-import { Formik } from 'formik';
+import {Formik} from 'formik';
 
 // project imports
 import AnimateButton from 'ui-component/extended/AnimateButton';
@@ -41,9 +41,9 @@ const useStyles = makeStyles((theme) => ({
 
 // ===============================|| JWT LOGIN ||=============================== //
 
-const JWTLogin = ({ loginIndex, ...others }) => {
+const JWTLogin = ({loginIndex, ...others}) => {
     const classes = useStyles();
-    const { login } = useAuth();
+    const {login} = useAuth();
     const scriptedRef = useScriptRef();
 
     const [checked, setChecked] = React.useState(true);
@@ -60,36 +60,36 @@ const JWTLogin = ({ loginIndex, ...others }) => {
     return (
         <Formik
             initialValues={{
-                email: 'info@codedthemes.com',
-                password: '123456',
+                email: '',
+                password: '',
                 submit: null
             }}
             validationSchema={Yup.object().shape({
                 email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
                 password: Yup.string().max(255).required('Password is required')
             })}
-            onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+            onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                 try {
                     await login(values.email, values.password);
 
                     if (scriptedRef.current) {
-                        console.log("LOGIN SUCCESS");
-                        setStatus({ success: true });
+                        setStatus({success: true});
                         setSubmitting(false);
                     }
                 } catch (err) {
                     console.error(err);
                     if (scriptedRef.current) {
-                        setStatus({ success: false });
-                        setErrors({ submit: err.message });
+                        setStatus({success: false});
+                        setErrors({submit: err.message});
                         setSubmitting(false);
                     }
                 }
             }}
         >
-            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+            {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
                 <form noValidate onSubmit={handleSubmit} {...others}>
-                    <FormControl fullWidth error={Boolean(touched.email && errors.email)} className={classes.loginInput}>
+                    <FormControl fullWidth error={Boolean(touched.email && errors.email)}
+                                 className={classes.loginInput}>
                         <InputLabel htmlFor="outlined-adornment-email-login">Email Address / Username</InputLabel>
                         <OutlinedInput
                             id="outlined-adornment-email-login"
@@ -112,7 +112,8 @@ const JWTLogin = ({ loginIndex, ...others }) => {
                         )}
                     </FormControl>
 
-                    <FormControl fullWidth error={Boolean(touched.password && errors.password)} className={classes.loginInput}>
+                    <FormControl fullWidth error={Boolean(touched.password && errors.password)}
+                                 className={classes.loginInput}>
                         <InputLabel htmlFor="outlined-adornment-password-login">Password</InputLabel>
                         <OutlinedInput
                             id="outlined-adornment-password-login"
@@ -129,7 +130,7 @@ const JWTLogin = ({ loginIndex, ...others }) => {
                                         onMouseDown={handleMouseDownPassword}
                                         edge="end"
                                     >
-                                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                                        {showPassword ? <Visibility/> : <VisibilityOff/>}
                                     </IconButton>
                                 </InputAdornment>
                             }
@@ -172,7 +173,7 @@ const JWTLogin = ({ loginIndex, ...others }) => {
                                         : '/pages/forgot-password/forgot-password1'
                                 }
                                 color="secondary"
-                                sx={{ textDecoration: 'none' }}
+                                sx={{textDecoration: 'none'}}
                             >
                                 Forgot Password?
                             </Typography>
@@ -194,7 +195,8 @@ const JWTLogin = ({ loginIndex, ...others }) => {
                         }}
                     >
                         <AnimateButton>
-                            <Button color="secondary" disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained">
+                            <Button color="secondary" disabled={isSubmitting} fullWidth size="large" type="submit"
+                                    variant="contained">
                                 Sign In
                             </Button>
                         </AnimateButton>
