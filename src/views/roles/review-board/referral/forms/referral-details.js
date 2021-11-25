@@ -178,7 +178,7 @@ const ReviewReferralDetails = ({referralDetails, setReferralDetail}) => {
             <Grid container spacing={gridSpacing}>
                 <Grid item xs={12} md={8} lg={4}>
                     <MaskedInput
-                        mask={[/[0-9]/, /[0-9]/, '/', /[0-9]/, /[0-9]/, '/', /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/]}
+                        mask={[/[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, '-', /[0-9]/, /[0-9]/, '-', /[0-9]/, /[0-9]/]}
                         className='form-control'
                         label='Date of Referral'
                         guide={false}
@@ -192,7 +192,7 @@ const ReviewReferralDetails = ({referralDetails, setReferralDetail}) => {
 
                 <Grid item xs={12} md={8} lg={4}>
                     <MaskedInput
-                        mask={[/[0-9]/, /[0-9]/, '/', /[0-9]/, /[0-9]/, '/', /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/]}
+                        mask={[/[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, '-', /[0-9]/, /[0-9]/, '-', /[0-9]/, /[0-9]/]}
                         className='form-control'
                         label='Date of Case Discussion'
                         guide={false}
@@ -204,21 +204,23 @@ const ReviewReferralDetails = ({referralDetails, setReferralDetail}) => {
                     />
                 </Grid>
 
-                <Grid item xs={12} md={8} lg={6}>
+                <Grid item xs={12} md={10} lg={6}>
                     <SubCard title='Referral Source'>
                         <CardContent>
-                            <Grid item xs={12} sm={12} lg={12} md={12}>
-                                <Autocomplete
-                                    disablePortal
-                                    options={referralSourcesList}
-                                    name='referral_source'
-                                    id='referral_source'
-                                    value={formik.values.referral_source}
-                                    onChange={(e, value) => {
-                                        formik.setFieldValue('referral_source', value)
-                                    }}
-                                    renderInput={(params) => <TextField {...params} />}
-                                />
+                            <Grid container spacing={gridSpacing}>
+                                <Grid item xs={12} sm={12} lg={12} md={12}>
+                                    <Autocomplete
+                                        disablePortal
+                                        options={referralSourcesList}
+                                        name='referral_source'
+                                        id='referral_source'
+                                        value={formik.values.referral_source}
+                                        onChange={(e, value) => {
+                                            formik.setFieldValue('referral_source', value)
+                                        }}
+                                        renderInput={(params) => <TextField {...params} />}
+                                    />
+                                </Grid>
                             </Grid>
                         </CardContent>
                     </SubCard>

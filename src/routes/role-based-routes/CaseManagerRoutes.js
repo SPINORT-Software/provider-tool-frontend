@@ -9,7 +9,6 @@ const DailyWorkload = Loadable(lazy(() => import('views/roles/case-manager/daily
 const ClientAssessment = Loadable(lazy(() => import('views/roles/case-manager/client-assessment')));
 const ClientIntervention = Loadable(lazy(() => import('views/roles/case-manager/client-interventions')));
 
-
 // ===========================|| MAIN ROUTING ||=========================== //
 
 const CaseManagerRoutes = {

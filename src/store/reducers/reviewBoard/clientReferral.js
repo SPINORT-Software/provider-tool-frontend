@@ -1,5 +1,10 @@
 // action - state management
 import * as actionTypes from 'store/actionTypes';
+import {
+    REVIEW_BOARD_REFERRAL_SET_FORM_FILE_CASE_PRESENTATION,
+    REVIEW_BOARD_REFERRAL_SET_FORM_FILE_FAMILIAR_FACES_FACES_SDH,
+    REVIEW_BOARD_REFERRAL_SET_FORM_FILE_FAMILIAR_FACES_SNAT
+} from "store/actionTypes";
 
 // export const initialState = {
 //     clientDetail: {
@@ -45,13 +50,14 @@ export const initialState = {
 
             case_management_organization_responsible: '',
             case_management_organization_person_responsible: '',
-            decision: '',
+            decision: 'POTENTIAL_CLIENT',
             decision_detail: '',
         },
         referralForms: {
             emp_referral_request: [],
             familiar_faces_snat: [],
-            familiar_faces_sdh: []
+            familiar_faces_sdh: [],
+            case_presentation: []
         }
     },
     update: {},
@@ -102,6 +108,58 @@ const clientReferralReducer = (state = initialState, action) => {
                     ...state.add,
                     referralData: {
                         ...referralDetails
+                    }
+                }
+            }
+        }
+        case actionTypes.REVIEW_BOARD_REFERRAL_SET_FORM_FILE_EMP_REFERRAL_REQUEST: {
+            const documentUUID = action.data;
+            return {
+                ...state,
+                add: {
+                    ...state.add,
+                    referralForms: {
+                        ...state.add.referralForms,
+                        emp_referral_request: [documentUUID]
+                    }
+                }
+            }
+        }
+        case actionTypes.REVIEW_BOARD_REFERRAL_SET_FORM_FILE_FAMILIAR_FACES_SNAT: {
+            const documentUUID = action.data;
+            return {
+                ...state,
+                add: {
+                    ...state.add,
+                    referralForms: {
+                        ...state.add.referralForms,
+                        familiar_faces_snat: [documentUUID]
+                    }
+                }
+            }
+        }
+        case actionTypes.REVIEW_BOARD_REFERRAL_SET_FORM_FILE_FAMILIAR_FACES_FACES_SDH: {
+            const documentUUID = action.data;
+            return {
+                ...state,
+                add: {
+                    ...state.add,
+                    referralForms: {
+                        ...state.add.referralForms,
+                        familiar_faces_sdh: [documentUUID]
+                    }
+                }
+            }
+        }
+        case actionTypes.REVIEW_BOARD_REFERRAL_SET_FORM_FILE_CASE_PRESENTATION: {
+            const documentUUID = action.data;
+            return {
+                ...state,
+                add: {
+                    ...state.add,
+                    referralForms: {
+                        ...state.add.referralForms,
+                        case_presentation: [documentUUID]
                     }
                 }
             }

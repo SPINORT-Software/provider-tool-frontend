@@ -5,37 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="39d7ce37-5e4e-4f5f-b5f9-b0d13e0acaa9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/store/api-calls/axios-client.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/api-calls/case-manager.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/api-calls/client.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/api-calls/common.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/api-calls/community.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/api-calls/review-board.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/roles/review-board/referral/add-referral.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/skeleton.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/skeleton.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu-items/common/json/menu-items.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu-items/common/utils.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/routes/common-routes/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/node_modules/.cache/.eslintcache" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.cache/.eslintcache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/.yarn-integrity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_mockApis/account.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/_mockApis/account.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_mockApis/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/_mockApis/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/contexts/JWTContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/contexts/JWTContext.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layout/MainLayout/Header/ProfileSection/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layout/MainLayout/Header/ProfileSection/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/layout/MainLayout/Sidebar/MenuList/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layout/MainLayout/Sidebar/MenuList/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes/role-based-routes/ReviewBoardRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/role-based-routes/ReviewBoardRoutes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/menu-items/case-manager/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/menu-items/case-manager/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/menu-items/common/common-menu-items.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/menu-items/common/common-menu-items.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/menu-items/review-board/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/menu-items/review-board/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/menu-items/review-board/json/menu-items.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/menu-items/review-board/json/menu-items.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/menu-items/review-board/prepare-menu-items.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/menu-items/review-board/prepare-menu-items.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/role-based-routes/CaseManagerRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/role-based-routes/CaseManagerRoutes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/actionTypes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/actionTypes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/actions/reviewBoard/referralActions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/actions/reviewBoard/referralActions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/api-client.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/api-client.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/api-calls/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/api-calls/common.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/api-calls/review-board.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/api-calls/review-board.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/reducers/reviewBoard/clientReferral.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/reducers/reviewBoard/clientReferral.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/reducers/reviewBoard/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/reducers/reviewBoard/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils/axios.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/axios.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/mockAdapter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/mockAdapter.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/authentication/login/JWTLogin.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/authentication/login/JWTLogin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/roles/review-board/referral/forms/client-detail.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/roles/review-board/referral/forms/client-detail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/roles/common/file-input.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/roles/common/file-input.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/roles/review-board/referral/forms/case-presentation-form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/roles/review-board/referral/forms/case-presentation-form.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/roles/review-board/referral/forms/decision.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/roles/review-board/referral/forms/decision.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/roles/review-board/referral/forms/referral-details.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/roles/review-board/referral/forms/referral-details.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/roles/review-board/referral/forms/referral-forms.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/roles/review-board/referral/forms/referral-forms.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/roles/review-board/referral/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/roles/review-board/referral/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -72,7 +65,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File" value="JavaScript" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/views/roles/review-board/referral" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/menu-items/common" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
@@ -85,6 +78,9 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/menu-items/common" />
+      <recent name="$PROJECT_DIR$/src/menu-items/review-board" />
+      <recent name="$PROJECT_DIR$/src/routes/common-routes" />
       <recent name="$PROJECT_DIR$/src/views/roles/review-board/referral" />
       <recent name="$PROJECT_DIR$/src/menu-items" />
     </key>
@@ -102,7 +98,7 @@
       <option name="presentableId" value="Default" />
       <updated>1636413207468</updated>
       <workItem from="1636413213212" duration="10861000" />
-      <workItem from="1636518294049" duration="71757000" />
+      <workItem from="1636518294049" duration="96169000" />
     </task>
     <servers />
   </component>

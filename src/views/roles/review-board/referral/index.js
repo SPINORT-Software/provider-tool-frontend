@@ -361,6 +361,7 @@ const ReviewBoardReferralList = () => {
 
     const fetchListData = async (reviewBoardID) => {
         const response = await reviewBoardApi.listReferralsByReviewBoardID(reviewBoardID);
+
         setRows(response)
 
         // Set this response to redux and display in table

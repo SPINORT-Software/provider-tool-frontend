@@ -8,8 +8,7 @@
           {
             "id": "referral-activity",
             "title": "Referral Activity",
-            "formatted_title": "Daily Workload",
-            "uuid": "2e454e63-aa89-4194-a9fb-507e2ff94a42",
+            "formatted_title": "Referral Activity",
             "type": "item",
             "url": "referral",
             "breadcrumbs": false

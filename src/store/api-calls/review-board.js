@@ -1,5 +1,4 @@
 import axios from './axios-client';
-// import axios from 'axios';
 
 /*
 * API Method Naming Convention:
@@ -12,6 +11,37 @@ const urls = {
 }
 
 export default {
+    async createReferral(referralData, referralForms, reviewBoardUser) {
+        try {
+            // Standardize organizations
+            const organizationValues = referralData.organizations_upon_referral.map(organization => organization.label)
+            referralData.organizations_upon_referral = organizationValues
+
+            // Standardize members
+            const membersValues = referralData.members_present_case_discussion.map(members => members.label)
+            referralData.members_present_case_discussion = membersValues
+
+            // Standardize referral source
+            referralData.referral_source = referralData.referral_source.label
+            referralData.case_management_organization_responsible = referralData.case_management_organization_responsible.label
+            referralData.review_board_user = reviewBoardUser
+
+            const formData = {
+                "data": {
+                    ...referralData
+                },
+                "referral_forms": {
+                    ...referralForms
+                }
+            }
+
+            const response = await axios.post('review-board/referral-create', formData);
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    },
+
     async listReferralsByReviewBoardID(reviewBoardID) {
         try {
             const response = await axios.get(`review-board/${reviewBoardID}/referral`);
@@ -79,46 +109,7 @@ export default {
         } catch (error) {
             return error.response;
         }
-    },
-
-    async addReferral(formData) {
-        formData = {
-            "data": {
-                "client_first_name": "Referral",
-                "client_last_name": "Test User 2",
-                "client_email": "referral.test2@ccc.com",
-
-                "review_board_user": "9ac96e2c-2694-487e-9bab-d87f3bc21bcf",
-                "referral_date": "2021-10-05",
-
-                "referral_source": "Ability NB",
-                "referral_source_detail": "",
-
-                "organizations_upon_referral": ["Ability NB", "Ambulatory Clinic"],
-                "organizations_upon_referral_detail": "",
-
-                "date_of_case_discussion": "2021-10-05",
-
-                "members_present_case_discussion": ["Ability NB", "Addiction and Mental Health"],
-                "members_present_case_discussion_detail": "",
-
-                "case_management_organization_responsible": "Ability NB",
-                "case_management_organization_person_responsible": "Manager Ability NB",
-                "decision": "POTENTIAL_CLIENT",
-                "decision_detail": "Client not accepted yet."
-            },
-            "referral_forms": {
-                "emp_referral_request": ["21756772-5cc1-4e68-84b0-e24422b7cd1d"],
-                "familiar_faces_snat": ["21756772-5cc1-4e68-84b0-e24422b7cd1d"],
-                "familiar_faces_sdh": ["21756772-5cc1-4e68-84b0-e24422b7cd1d"]
-            }
-        }
-        try {
-            const response = await axios.post('review-board/referral-create', formData);
-            return response.data;
-        } catch (error) {
-            return error.response;
-        }
     }
 }
+
 

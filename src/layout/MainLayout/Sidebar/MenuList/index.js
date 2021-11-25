@@ -8,7 +8,7 @@ import NavGroup from './NavGroup';
 import caseManagerMenuItems from 'menu-items/case-manager';
 import reviewBoardMenuItems from 'menu-items/review-board';
 import JWTContext from "contexts/JWTContext";
-import useAuth from 'hooks/useAuth';
+
 
 // ===========================|| SIDEBAR MENU LIST ||=========================== //
 
@@ -33,7 +33,6 @@ const MenuList = () => {
     /**
      *  Get menu items for different roles and load them based on the logged in user TYPE in redux data
      */
-
     const navItems = roleMenuItems.items.map((item) => {
         switch (item.type) {
             case 'group':
