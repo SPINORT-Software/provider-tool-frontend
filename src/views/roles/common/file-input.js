@@ -17,10 +17,18 @@ const FileInput = ({title, setDocumentUUID, fileType}) => {
     /*
     * setDocumentUUID is a generic function.
     * It is passed as parameter by the parent component.
+    * fileType - Type of the File to add a Document Object ( Document Add API )
     * */
 
     const dispatch = useDispatch();
 
+    /*
+     * 1. Generic Upload function to create document object in Database
+     * 2. Document object returns UUID of the instance and stored to reducer.
+     * 3. UUID is added to reducer using dispatch Action sent as a prop to this component.
+     * @param event
+     * @returns {Promise<void>}
+     */
     const uploadFile = async event => {
         try {
             const file = event.currentTarget.files[0];
@@ -35,7 +43,7 @@ const FileInput = ({title, setDocumentUUID, fileType}) => {
         }
     }
 
-    return (<Grid item xs={12} sm={12} lg={6} md={8}>
+    return (<Grid item xs={12} sm={12} lg={4} md={8}>
         <SubCard title={title}>
             <CardContent>
                 <Button

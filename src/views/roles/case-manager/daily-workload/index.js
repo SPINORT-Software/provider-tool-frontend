@@ -1,11 +1,20 @@
 import PropTypes from 'prop-types';
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, {useEffect} from 'react';
 import JWTContext from 'contexts/JWTContext';
 
 // material-ui
-import { makeStyles } from '@material-ui/styles';
-import { Button, CardActions, CardContent, Divider, Grid, Tab, Tabs, Typography } from '@material-ui/core';
+import {makeStyles} from '@material-ui/styles';
+import {
+    Button,
+    CardActions,
+    CircularProgress,
+    CardContent,
+    Divider,
+    Grid,
+    Tab,
+    Tabs,
+    Typography
+} from '@material-ui/core';
 
 // project imports
 import ClientCaseLoad from './forms/client-caseload';
@@ -13,16 +22,23 @@ import ProjectClinicalActivities from './forms/project-clinical-activities';
 import ProjectActivities from './forms/project-activities';
 import Details from './forms/details';
 
+import {useSelector, useDispatch} from "react-redux";
 
 import MainCard from 'ui-component/cards/MainCard';
 import AnimateButton from 'ui-component/extended/AnimateButton';
-import { gridSpacing } from 'store/constant';
+import {gridSpacing} from 'store/constant';
 
 // assets
 import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
 import DescriptionTwoToneIcon from '@material-ui/icons/DescriptionTwoTone';
 import CreditCardTwoToneIcon from '@material-ui/icons/CreditCardTwoTone';
 import VpnKeyTwoToneIcon from '@material-ui/icons/VpnKeyTwoTone';
+import {SNACKBAR_OPEN} from 'store/actionTypes';
+
+import caseManagerApi from 'store/api-calls/case-manager';
+import {listReferralsByReviewBoardID} from "store/actions/reviewBoard/referralActions";
+
+import ProgressCircularControlled from 'views/ui/ProgressCircularControlled';
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -68,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
 
 // tabs
 function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+    const {children, value, index, ...other} = props;
 
     return (
         <div role='tabpanel' hidden={value !== index} id={`simple-tabpanel-${index}`}
@@ -95,43 +111,64 @@ function a11yProps(index) {
 const tabsOption = [
     {
         label: 'Details',
-        icon: <DescriptionTwoToneIcon />,
+        icon: <DescriptionTwoToneIcon/>,
         caption: 'Caption here'
     },
     {
         label: 'Client Caseload',
-        icon: <DescriptionTwoToneIcon />,
+        icon: <DescriptionTwoToneIcon/>,
         caption: 'Billing Information'
     },
     {
         label: 'Project Related Clinical Activities',
-        icon: <CreditCardTwoToneIcon />,
+        icon: <CreditCardTwoToneIcon/>,
         caption: 'Add & Update Card'
     },
     {
         label: 'Research Related Activities',
-        icon: <VpnKeyTwoToneIcon />,
+        icon: <VpnKeyTwoToneIcon/>,
         caption: 'Update Profile Security'
     }
 ];
 
 // ===========================|| PROFILE 2 ||=========================== //
 
-const Profile2 = () => {
+const DailyWorkload = () => {
     const classes = useStyles();
     const customization = useSelector((state) => state.customization);
     const [value, setValue] = React.useState(0);
+    const [progressLoader, setProgressLoader] = React.useState(false);
+    const dispatch = useDispatch();
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const createDailyWorkload = async () => (caseManagerApi.createDailyWorkload())
+
+    useEffect(() => {
+        setProgressLoader(true);  // Call this to show the loader for the current tab
+
+        dispatch({
+            type: SNACKBAR_OPEN,
+            open: true,
+            message: 'This is default message',
+            variant: 'alert',
+            alertSeverity: 'success', // error , success, warning
+            anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+            transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+            close: false
+        })
+
+        // console.log(createDailyWorkload())
+    }, []);
 
     const userAuthContext = React.useContext(JWTContext)
 
     return (
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
-                <MainCard title='Daily Workload' content={false}>
+                <MainCard title='Daily Workload ' secondary={<ProgressCircularControlled display={progressLoader} />} content={false}>
                     <Grid container spacing={gridSpacing}>
                         <Grid item xs={12} lg={4}>
                             <CardContent>
@@ -153,11 +190,12 @@ const Profile2 = () => {
                                             icon={tab.icon}
                                             label={
                                                 <Grid container direction='column'>
-                                                    <Typography sx={{ textTransform: 'capitalize' }} variant='subtitle1' color='inherit'>
+                                                    <Typography sx={{textTransform: 'capitalize'}} variant='subtitle1'
+                                                                color='inherit'>
                                                         {tab.label}
                                                     </Typography>
                                                     <Typography component='div' variant='caption'
-                                                                sx={{ textTransform: 'capitalize' }}>
+                                                                sx={{textTransform: 'capitalize'}}>
                                                         {tab.caption}
                                                     </Typography>
                                                 </Grid>
@@ -171,43 +209,60 @@ const Profile2 = () => {
                         <Grid item xs={12} lg={8}>
                             <CardContent className={classes.cardPanels}>
                                 <TabPanel value={value} index={0}>
-                                    <Details />
+                                    <Details/>
                                 </TabPanel>
                                 <TabPanel value={value} index={1}>
-                                    <ClientCaseLoad />
+                                    <ClientCaseLoad/>
                                 </TabPanel>
                                 <TabPanel value={value} index={2}>
-                                    <ProjectClinicalActivities />
+                                    <ProjectClinicalActivities/>
                                 </TabPanel>
                                 <TabPanel value={value} index={3}>
-                                    <ProjectActivities />
+                                    <ProjectActivities/>
                                 </TabPanel>
                             </CardContent>
                         </Grid>
                     </Grid>
-                    <Divider />
+                    <Divider/>
                     <CardActions>
                         <Grid container justifyContent='space-between' spacing={0}>
                             <Grid item>
-                                {value > 0 && (
-                                    <AnimateButton>
-                                        <Button variant='outlined' size='large'
-                                                onClick={(e) => handleChange(e, parseInt(value, 10) - 1)}>
-                                            Back
-                                        </Button>
-                                    </AnimateButton>
-                                )}
+                                <Grid container justifyContent='space-between' spacing={1}>
+                                    <Grid item>
+                                        {value < 3 && (
+                                            <AnimateButton>
+                                                <Button variant='contained' size='large'
+                                                        onClick={(e) => handleChange(e, 1 + parseInt(value, 10))}>
+                                                    Continue
+                                                </Button>
+                                            </AnimateButton>
+                                        )}
+                                    </Grid>
+
+                                    <Grid item>
+                                        {value > 0 && (
+                                            <AnimateButton>
+                                                <Button variant='outlined' size='large'
+                                                        onClick={(e) => handleChange(e, parseInt(value, 10) - 1)}>
+                                                    Back
+                                                </Button>
+                                            </AnimateButton>
+                                        )}
+                                    </Grid>
+                                </Grid>
                             </Grid>
-                            <Grid item>
-                                {value < 3 && (
+
+                            <Grid item alignContent='end'>
+                                {value > 2 && (
                                     <AnimateButton>
-                                        <Button variant='contained' size='large'
+                                        <Button color='secondary' variant='contained' size='large'
                                                 onClick={(e) => handleChange(e, 1 + parseInt(value, 10))}>
-                                            Continue
+                                            Submit
                                         </Button>
                                     </AnimateButton>
                                 )}
                             </Grid>
+
                         </Grid>
                     </CardActions>
                 </MainCard>
@@ -216,4 +271,4 @@ const Profile2 = () => {
     );
 };
 
-export default Profile2;
+export default DailyWorkload;

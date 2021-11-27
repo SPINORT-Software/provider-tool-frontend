@@ -15,9 +15,27 @@ import {
 // project imports
 import { gridSpacing } from 'store/constant';
 import SubCard from 'ui-component/cards/SubCard';
+import {useDispatch, useSelector} from "react-redux";
+import {useFormik} from "formik";
+import {setAssessmentClientStatus} from "../../../../../store/actions/caseManager/clientAssessmentActions";
 
 const ClientSelect = () => {
     const [valueLabel, setValueLabel] = React.useState('checked');
+    const dispatch = useDispatch()
+
+    const clientAssessmentStore = useSelector(state => state.caseManager.clientAssessment)
+    const clientAssessmentTypeStatus = clientAssessmentStore.add.assessment.client_status
+
+    const formik = useFormik({
+        initialValues: {
+            client_status: clientAssessmentTypeStatus
+        },
+        validate: values => {
+            // eslint-disable-next-line camelcase
+            const {client_status} = values;
+            dispatch(setAssessmentClientStatus(client_status));
+        }
+    });
 
     return (
         <Grid container spacing={gridSpacing}>
@@ -33,15 +51,18 @@ const ClientSelect = () => {
                                 <RadioGroup
                                     row
                                     aria-label='client-status'
-                                    value={valueLabel}
-                                    onChange={(e) => setValueLabel(e.target.value)}
-                                    name='row-radio-buttons-group'
+                                    // value={valueLabel}
+                                    // onChange={(e) => setValueLabel(e.target.value)}
+                                    name='client_status'
+                                    id="client_status"
+                                    onChange={formik.handleChange}
+                                    value={formik.values.client_status}
                                 >
-                                    <FormControlLabel value='existing-extra-mural-no-reassess' control={<Radio />}
+                                    <FormControlLabel value='NEW_CASE_CLIENT_EXISTING_EMC_NO_REASSESS' control={<Radio />}
                                                       label='Existing Extra-Mural Client – No need to re-assess ' />
-                                    <FormControlLabel value='existing-extra-mural-reassess' control={<Radio />}
+                                    <FormControlLabel value='NEW_CASE_CLIENT_EXISTING_EMC_REASSESS' control={<Radio />}
                                                       label='Existing Extra-Mural Client - Need to re-assess' />
-                                    <FormControlLabel value='new-extra-mural' control={<Radio />}
+                                    <FormControlLabel value='NEW_CASE_CLIENT_NEW_EXTRA_MURAL_CLIENT' control={<Radio />}
                                                       label='New Extra-Mural Client' />
                                 </RadioGroup>
                             </FormControl>
@@ -58,11 +79,14 @@ const ClientSelect = () => {
                                 <RadioGroup
                                     row
                                     aria-label='client-status'
-                                    value={valueLabel}
-                                    onChange={(e) => setValueLabel(e.target.value)}
-                                    name='row-radio-buttons-group'
+                                    // value={valueLabel}
+                                    // onChange={(e) => setValueLabel(e.target.value)}
+                                    id="client_status"
+                                    onChange={formik.handleChange}
+                                    value={formik.values.client_status}
+                                    name='client_status'
                                 >
-                                    <FormControlLabel value='existing-casemanagement-client-reassess' control={<Radio />}
+                                    <FormControlLabel value='EXISTING_CASE_CLIENT_REASSESS' control={<Radio />}
                                                       label='Need to re-assess' />
                                 </RadioGroup>
                             </FormControl>

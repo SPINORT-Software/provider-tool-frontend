@@ -1,57 +1,97 @@
 import React from 'react';
 
 // material-ui
-import { Checkbox, CardContent, FormControlLabel, Grid, MenuItem, TextField } from '@material-ui/core';
+import {CardContent, Grid, TextField} from '@material-ui/core';
 
 // project imports
-import { gridSpacing } from 'store/constant';
+import {gridSpacing} from 'store/constant';
 import SubCard from 'ui-component/cards/SubCard';
+import MaskedInput from 'react-text-mask';
 
+// redux
+import {useDispatch, useSelector} from "react-redux";
+import {setDailyWorkLoadDetails} from "store/actions/caseManager/dailyWorkloadActions";
+import {useFormik} from "formik";
 
 const ProjectActivities = () => {
-    const [city, setCity] = React.useState('1');
-    const handleChangeCity = (event) => {
-        setCity(event.target.value);
-    };
+    const dailyWorkloadData = useSelector(state => state.caseManager.dailyWorkload.add)
+    const dispatch = useDispatch()
 
-    const [Country, setCountry] = React.useState('1');
-    const handleSelectChange1 = (event) => {
-        setCountry(event.target.value);
-    };
-
-    const [state1, setState1] = React.useState({
-        checkedA: true
+    const formik = useFormik({
+        initialValues: {
+            research_related_meetings_total_time: dailyWorkloadData.research_related_meetings_total_time,
+            research_related_administration_total_time: dailyWorkloadData.research_related_administration_total_time,
+            research_related_other: dailyWorkloadData.research_related_other,
+        },
+        validate: values => {
+            const valuesData = {
+                ...values
+            }
+            dispatch(setDailyWorkLoadDetails(valuesData));
+        }
     });
-    const handleChangeState1 = (event) => {
-        setState1({ ...state1, [event.target.name]: event.target.checked });
-    };
+
     return (
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12} sm={6}>
 
                 <SubCard title='Research Meetings'>
                     <CardContent>
-                        <TextField fullWidth label='Total time spent' defaultValue='' />
+                        <MaskedInput
+                            mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
+                            className="form-control"
+                            label="Total time spent"
+                            guide={false}
+                            defaultValue={formik.values.research_related_meetings_total_time}
+                            onChange={formik.handleChange}
+                            name="research_related_meetings_total_time"
+                            id="research_related_meetings_total_time"
+                            value={formik.values.research_related_meetings_total_time}
+                            render={(ref, props) => <TextField fullWidth inputRef={ref} {...props}
+                                                               defaultValue=""/>}
+                        />
                     </CardContent>
                 </SubCard>
 
             </Grid>
 
             <Grid item xs={12} sm={6}>
-
                 <SubCard title='Administration (e.g., data gathering, sharing institutional documents, etc.)'>
                     <CardContent>
-                        <TextField fullWidth label='Total time spent' defaultValue='' />
+                        <MaskedInput
+                            mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
+                            className="form-control"
+                            label="Total time spent"
+                            guide={false}
+                            defaultValue={formik.values.research_related_administration_total_time}
+                            onChange={formik.handleChange}
+                            name="research_related_administration_total_time"
+                            id="research_related_administration_total_time"
+                            value={formik.values.research_related_administration_total_time}
+                            render={(ref, props) => <TextField fullWidth inputRef={ref} {...props}
+                                                               defaultValue=""/>}
+                        />
                     </CardContent>
                 </SubCard>
-
             </Grid>
 
             <Grid item xs={12} sm={6}>
 
                 <SubCard title='Other'>
                     <CardContent>
-                        <TextField fullWidth label='Other' defaultValue='' />
+                        <MaskedInput
+                            mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
+                            className="form-control"
+                            label="Total time spent"
+                            guide={false}
+                            defaultValue={formik.values.research_related_other}
+                            onChange={formik.handleChange}
+                            name="research_related_other"
+                            id="research_related_other"
+                            value={formik.values.research_related_other}
+                            render={(ref, props) => <TextField fullWidth inputRef={ref} {...props}
+                                                               defaultValue=""/>}
+                        />
                     </CardContent>
                 </SubCard>
 

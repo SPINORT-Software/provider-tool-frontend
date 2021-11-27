@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 // material-ui
-import { makeStyles } from '@material-ui/styles';
-import { Button, CardActions, CardContent, Divider, Grid, Tab, Tabs, Typography } from '@material-ui/core';
+import {makeStyles} from '@material-ui/styles';
+import {Button, CardActions, CardContent, Divider, Grid, Tab, Tabs, Typography} from '@material-ui/core';
 
 // project imports
 import ClientSelect from './forms/client';
@@ -14,7 +14,7 @@ import ClientReasessment from './forms/conditional-display/client-reassessment';
 
 import MainCard from 'ui-component/cards/MainCard';
 import AnimateButton from 'ui-component/extended/AnimateButton';
-import { gridSpacing } from 'store/constant';
+import {gridSpacing} from 'store/constant';
 
 // assets
 import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
 
 // tabs
 function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+    const {children, value, index, ...other} = props;
 
     return (
         <div role='tabpanel' hidden={value !== index} id={`simple-tabpanel-${index}`}
@@ -90,28 +90,7 @@ function a11yProps(index) {
 }
 
 // tabs option
-const tabsOption = [
-    {
-        label: 'Client',
-        icon: <DescriptionTwoToneIcon />,
-        caption: 'Enter Client Details'
-    },
-    {
-        label: 'Existing Extra-Mural Client',
-        icon: <DescriptionTwoToneIcon />,
-        caption: 'Existing Client Details'
-    },
-    {
-        label: 'New Extra-Mural Client',
-        icon: <CreditCardTwoToneIcon />,
-        caption: 'New Client Details'
-    },
-    {
-        label: 'Client Re-Assessment',
-        icon: <DescriptionTwoToneIcon />,
-        caption: 'Client Reassessment Details'
-    }
-];
+const tabsOption = [];
 
 // ===========================|| PROFILE 2 ||=========================== //
 
@@ -123,6 +102,106 @@ const ClientAssessment = () => {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const clientAssessmentStore = useSelector(state => state.caseManager.clientAssessment)
+    const dispatch = useDispatch();
+
+    const clientAssessmentTypeStatus = clientAssessmentStore.add.assessment.client_status;
+
+    const setAssessmentTypeOptions = () => {
+        tabsOption.length = 0;
+
+        tabsOption.push(
+            {
+                label: 'Client',
+                icon: <DescriptionTwoToneIcon/>,
+                caption: 'Enter Client Details'
+            }
+        )
+
+        switch (clientAssessmentTypeStatus) {
+            case 'NEW_CASE_CLIENT_EXISTING_EMC_NO_REASSESS':
+                return tabsOption.push(
+                    {
+                        label: 'Existing Extra-Mural Client',
+                        icon: <DescriptionTwoToneIcon/>,
+                        caption: 'Existing Client Details'
+                    }
+                )
+
+            case 'NEW_CASE_CLIENT_EXISTING_EMC_REASSESS':
+                return tabsOption.push(
+                    {
+                        label: 'Existing Extra-Mural Client',
+                        icon: <DescriptionTwoToneIcon/>,
+                        caption: 'Existing Client Details'
+                    },
+                    {
+                        label: 'Client Re-Assessment',
+                        icon: <DescriptionTwoToneIcon/>,
+                        caption: 'Client Reassessment Details'
+                    }
+                )
+
+
+            case 'NEW_CASE_CLIENT_NEW_EXTRA_MURAL_CLIENT':
+                return tabsOption.push(
+                    {
+                        label: 'New Extra-Mural Client',
+                        icon: <CreditCardTwoToneIcon/>,
+                        caption: 'New Client Details'
+                    }
+                )
+
+            case 'EXISTING_CASE_CLIENT_REASSESS':
+                return tabsOption.push(
+                    {
+                        label: 'Client Re-Assessment',
+                        icon: <DescriptionTwoToneIcon/>,
+                        caption: 'Client Reassessment Details'
+                    }
+                )
+            default:
+                return false
+        }
+    }
+
+    const switchAssessmentTypeRender = () => {
+        switch (clientAssessmentTypeStatus) {
+            case 'NEW_CASE_CLIENT_EXISTING_EMC_NO_REASSESS':
+                return <fragment>
+                    <TabPanel value={value} index={1}>
+                        <ExistingExtraMural/>
+                    </TabPanel>
+                </fragment>
+            case 'NEW_CASE_CLIENT_EXISTING_EMC_REASSESS':
+                return <fragment>
+                    <TabPanel value={value} index={1}>
+                        <ExistingExtraMural/>
+                    </TabPanel>
+                    <TabPanel value={value} index={2}>
+                        <ClientReasessment/>
+                    </TabPanel>
+                </fragment>
+
+            case 'NEW_CASE_CLIENT_NEW_EXTRA_MURAL_CLIENT':
+                return <fragment><TabPanel value={value} index={1}>
+                    <NewExtraMural/>
+                </TabPanel>
+                </fragment>
+
+            case 'EXISTING_CASE_CLIENT_REASSESS':
+                return <fragment>
+                    <TabPanel value={value} index={1}>
+                        <ClientReasessment/>
+                    </TabPanel>
+                </fragment>
+            default:
+                return false
+        }
+    }
+
+    setAssessmentTypeOptions();
 
     return (
         <Grid container spacing={gridSpacing}>
@@ -149,12 +228,12 @@ const ClientAssessment = () => {
                                             icon={tab.icon}
                                             label={
                                                 <Grid container direction='column'>
-                                                    <Typography sx={{ textTransform: 'capitalize' }} variant='subtitle1'
+                                                    <Typography sx={{textTransform: 'capitalize'}} variant='subtitle1'
                                                                 color='inherit'>
                                                         {tab.label}
                                                     </Typography>
                                                     <Typography component='div' variant='caption'
-                                                                sx={{ textTransform: 'capitalize' }}>
+                                                                sx={{textTransform: 'capitalize'}}>
                                                         {tab.caption}
                                                     </Typography>
                                                 </Grid>
@@ -168,21 +247,16 @@ const ClientAssessment = () => {
                         <Grid item xs={12} lg={8}>
                             <CardContent className={classes.cardPanels}>
                                 <TabPanel value={value} index={0}>
-                                    <ClientSelect />
+                                    <ClientSelect/>
                                 </TabPanel>
-                                <TabPanel value={value} index={1}>
-                                    <ExistingExtraMural />
-                                </TabPanel>
-                                <TabPanel value={value} index={2}>
-                                    <NewExtraMural />
-                                </TabPanel>
-                                <TabPanel value={value} index={3}>
-                                    <ClientReasessment />
-                                </TabPanel>
+
+                                {switchAssessmentTypeRender()}
                             </CardContent>
                         </Grid>
                     </Grid>
-                    <Divider />
+
+                    <Divider/>
+
                     <CardActions>
                         <Grid container justifyContent='space-between' spacing={0}>
                             <Grid item>

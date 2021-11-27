@@ -1,14 +1,22 @@
 import React from 'react';
 
 // material-ui
-import { CardContent, Checkbox, FormControlLabel, Grid, MenuItem, TextField } from '@material-ui/core';
+import {CardContent, Checkbox, FormControlLabel, Grid, MenuItem, TextField} from '@material-ui/core';
 
 // project imports
-import { gridSpacing } from 'store/constant';
+import {gridSpacing} from 'store/constant';
 import SubCard from 'ui-component/cards/SubCard';
 import ProviderSpecificForms from '../../../../common/provider-specific-forms';
 import AssessmentForms from '../../../../common/assessment-forms';
 import MaskedInput from 'react-text-mask';
+
+import {useFormik} from "formik";
+import {useDispatch, useSelector} from "react-redux";
+import {
+    setReassessmentEMProviderSpecificFormUUID,
+    setReassessmentEMGeneralAssessmentFormUUID,
+    setReAssessmentDetails
+} from "store/actions/caseManager/clientAssessmentActions";
 
 const modeOfAssessmentSelectList = [
     {
@@ -46,47 +54,83 @@ const modeOfAssessmentSelectList = [
 ];
 
 const ClientReasessment = () => {
-    const [city, setCity] = React.useState('1');
-    const handleChangeCity = (event) => {
-        setCity(event.target.value);
-    };
+    const clientAssessmentTypeData = useSelector(state => state.caseManager.clientAssessment.add.assessment_type_data)
+    const reAssessmentData = clientAssessmentTypeData.reassessment.data
+
+    const dispatch = useDispatch()
+
+    const formik = useFormik({
+        initialValues: {
+            date: reAssessmentData.date,
+            reason: reAssessmentData.reason,
+            total_time: reAssessmentData.total_time,
+            mode_of_assessment: reAssessmentData.mode_of_assessment
+        },
+        validate: values => {
+            dispatch(setReAssessmentDetails(values));
+        }
+    });
 
     return (
         <Grid container spacing={gridSpacing}>
 
             <Grid item xs={12} sm={12} lg={8} md={8}>
                 <MaskedInput
-                    mask={[/[0-9]/, /[0-9]/, '/', /[0-9]/, /[0-9]/, '/', /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/]}
+                    mask={[/[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, '-', /[0-9]/, /[0-9]/, '-', /[0-9]/, /[0-9]/]}
                     className="form-control"
                     label="Date"
                     guide={false}
-                    id="client-reassessment-date"
-                    onBlur={() => {}}
-                    onChange={() => {}}
-                    render={(ref, props) => <TextField fullWidth inputRef={ref} {...props} defaultValue="" />}
+
+                    onChange={formik.handleChange}
+                    name='date'
+                    id="date"
+                    value={formik.values.date}
+
+                    render={(ref, props) => <TextField fullWidth inputRef={ref} {...props} defaultValue=""/>}
                 />
             </Grid>
 
             <Grid item xs={12} sm={12} lg={8} md={8}>
                 <MaskedInput
-                    mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
+                    mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
                     className="form-control"
                     label="Total time spent"
                     guide={false}
-                    id="client-reassessment-time-spent"
-                    onBlur={() => {}}
-                    onChange={() => {}}
-                    render={(ref, props) => <TextField fullWidth inputRef={ref} {...props} defaultValue="" />}
+
+                    onChange={formik.handleChange}
+                    name='total_time'
+                    id="total_time"
+                    value={formik.values.total_time}
+
+                    render={(ref, props) => <TextField fullWidth inputRef={ref} {...props} defaultValue=""/>}
                 />
 
             </Grid>
 
             <Grid item xs={12} sm={12} lg={8} md={8}>
-                <TextField type='text' fullWidth label='Reason' defaultValue='' />
+                <TextField type='text'
+                           fullWidth
+                           label='Reason'
+                           defaultValue=''
+
+                           onChange={formik.handleChange}
+                           name='reason'
+                           id="reason"
+                           value={formik.values.reason}
+                />
             </Grid>
 
             <Grid item xs={12} sm={8}>
-                <TextField id="client-reassessment-mode-of-assessment" select label="Mode of Assessment" value={city} fullWidth onChange={handleChangeCity}>
+                <TextField
+                    select
+                    label="Mode of Assessment"
+                    fullWidth
+
+                    onChange={formik.handleChange}
+                    name='mode_of_assessment'
+                    id="mode_of_assessment"
+                    value={formik.values.mode_of_assessment}
+                >
                     {modeOfAssessmentSelectList.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                             {option.label}
@@ -96,17 +140,19 @@ const ClientReasessment = () => {
             </Grid>
 
             <Grid item xs={12} sm={12} lg={8} md={8}>
-                <TextField id='client-reassessment-mode-of-assessment-other' type='text' fullWidth label='Other' defaultValue='' />
+                <TextField id='client-reassessment-mode-of-assessment-other' type='text' fullWidth label='Other'
+                           defaultValue=''/>
             </Grid>
 
-            <Grid item xs={12} sm={8}>
-                <ProviderSpecificForms />
+            <Grid item xs={12} sm={8} lg={12}>
+                <ProviderSpecificForms documentType='TYPE_CASE_MANAGER_ASSESSMENT'
+                                       providerSpecificFormAction={setReassessmentEMProviderSpecificFormUUID}/>
             </Grid>
 
-            <Grid item xs={12} sm={8}>
-                <AssessmentForms />
+            <Grid item xs={12} sm={10} md={10} lg={12}>
+                <AssessmentForms documentType='TYPE_CASE_MANAGER_ASSESSMENT'
+                                 generalAssessmentFormAction={setReassessmentEMGeneralAssessmentFormUUID}/>
             </Grid>
-
         </Grid>
     );
 };

@@ -1,42 +1,68 @@
 import React from 'react';
 
 // material-ui
-import { CardContent, Checkbox, FormControlLabel, Grid, MenuItem, TextField } from '@material-ui/core';
+import {CardContent, Checkbox, FormControlLabel, Grid, MenuItem, TextField} from '@material-ui/core';
 
 // project imports
-import { gridSpacing } from 'store/constant';
+import {gridSpacing} from 'store/constant';
 import SubCard from 'ui-component/cards/SubCard';
 import MaskedInput from 'react-text-mask';
 
+// redux
+import {useDispatch, useSelector} from "react-redux";
+import {setDailyWorkLoadDetails} from "store/actions/caseManager/dailyWorkloadActions";
+import {useFormik} from "formik";
+
 const ClientCaseload = () => {
-    const [state1, setState1] = React.useState({
-        checkedA: true
+    const dailyWorkloadData = useSelector(state => state.caseManager.dailyWorkload.add)
+    const dispatch = useDispatch()
+
+    const formik = useFormik({
+        initialValues: {
+            client_caseload_casemanagement_number_clients: dailyWorkloadData.client_caseload_casemanagement_number_clients,
+            client_caseload_casemanagement_total_time: dailyWorkloadData.client_caseload_casemanagement_total_time,
+            client_caseload_regular_number_clients: dailyWorkloadData.client_caseload_regular_number_clients,
+            client_caseload_regular_total_time: dailyWorkloadData.client_caseload_regular_total_time
+        },
+        validate: values => {
+            const valuesData = {
+                ...values
+            }
+            dispatch(setDailyWorkLoadDetails(valuesData));
+        }
     });
-    const handleChangeState1 = (event) => {
-        setState1({ ...state1, [event.target.name]: event.target.checked });
-    };
+
     return (
         <Grid container spacing={gridSpacing}>
-
             <Grid item xs={12} sm={8}>
                 <SubCard title='Case Management Clients'>
                     <CardContent>
                         <Grid container spacing={gridSpacing}>
                             <Grid item xs={12} sm={8}>
-                                <TextField type='number' fullWidth label='Number of Case Management Clients'
-                                           defaultValue='' />
+                                <TextField type='number'
+                                           fullWidth
+                                           label='Number of Case Management Clients'
+                                           defaultValue={formik.values.client_caseload_casemanagement_number_clients}
+                                           onChange={formik.handleChange}
+                                           name='client_caseload_casemanagement_number_clients'
+                                           id="client_caseload_casemanagement_number_clients"
+                                           value={formik.values.client_caseload_casemanagement_number_clients}
+                                />
                             </Grid>
 
                             <Grid item xs={12} sm={8}>
                                 <MaskedInput
-                                    mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
+                                    mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
                                     className="form-control"
                                     label="Total time spent"
                                     guide={false}
-                                    id="case-management-clients-time-spent"
-                                    onBlur={() => {}}
-                                    onChange={() => {}}
-                                    render={(ref, props) => <TextField fullWidth inputRef={ref} {...props} defaultValue="" />}
+                                    defaultValue={formik.values.client_caseload_casemanagement_total_time}
+                                    onChange={formik.handleChange}
+                                    name='client_caseload_casemanagement_total_time'
+                                    id="client_caseload_casemanagement_total_time"
+                                    value={formik.values.client_caseload_casemanagement_total_time}
+                                    render={(ref, props) => <TextField fullWidth inputRef={ref} {...props}
+                                                                       defaultValue=""/>}
                                 />
                             </Grid>
                         </Grid>
@@ -49,18 +75,29 @@ const ClientCaseload = () => {
                     <CardContent>
                         <Grid container spacing={gridSpacing}>
                             <Grid item xs={12} sm={8}>
-                                <TextField type='number' fullWidth label='Number of Regular Clients' defaultValue='' />
+                                <TextField type='number'
+                                           fullWidth
+                                           label='Number of Regular Clients'
+                                           defaultValue={formik.values.client_caseload_regular_number_clients}
+                                           onChange={formik.handleChange}
+                                           name='client_caseload_regular_number_clients'
+                                           id="client_caseload_regular_number_clients"
+                                           value={formik.values.client_caseload_regular_number_clients}
+                                />
                             </Grid>
                             <Grid item xs={12} sm={8}>
                                 <MaskedInput
-                                    mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
+                                    mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
                                     className="form-control"
                                     label="Total time spent"
                                     guide={false}
-                                    id="regular-clients-time-spent"
-                                    onBlur={() => {}}
-                                    onChange={() => {}}
-                                    render={(ref, props) => <TextField fullWidth inputRef={ref} {...props} defaultValue="" />}
+                                    defaultValue={formik.values.client_caseload_regular_total_time}
+                                    onChange={formik.handleChange}
+                                    name='client_caseload_regular_total_time'
+                                    id="client_caseload_regular_total_time"
+                                    value={formik.values.client_caseload_regular_total_time}
+                                    render={(ref, props) => <TextField fullWidth inputRef={ref} {...props}
+                                                                       defaultValue=""/>}
                                 />
                             </Grid>
                         </Grid>

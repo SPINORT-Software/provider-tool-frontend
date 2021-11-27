@@ -9,6 +9,7 @@ import cartReducer from './reducers/cartReducer';
 import sectionFormReducer from './reducers/sectionFormReducer';
 import accountReducer from './reducers/accountReducer';
 import reviewBoardReducers from './reducers/reviewBoard';
+import caseManagerReducers from './reducers/caseManager';
 
 
 // ===========================|| COMBINE REDUCER ||=========================== //
@@ -19,6 +20,7 @@ const reducer = combineReducers({
     sectionForm: sectionFormReducer,
     account: accountReducer,
     reviewBoard: reviewBoardReducers,
+    caseManager: caseManagerReducers,
     cart: persistReducer(
         {
             key: 'cart',
