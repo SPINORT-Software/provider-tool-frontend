@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 // material-ui
-import { makeStyles, styled, useTheme } from '@material-ui/styles';
+import {makeStyles, styled, useTheme} from '@material-ui/styles';
 import {
     Box,
     CardContent,
@@ -20,7 +20,7 @@ import {
 
 // third-party
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import Picker, { SKIN_TONE_MEDIUM_DARK } from 'emoji-picker-react';
+import Picker, {SKIN_TONE_MEDIUM_DARK} from 'emoji-picker-react';
 
 // project imports
 import UserDetails from './UserDetails';
@@ -30,8 +30,8 @@ import AvatarStatus from './AvatarStatus';
 import MainCard from 'ui-component/cards/MainCard';
 import Avatar from 'ui-component/extended/Avatar';
 import axios from 'utils/axios';
-import { SET_MENU } from 'store/actionTypes';
-import { appDrawerWidth as drawerWidth, gridSpacing } from 'store/constant';
+import {SET_MENU} from 'store/actionTypes';
+import {appDrawerWidth as drawerWidth, gridSpacing} from 'store/constant';
 
 // assets
 import AttachmentTwoToneIcon from '@material-ui/icons/AttachmentTwoTone';
@@ -43,6 +43,7 @@ import CallTwoToneIcon from '@material-ui/icons/CallTwoTone';
 import SendTwoToneIcon from '@material-ui/icons/SendTwoTone';
 import MoodTwoToneIcon from '@material-ui/icons/MoodTwoTone';
 import HighlightOffTwoToneIcon from '@material-ui/icons/HighlightOffTwoTone';
+import {w3cwebsocket as W3CWebSocket} from "websocket";
 
 const avatarImage = require.context('assets/images/users', true);
 
@@ -62,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // drawer content element
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
+const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})(({theme, open}) => ({
     flexGrow: 1,
     paddingLeft: open ? theme.spacing(3) : 0,
     transition: theme.transitions.create('margin', {
@@ -122,13 +123,13 @@ const ChatMainPage = () => {
     // fetch user details of current user
     const [user, setUser] = useState({});
     const getUserData = async () => {
-        const response = await axios.post('/api/chat/users/id', { id: 1 });
+        const response = await axios.post('/api/chat/users/id', {id: 1});
         setUser(response.data);
     };
 
     React.useEffect(() => {
         // hide left drawer when email app opens
-        dispatch({ type: SET_MENU, opened: false });
+        dispatch({type: SET_MENU, opened: false});
         getUserData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -155,7 +156,7 @@ const ChatMainPage = () => {
             from: 'User1',
             to: user.name,
             text: message,
-            time: d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            time: d.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
         };
         setData((prevState) => [...prevState, newMessage]);
         axios.post('/api/chat/insert', {
@@ -189,11 +190,12 @@ const ChatMainPage = () => {
     if (!user) return 'Loading...';
 
     return (
-        <Box sx={{ display: 'flex' }}>
-            <ChatDrawer openChatDrawer={openChatDrawer} handleDrawerOpen={handleDrawerOpen} user={user} setUser={setUser} />
+        <Box sx={{display: 'flex'}}>
+            <ChatDrawer openChatDrawer={openChatDrawer} handleDrawerOpen={handleDrawerOpen} user={user}
+                        setUser={setUser}/>
             <Main open={openChatDrawer}>
                 <Grid container spacing={gridSpacing}>
-                    <Grid item xs zeroMinWidth sx={{ display: emailDetails ? { xs: 'none', sm: 'flex' } : 'flex' }}>
+                    <Grid item xs zeroMinWidth sx={{display: emailDetails ? {xs: 'none', sm: 'flex'} : 'flex'}}>
                         <MainCard
                             sx={{
                                 bgcolor: theme.palette.mode === 'dark' ? 'dark.main' : theme.palette.grey[50]
@@ -204,47 +206,49 @@ const ChatMainPage = () => {
                                     <Grid container alignItems="center" spacing={0.5}>
                                         <Grid item>
                                             <IconButton onClick={handleDrawerOpen}>
-                                                <MenuRoundedIcon />
+                                                <MenuRoundedIcon/>
                                             </IconButton>
                                         </Grid>
                                         <Grid item>
-                                            <Grid container spacing={2} alignItems="center" sx={{ flexWrap: 'nowrap' }}>
+                                            <Grid container spacing={2} alignItems="center" sx={{flexWrap: 'nowrap'}}>
                                                 <Grid item>
-                                                    <Avatar alt={user.name} src={user.avatar && avatarImage(`./${user.avatar}`).default} />
+                                                    <Avatar alt={user.name}
+                                                            src={user.avatar && avatarImage(`./${user.avatar}`).default}/>
                                                 </Grid>
                                                 <Grid item sm zeroMinWidth>
                                                     <Grid container spacing={0} alignItems="center">
                                                         <Grid item xs={12}>
                                                             <Typography variant="h4" component="div">
-                                                                {user.name} <AvatarStatus status={user.online_status} />
+                                                                {user.name} <AvatarStatus status={user.online_status}/>
                                                             </Typography>
                                                         </Grid>
                                                         <Grid item xs={12}>
-                                                            <Typography variant="subtitle2">Last seen {user.lastMessage}</Typography>
+                                                            <Typography variant="subtitle2">Last
+                                                                seen {user.lastMessage}</Typography>
                                                         </Grid>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
                                         </Grid>
-                                        <Grid item sm zeroMinWidth />
+                                        <Grid item sm zeroMinWidth/>
                                         <Grid item>
                                             <IconButton>
-                                                <CallTwoToneIcon />
+                                                <CallTwoToneIcon/>
                                             </IconButton>
                                         </Grid>
                                         <Grid item>
                                             <IconButton>
-                                                <VideoCallTwoToneIcon />
+                                                <VideoCallTwoToneIcon/>
                                             </IconButton>
                                         </Grid>
                                         <Grid item>
                                             <IconButton onClick={handleUserChange}>
-                                                <ErrorTwoToneIcon />
+                                                <ErrorTwoToneIcon/>
                                             </IconButton>
                                         </Grid>
                                         <Grid item>
                                             <IconButton onClick={handleClickSort}>
-                                                <MoreHorizTwoToneIcon />
+                                                <MoreHorizTwoToneIcon/>
                                             </IconButton>
                                             <Menu
                                                 id="simple-menu"
@@ -268,7 +272,7 @@ const ChatMainPage = () => {
                                             </Menu>
                                         </Grid>
                                     </Grid>
-                                    <Divider sx={{ mt: theme.spacing(2) }} />
+                                    <Divider sx={{mt: theme.spacing(2)}}/>
                                 </Grid>
                                 <PerfectScrollbar className={classes.ScrollHeight}>
                                     <CardContent>
@@ -284,8 +288,9 @@ const ChatMainPage = () => {
                                 <Grid item xs={12}>
                                     <Grid container spacing={1} alignItems="center">
                                         <Grid item>
-                                            <IconButton ref={anchorElEmoji} aria-describedby={emojiId} onClick={handleOnEmojiButtonClick}>
-                                                <MoodTwoToneIcon />
+                                            <IconButton ref={anchorElEmoji} aria-describedby={emojiId}
+                                                        onClick={handleOnEmojiButtonClick}>
+                                                <MoodTwoToneIcon/>
                                             </IconButton>
                                             <Popper
                                                 id={emojiId}
@@ -325,12 +330,12 @@ const ChatMainPage = () => {
                                         </Grid>
                                         <Grid item>
                                             <IconButton>
-                                                <AttachmentTwoToneIcon />
+                                                <AttachmentTwoToneIcon/>
                                             </IconButton>
                                         </Grid>
                                         <Grid item>
                                             <IconButton color="primary" onClick={handleOnSend}>
-                                                <SendTwoToneIcon />
+                                                <SendTwoToneIcon/>
                                             </IconButton>
                                         </Grid>
                                     </Grid>
@@ -340,12 +345,12 @@ const ChatMainPage = () => {
                     </Grid>
                     {emailDetails ? (
                         <Grid item className={classes.smallDrawer}>
-                            <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
-                                <IconButton onClick={handleUserChange} sx={{ mb: '-80px' }}>
-                                    <HighlightOffTwoToneIcon />
+                            <Box sx={{display: {xs: 'block', sm: 'none'}}}>
+                                <IconButton onClick={handleUserChange} sx={{mb: '-80px'}}>
+                                    <HighlightOffTwoToneIcon/>
                                 </IconButton>
                             </Box>
-                            <UserDetails user={user} />
+                            <UserDetails user={user}/>
                         </Grid>
                     ) : (
                         ''
