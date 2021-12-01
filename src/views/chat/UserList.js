@@ -2,38 +2,60 @@ import * as PropTypes from 'prop-types';
 import React from 'react';
 
 // material-ui
-import { Chip, Divider, Grid, List, ListItemAvatar, ListItemText, Typography } from '@material-ui/core';
+import {Chip, Divider, Grid, List, ListItemAvatar, ListItemText, Typography} from '@material-ui/core';
 import ListItemButton from '@material-ui/core/ListItemButton';
 
 // project imports
 import UserAvatar from './UserAvatar';
-import axios from 'utils/axios';
+
+import {useDispatch, useSelector} from "react-redux";
+import messagingApi from "store/api-calls/messaging";
+import JWTContext from "../../contexts/JWTContext";
+import {setActiveRecipientUser, setUserActiveMessagesList} from "../../store/actions/messagingActions";
 
 // ===========================|| CHAT USER LIST ||=========================== //
 
-const UserList = ({ setUser }) => {
+const UserList = ({setActiveRecipient}) => {
     const [data, setData] = React.useState([]);
+    const activeChats = useSelector(store => store.messaging.activeChats)
+    const jwtContext = React.useContext(JWTContext);
+    const {user: currentUser} = jwtContext;
+    const {username: currentUsername} = currentUser;
+    const dispatch = useDispatch();
 
-    const getData = async () => {
-        const response = await axios.get('/api/chat/users');
-        setData(response.data.users);
+    const getUserActiveRecipientsList = async () => {
+        const response = await messagingApi.getUserActiveRecipientsList(currentUsername)
+        return response;
     };
 
     React.useEffect(() => {
-        getData();
+        const activeRecipientsList = getUserActiveRecipientsList();
+
+        // dispatch
+        // dispatch(setUserActiveMessagesList(response))
     }, []);
 
-    return (
-        <List component="nav">
-            {data.map((user) => (
-                <React.Fragment key={user.id}>
+    const handleRecipientSelect = (e, recipient) => {
+        setActiveRecipient(recipient);
+        dispatch(setActiveRecipientUser(recipient));
+    }
+
+    const renderRecipientsList = () => {
+        if (Object.keys(activeChats).length < 0) {
+            return <></>
+        }
+
+        return Object.keys(activeChats).map((activeRecipientUsername, index) => {
+            const recipient = activeChats[activeRecipientUsername].user;
+            const {user_type_pk, fullname} = recipient;
+
+            return (
+                <React.Fragment key={user_type_pk}>
                     <ListItemButton
-                        onClick={() => {
-                            setUser(user);
-                        }}
+                        onClick={(e) => handleRecipientSelect(e, recipient)}
                     >
                         <ListItemAvatar>
-                            <UserAvatar user={user} />
+                            <UserAvatar user={recipient}/>
                         </ListItemAvatar>
                         <ListItemText
                             primary={
@@ -50,61 +72,29 @@ const UserList = ({ setUser }) => {
                                                 display: 'block'
                                             }}
                                         >
-                                            {user.name}
+                                            {fullname}
                                         </Typography>
-                                    </Grid>
-                                    <Grid item component="span">
-                                        <Typography component="span" variant="subtitle2">
-                                            {user.lastMessage}
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                            }
-                            secondary={
-                                <Grid container alignItems="center" spacing={1} component="span">
-                                    <Grid item xs zeroMinWidth component="span">
-                                        <Typography
-                                            variant="caption"
-                                            component="span"
-                                            sx={{
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                display: 'block'
-                                            }}
-                                        >
-                                            {user.status}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item component="span">
-                                        {user.unReadChatCount !== 0 && (
-                                            <Chip
-                                                label={user.unReadChatCount}
-                                                component="span"
-                                                color="secondary"
-                                                sx={{
-                                                    width: '20px',
-                                                    height: '20px',
-                                                    '& .MuiChip-label': {
-                                                        px: '4px'
-                                                    }
-                                                }}
-                                            />
-                                        )}
                                     </Grid>
                                 </Grid>
                             }
                         />
                     </ListItemButton>
-                    <Divider />
+                    <Divider/>
                 </React.Fragment>
-            ))}
+            )
+        })
+    }
+
+
+    return (
+        <List component="nav">
+            {renderRecipientsList()}
         </List>
     );
 };
 
 UserList.propTypes = {
-    setUser: PropTypes.func
+    setActiveRecipient: PropTypes.func
 };
 
 export default UserList;

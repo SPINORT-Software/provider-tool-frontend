@@ -4,10 +4,22 @@ import { useSelector } from 'react-redux';
 
 // material-ui
 import { makeStyles, useTheme } from '@material-ui/styles';
-import { Drawer, Grid, IconButton, InputAdornment, Menu, MenuItem, OutlinedInput, Typography, useMediaQuery } from '@material-ui/core';
+import {
+    Button,
+    Drawer,
+    Grid,
+    IconButton,
+    InputAdornment,
+    Menu,
+    MenuItem,
+    OutlinedInput,
+    Typography,
+    useMediaQuery
+} from '@material-ui/core';
 
 // third-party
 import PerfectScrollbar from 'react-perfect-scrollbar';
+
 
 // project imports
 import UserList from './UserList';
@@ -19,6 +31,9 @@ import { appDrawerWidth as drawerWidth, gridSpacing } from 'store/constant';
 // assets
 import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import LayersTwoToneIcon from "@material-ui/icons/LayersTwoTone";
+import PersonAddAlt from '@material-ui/icons/PersonAddAlt';
+import UsersSearchList from "./UsersSearchList";
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -35,11 +50,20 @@ const useStyles = makeStyles((theme) => ({
 
 // ===========================|| CHAT DRAWER ||=========================== //
 
-const ChatDrawer = ({ handleDrawerOpen, openChatDrawer, setUser }) => {
+const ChatDrawer = ({ handleDrawerOpen, openChatDrawer, setActiveRecipient }) => {
     const classes = useStyles();
     const theme = useTheme();
     const customization = useSelector((state) => state.customization);
     const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
+
+    // Users Search List Dialog
+    const [userssearchlistopen, setUserssearchlistopen] = React.useState(false);
+    const handleClickOpenDialog = () => {
+        setUserssearchlistopen(true);
+    };
+    const handleCloseDialog = () => {
+        setUserssearchlistopen(false);
+    };
 
     // show menu to set current user status
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -133,11 +157,21 @@ const ChatDrawer = ({ handleDrawerOpen, openChatDrawer, setUser }) => {
                             </Grid>
                         </Grid>
                     </Grid>
+
+                    <Grid item xs={12}>
+                        <Button fullWidth variant="outlined" onClick={handleClickOpenDialog} endIcon={<PersonAddAlt />}>
+                            Start Conversation
+                        </Button>
+
+                        <UsersSearchList open={userssearchlistopen} handleCloseDialog={handleCloseDialog} />
+                    </Grid>
+
+
                     <Grid item xs={12}>
                         <OutlinedInput
                             fullWidth
                             id="input-search-header"
-                            placeholder="Search Mail"
+                            placeholder="Search Messages"
                             startAdornment={
                                 <InputAdornment position="start">
                                     <SearchTwoToneIcon fontSize="small" />
@@ -147,7 +181,7 @@ const ChatDrawer = ({ handleDrawerOpen, openChatDrawer, setUser }) => {
                     </Grid>
                     <Grid item xs={12}>
                         <PerfectScrollbar className={classes.ScrollHeight}>
-                            <UserList setUser={setUser} />
+                            <UserList setActiveRecipient={setActiveRecipient} />
                         </PerfectScrollbar>
                     </Grid>
                 </Grid>
@@ -159,7 +193,7 @@ const ChatDrawer = ({ handleDrawerOpen, openChatDrawer, setUser }) => {
 ChatDrawer.propTypes = {
     handleDrawerOpen: PropTypes.func,
     openChatDrawer: PropTypes.bool,
-    setUser: PropTypes.func
+    setActiveRecipient: PropTypes.func
 };
 
 export default ChatDrawer;

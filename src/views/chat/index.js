@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+
+import JWTContext from "contexts/JWTContext";
+
 
 // material-ui
 import {makeStyles, styled, useTheme} from '@material-ui/styles';
@@ -25,7 +28,7 @@ import Picker, {SKIN_TONE_MEDIUM_DARK} from 'emoji-picker-react';
 // project imports
 import UserDetails from './UserDetails';
 import ChatDrawer from './ChatDrawer';
-import ChartHistory from './ChartHistory';
+import ChatHistory from './ChatHistory';
 import AvatarStatus from './AvatarStatus';
 import MainCard from 'ui-component/cards/MainCard';
 import Avatar from 'ui-component/extended/Avatar';
@@ -45,6 +48,9 @@ import MoodTwoToneIcon from '@material-ui/icons/MoodTwoTone';
 import HighlightOffTwoToneIcon from '@material-ui/icons/HighlightOffTwoTone';
 import {w3cwebsocket as W3CWebSocket} from "websocket";
 
+// redux
+import {setNewMessageSend} from 'store/actions/messagingActions';
+
 const avatarImage = require.context('assets/images/users', true);
 
 // style constant
@@ -61,6 +67,8 @@ const useStyles = makeStyles((theme) => ({
         }
     }
 }));
+
+const socketChatClient = new W3CWebSocket('ws://127.0.0.1:8000/ws/chat/');
 
 // drawer content element
 const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})(({theme, open}) => ({
@@ -86,10 +94,21 @@ const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})(({th
 
 // ===========================|| APPLICATION CHAT ||=========================== //
 
+/**
+ * CURRENT USER UUID = currentUserUUID
+ * Use the currentUserUUID to send and receive messages
+ * @returns {JSX.Element|string}
+ * @constructor
+ */
 const ChatMainPage = () => {
+    const jwtContext = React.useContext(JWTContext);
+    const {user: currentUser} = jwtContext;
+    const {user_type_pk: currentUserUUID, username: currentUsername} = currentUser
+
     const classes = useStyles();
     const theme = useTheme();
     const dispatch = useDispatch();
+    const selectedRecipient = useSelector(store => store.messaging.selectedRecipient)
 
     const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -120,11 +139,10 @@ const ChatMainPage = () => {
         setOpenChatDrawer(!matchDownSM);
     }, [matchDownSM]);
 
-    // fetch user details of current user
-    const [user, setUser] = useState({});
+    const [activeRecipient, setActiveRecipient] = useState({});
     const getUserData = async () => {
         const response = await axios.post('/api/chat/users/id', {id: 1});
-        setUser(response.data);
+        setActiveRecipient(response.data);
     };
 
     React.useEffect(() => {
@@ -135,33 +153,71 @@ const ChatMainPage = () => {
     }, []);
 
     // fetch chat history for selected user
-    const [data, setData] = React.useState([]);
-    const getData = async (userData) => {
-        const response = await axios.post('/api/chat/filter', {
-            user: userData.name
-        });
-        setData(response.data);
-    };
-
     React.useEffect(() => {
-        getData(user);
-    }, [user]);
+        socketChatClient.onopen = () => {
+            console.log("Socket opened");
+        }
+
+        socketChatClient.onmessage = (e) => {
+            console.log("On message")
+            const newMessageData = JSON.parse(e.data)
+
+            if (newMessageData.message) {
+                console.log("Message received ", newMessageData.message)
+            } else {
+                console.log("Message is empty")
+            }
+
+            const d = new Date();
+            const newMessage = {
+                sender: newMessageData.sender, 
+                recipient: newMessageData.recipient,
+                message: newMessageData.message,
+                message_type: newMessageData.message_type,
+                sent_at: newMessageData.sent_at,
+            };
+
+            console.log("Message received ")
+            console.log(newMessage)
+
+            // the newMessage could be from any user in the system. dispatch this message to a generic function to set
+            // it to 'activeChats' in messagingReducer.
+            // if the message is from the selectedRecipient - set it in selectedRecipientHistory and add it to selected
+            // setData((prevState) => [...prevState, newMessage]);
+        }
+
+        // getData(user);
+    }, [activeRecipient]);
 
     // handle new message form
     const [message, setMessage] = useState('');
     const handleOnSend = () => {
+        if(!message && message.length < 1){
+            return false;
+        }
+
+        const {username: recipientUsername} = selectedRecipient;
         const d = new Date();
+        const messageSendTime = d.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
+
+        /**
+         * Send Message to WebSocket API
+         */
         setMessage('');
-        const newMessage = {
-            from: 'User1',
-            to: user.name,
-            text: message,
-            time: d.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
-        };
-        setData((prevState) => [...prevState, newMessage]);
-        axios.post('/api/chat/insert', {
-            ...newMessage
-        });
+        const newMessageToSend = {
+            'message': message,
+            'message_type': 'text',  // [model_instance,text]
+            'sender': currentUsername,
+            'recipient': recipientUsername,
+            'sent_at': messageSendTime
+        }
+        socketChatClient.send(JSON.stringify(newMessageToSend))
+
+        // TODO : Do this
+        // TODO : dispatch action to add to selectedRecipientHistory in reducer
+        dispatch(setNewMessageSend(newMessageToSend, recipientUsername))
+
+        return true;
     };
 
     const handleEnter = (event) => {
@@ -180,22 +236,23 @@ const ChatMainPage = () => {
     const handleOnEmojiButtonClick = (event) => {
         setAnchorElEmoji(anchorElEmoji ? null : event.currentTarget);
     };
-
     const emojiOpen = Boolean(anchorElEmoji);
     const emojiId = emojiOpen ? 'simple-popper' : undefined;
     const handleCloseEmoji = () => {
         setAnchorElEmoji(null);
     };
 
-    if (!user) return 'Loading...';
+    if (!currentUser) return 'Loading...';
 
     return (
         <Box sx={{display: 'flex'}}>
-            <ChatDrawer openChatDrawer={openChatDrawer} handleDrawerOpen={handleDrawerOpen} user={user}
-                        setUser={setUser}/>
+            <ChatDrawer openChatDrawer={openChatDrawer} handleDrawerOpen={handleDrawerOpen}
+                        setActiveRecipient={setActiveRecipient}/>
+
+
             <Main open={openChatDrawer}>
                 <Grid container spacing={gridSpacing}>
-                    <Grid item xs zeroMinWidth sx={{display: emailDetails ? {xs: 'none', sm: 'flex'} : 'flex'}}>
+                    <Grid item lg={12} xs={12}>
                         <MainCard
                             sx={{
                                 bgcolor: theme.palette.mode === 'dark' ? 'dark.main' : theme.palette.grey[50]
@@ -203,28 +260,30 @@ const ChatMainPage = () => {
                         >
                             <Grid container spacing={gridSpacing}>
                                 <Grid item xs={12}>
-                                    <Grid container alignItems="center" spacing={0.5}>
+                                    <Grid container alignItems="" spacing={0.5}>
                                         <Grid item>
                                             <IconButton onClick={handleDrawerOpen}>
                                                 <MenuRoundedIcon/>
                                             </IconButton>
                                         </Grid>
+
                                         <Grid item>
                                             <Grid container spacing={2} alignItems="center" sx={{flexWrap: 'nowrap'}}>
                                                 <Grid item>
-                                                    <Avatar alt={user.name}
-                                                            src={user.avatar && avatarImage(`./${user.avatar}`).default}/>
+                                                    <Avatar alt={activeRecipient.fullname}
+                                                            src={activeRecipient.avatar && avatarImage(`./${activeRecipient.avatar}`).default}/>
                                                 </Grid>
                                                 <Grid item sm zeroMinWidth>
                                                     <Grid container spacing={0} alignItems="center">
                                                         <Grid item xs={12}>
                                                             <Typography variant="h4" component="div">
-                                                                {user.name} <AvatarStatus status={user.online_status}/>
+                                                                {activeRecipient.fullname} <AvatarStatus
+                                                                status={activeRecipient.online_status}/>
                                                             </Typography>
                                                         </Grid>
                                                         <Grid item xs={12}>
                                                             <Typography variant="subtitle2">Last
-                                                                seen {user.lastMessage}</Typography>
+                                                                seen {activeRecipient.lastMessage}</Typography>
                                                         </Grid>
                                                     </Grid>
                                                 </Grid>
@@ -246,45 +305,24 @@ const ChatMainPage = () => {
                                                 <ErrorTwoToneIcon/>
                                             </IconButton>
                                         </Grid>
-                                        <Grid item>
-                                            <IconButton onClick={handleClickSort}>
-                                                <MoreHorizTwoToneIcon/>
-                                            </IconButton>
-                                            <Menu
-                                                id="simple-menu"
-                                                anchorEl={anchorEl}
-                                                keepMounted
-                                                open={Boolean(anchorEl)}
-                                                onClose={handleCloseSort}
-                                                anchorOrigin={{
-                                                    vertical: 'bottom',
-                                                    horizontal: 'right'
-                                                }}
-                                                transformOrigin={{
-                                                    vertical: 'top',
-                                                    horizontal: 'right'
-                                                }}
-                                            >
-                                                <MenuItem onClick={handleCloseSort}>Name</MenuItem>
-                                                <MenuItem onClick={handleCloseSort}>Date</MenuItem>
-                                                <MenuItem onClick={handleCloseSort}>Ratting</MenuItem>
-                                                <MenuItem onClick={handleCloseSort}>Unread</MenuItem>
-                                            </Menu>
-                                        </Grid>
                                     </Grid>
                                     <Divider sx={{mt: theme.spacing(2)}}/>
                                 </Grid>
+
+                                {
+                                    /**
+                                     * User Chat History Messages Component
+                                     */
+                                }
                                 <PerfectScrollbar className={classes.ScrollHeight}>
                                     <CardContent>
-                                        <ChartHistory
+                                        <ChatHistory
                                             theme={theme}
-                                            handleUserDetails={handleUserChange}
-                                            handleDrawerOpen={handleDrawerOpen}
-                                            user={user}
-                                            data={data}
+                                            user={activeRecipient}
                                         />
                                     </CardContent>
                                 </PerfectScrollbar>
+
                                 <Grid item xs={12}>
                                     <Grid container spacing={1} alignItems="center">
                                         <Grid item>
@@ -343,6 +381,7 @@ const ChatMainPage = () => {
                             </Grid>
                         </MainCard>
                     </Grid>
+
                     {emailDetails ? (
                         <Grid item className={classes.smallDrawer}>
                             <Box sx={{display: {xs: 'block', sm: 'none'}}}>
@@ -350,7 +389,7 @@ const ChatMainPage = () => {
                                     <HighlightOffTwoToneIcon/>
                                 </IconButton>
                             </Box>
-                            <UserDetails user={user}/>
+                            <UserDetails user={activeRecipient}/>
                         </Grid>
                     ) : (
                         ''

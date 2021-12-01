@@ -21,7 +21,7 @@ const UserAvatar = ({ user }) => (
             horizontal: 'right'
         }}
     >
-        <Avatar alt={user.name} src={user.avatar}/>
+        <Avatar alt={user.fullname} src={user.avatar}/>
     </Badge>
 );
 

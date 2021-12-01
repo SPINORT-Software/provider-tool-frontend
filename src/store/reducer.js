@@ -10,6 +10,7 @@ import sectionFormReducer from './reducers/sectionFormReducer';
 import accountReducer from './reducers/accountReducer';
 import reviewBoardReducers from './reducers/reviewBoard';
 import caseManagerReducers from './reducers/caseManager';
+import messagingReducer from './reducers/messagingReducer';
 
 
 // ===========================|| COMBINE REDUCER ||=========================== //
@@ -21,6 +22,7 @@ const reducer = combineReducers({
     account: accountReducer,
     reviewBoard: reviewBoardReducers,
     caseManager: caseManagerReducers,
+    messaging: messagingReducer,
     cart: persistReducer(
         {
             key: 'cart',

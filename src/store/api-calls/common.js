@@ -15,6 +15,21 @@ export default {
         } catch (error) {
             return error.response;
         }
-    }
+    },
+
+    async searchUser(searchKey) {
+        try {
+            const response = await axios.get('core/search-user', {
+                params: {
+                    search: searchKey
+                }
+            });
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    },
 }
+
+
 
