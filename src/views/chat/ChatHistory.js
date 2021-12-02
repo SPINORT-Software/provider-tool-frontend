@@ -33,7 +33,6 @@ const ChatHistory = ({theme, user}) => {
     useEffect(() => {
         // getRecipientMessageHistory();
         scrollToBottom()
-        console.log("Scroll to bottom ")
     }, [recipientMessages?.length, scrollToBottom]);
 
     const renderMessages = () => {
