@@ -7,6 +7,7 @@ import {Typography} from '@material-ui/core';
 import NavGroup from './NavGroup';
 import caseManagerMenuItems from 'menu-items/case-manager';
 import reviewBoardMenuItems from 'menu-items/review-board';
+import clientMenuItems from 'menu-items/client';
 import JWTContext from "contexts/JWTContext";
 
 
@@ -17,13 +18,23 @@ const MenuList = () => {
     const jwtContext = useContext(JWTContext);
     const {user} = jwtContext;
 
+    if (!user) {
+        return <></>
+    }
+
     // eslint-disable-next-line camelcase
     const {user_type: userType} = user;
 
-    if (typeof(user) === 'object' && ('user_type' in user) && user) {
+    if (typeof (user) === 'object' && ('user_type' in user) && user) {
         switch (userType) {
             case 'TYPE_REVIEW_BOARD':
                 roleMenuItems = reviewBoardMenuItems
+                break;
+            case 'TYPE_CASE_MANAGER':
+                roleMenuItems = caseManagerMenuItems
+                break;
+            case 'TYPE_CLIENT':
+                roleMenuItems = clientMenuItems
                 break;
             default:
                 roleMenuItems = caseManagerMenuItems

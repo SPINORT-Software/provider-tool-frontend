@@ -1,0 +1,62 @@
+{
+  "roles": {
+    "client": [
+      {
+        "id": "personal-info",
+        "type": "group",
+        "children": [
+          {
+            "id": "personal-info",
+            "title": "Personal Information",
+            "formatted_title": "Personal Information",
+            "type": "item",
+            "url": "personal-info",
+            "breadcrumbs": false
+          }
+        ]
+      },
+      {
+        "id": "clinical-info",
+        "type": "group",
+        "children": [
+          {
+            "id": "clinical-info",
+            "title": "Clinical Information",
+            "formatted_title": "Clinical Information",
+            "type": "item",
+            "url": "clinical-info",
+            "breadcrumbs": false
+          }
+        ]
+      },
+      {
+        "id": "visitors-log",
+        "type": "group",
+        "children": [
+          {
+            "id": "visitors-log",
+            "title": "Visitors Log",
+            "formatted_title": "Visitors Log",
+            "type": "item",
+            "url": "visitors-log",
+            "breadcrumbs": false
+          }
+        ]
+      },
+      {
+        "id": "communication-log",
+        "type": "group",
+        "children": [
+          {
+            "id": "communication-log",
+            "title": "Communication Log",
+            "formatted_title": "Communication Log",
+            "type": "item",
+            "url": "communication-log",
+            "breadcrumbs": false
+          }
+        ]
+      }
+    ]
+  }
+}
