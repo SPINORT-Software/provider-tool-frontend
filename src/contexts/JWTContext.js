@@ -13,6 +13,8 @@ import accountReducer from 'store/reducers/accountReducer';
 import axios from 'store/api-calls/axios-client';
 import Loader from 'ui-component/Loader';
 
+import { useNavigate } from 'react-router-dom';
+
 // constant
 const initialState = {
     isLoggedIn: false,
@@ -47,6 +49,7 @@ const JWTContext = createContext({
 
 export const JWTProvider = ({children}) => {
     const [state, dispatch] = useReducer(accountReducer, initialState);
+    const navigate = useNavigate();
 
     const login = async (email, password) => {
         const rawResponse = await fetch('http://127.0.0.1:8000/auth/users/login', {
@@ -70,8 +73,10 @@ export const JWTProvider = ({children}) => {
     };
 
     const logout = () => {
+        console.log("LOGOUT")
         setSession(null);
         dispatch({type: LOGOUT});
+        navigate('login', { replace: true });
     };
 
     useEffect(() => {

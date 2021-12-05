@@ -29,6 +29,19 @@ export default {
             return error.response;
         }
     },
+
+    async searchClient(searchKey) {
+        try {
+            const response = await axios.get('core/search-client', {
+                params: {
+                    search: searchKey
+                }
+            });
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    },
 }
 
 

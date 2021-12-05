@@ -15,3 +15,10 @@ export const listDailyWorkLoad = (responseData) => ({
     }
 })
 
+export const resetDailyWorkLoad = () => ({
+    type: actionTypes.CASE_MANAGER_RESET_DAILY_WORKLOAD_DETAILS,
+    data: false
+})
+
+
+

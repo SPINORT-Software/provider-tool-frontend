@@ -21,6 +21,10 @@ import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
 import DescriptionTwoToneIcon from '@material-ui/icons/DescriptionTwoTone';
 import CreditCardTwoToneIcon from '@material-ui/icons/CreditCardTwoTone';
 import VpnKeyTwoToneIcon from '@material-ui/icons/VpnKeyTwoTone';
+import {setDailyWorkLoadDetails} from "store/actions/caseManager/dailyWorkloadActions";
+import caseManagerApi from "store/api-calls/case-manager";
+import ProgressCircularControlled from 'views/ui/ProgressCircularControlled';
+import {SNACKBAR_OPEN} from "../../../../store/actionTypes";
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -98,15 +102,134 @@ const ClientAssessment = () => {
     const classes = useStyles();
     const customization = useSelector((state) => state.customization);
     const [value, setValue] = React.useState(0);
+    const [progressLoader, setProgressLoader] = React.useState(false);
+    const clientAssessmentStore = useSelector(state => state.caseManager.clientAssessment)
+    const dispatch = useDispatch();
+    const clientAssessmentTypeStatus = clientAssessmentStore.add.assessment.client_status;
+    const clientAssessmentAddData = clientAssessmentStore.add;
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    const clientAssessmentStore = useSelector(state => state.caseManager.clientAssessment)
-    const dispatch = useDispatch();
+    const prepareAssessmentRequestData = (clientAssessmentAddData) => {
+        let requestData = {}
+        switch (clientAssessmentTypeStatus) {
+            case 'NEW_CASE_CLIENT_EXISTING_EMC_NO_REASSESS':
+                requestData = {
+                    assessment: {
+                        ...clientAssessmentAddData.assessment
+                    },
+                    assessment_type_data: {
+                        ...clientAssessmentAddData.assessment_type_data.existing_assessment.data
+                    },
+                    assessment_type_forms: {
+                        ...clientAssessmentAddData.assessment_type_forms.existing_assessment
+                    }
+                }
+                break;
+            case 'NEW_CASE_CLIENT_EXISTING_EMC_REASSESS':
+                requestData = {
+                    assessment: {
+                        ...clientAssessmentAddData.assessment
+                    },
+                    assessment_type_data: {
+                        existing_assessment: {
+                            ...clientAssessmentAddData.assessment_type_data.existing_assessment,
+                            assessment_type_forms: {
+                                ...clientAssessmentAddData.assessment_type_forms.existing_assessment
+                            }
+                        },
+                        reassessment: {
+                            ...clientAssessmentAddData.assessment_type_data.reassessment,
+                            assessment_type_forms: {
+                                ...clientAssessmentAddData.assessment_type_forms.reassessment
+                            }
+                        }
+                    }
+                }
+                break;
+            case 'NEW_CASE_CLIENT_NEW_EXTRA_MURAL_CLIENT':
+                delete clientAssessmentAddData.assessment_type_data.existing_assessment
+                delete clientAssessmentAddData.assessment_type_forms.existing_assessment
+                delete clientAssessmentAddData.assessment_type_data.reassessment
+                delete clientAssessmentAddData.assessment_type_forms.reassessment
 
-    const clientAssessmentTypeStatus = clientAssessmentStore.add.assessment.client_status;
+                requestData = {
+                    assessment: {
+                        ...clientAssessmentAddData.assessment
+                    },
+                    assessment_type_data: {
+                        ...clientAssessmentAddData.assessment_type_data
+                    },
+                    assessment_type_forms:{
+                        ...clientAssessmentAddData.assessment_type_forms
+                    }
+                }
+                break;
+            case 'EXISTING_CASE_CLIENT_REASSESS':
+                requestData = {
+                    assessment: {
+                        ...clientAssessmentAddData.assessment
+                    },
+                    assessment_type_data: {
+                        ...clientAssessmentAddData.assessment_type_data.reassessment.data
+                    },
+                    assessment_type_forms: {
+                        ...clientAssessmentAddData.assessment_type_forms.reassessment
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        return requestData;
+    }
+
+    const handleSubmit = async (event) => {
+        setProgressLoader(true);  // Call this to show the loader for the current tab
+        const response = await caseManagerApi.createClientAssessment(prepareAssessmentRequestData(clientAssessmentAddData));
+
+        if (response && 'result' in response) {
+            if (response.result === true) {
+                dispatch({
+                    type: SNACKBAR_OPEN,
+                    open: true,
+                    message: 'Client Assessment has been successfully added.',
+                    variant: 'alert',
+                    alertSeverity: 'success', // error , success, warning
+                    anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                    transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                    close: true,
+                })
+            } else {
+                dispatch({
+                    type: SNACKBAR_OPEN,
+                    open: true,
+                    message: 'Client Assessment could not be added. Please try again',
+                    variant: 'alert',
+                    alertSeverity: 'error', // error , success, warning
+                    anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                    transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                    close: true,
+                })
+            }
+        } else {
+            dispatch({
+                type: SNACKBAR_OPEN,
+                open: true,
+                message: 'Client Assessment could not be added. Please try again',
+                variant: 'alert',
+                alertSeverity: 'error', // error , success, warning
+                anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                close: true,
+            })
+        }
+
+        setProgressLoader(false);
+    }
+
 
     const setAssessmentTypeOptions = () => {
         tabsOption.length = 0;
@@ -208,7 +331,7 @@ const ClientAssessment = () => {
             <Grid item xs={12}>
                 <MainCard title='Client Assessment' content={false}>
                     <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} lg={4}>
+                        <Grid item xs={6} lg={3}>
                             <CardContent>
                                 <Tabs
                                     value={value}
@@ -244,7 +367,7 @@ const ClientAssessment = () => {
                                 </Tabs>
                             </CardContent>
                         </Grid>
-                        <Grid item xs={12} lg={8}>
+                        <Grid item xs={12} lg={9}>
                             <CardContent className={classes.cardPanels}>
                                 <TabPanel value={value} index={0}>
                                     <ClientSelect/>
@@ -270,13 +393,28 @@ const ClientAssessment = () => {
                                 )}
                             </Grid>
                             <Grid item>
-                                {value < 3 && (
+                                {value < (tabsOption.length - 1) && (
                                     <AnimateButton>
                                         <Button variant='contained' size='large'
                                                 onClick={(e) => handleChange(e, 1 + parseInt(value, 10))}>
                                             Continue
                                         </Button>
                                     </AnimateButton>
+                                )}
+                                {value === (tabsOption.length - 1) && (
+                                    <Grid container justify="space-around" spacing={gridSpacing}>
+                                        <Grid item>
+                                            <ProgressCircularControlled display={progressLoader}/>
+                                        </Grid>
+                                        <Grid item>
+                                            <AnimateButton>
+                                                <Button variant='contained' size='large'
+                                                        onClick={handleSubmit}>
+                                                    Save
+                                                </Button>
+                                            </AnimateButton>
+                                        </Grid>
+                                    </Grid>
                                 )}
                             </Grid>
                         </Grid>

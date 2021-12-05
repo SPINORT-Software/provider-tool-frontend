@@ -92,7 +92,7 @@ const ClientReasessment = () => {
 
             <Grid item xs={12} sm={12} lg={8} md={8}>
                 <MaskedInput
-                    mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
+                    mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
                     className="form-control"
                     label="Total time spent"
                     guide={false}

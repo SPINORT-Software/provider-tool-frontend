@@ -22,7 +22,6 @@ const accountReducer = (state, action) => {
             };
         }
         case LOGOUT: {
-            console.log("Logout 25")
             return {
                 ...state,
                 isLoggedIn: false,

@@ -58,7 +58,7 @@ const ExistingExtraMural = () => {
                                        providerSpecificFormAction={setExistingEMProviderSpecificFormUUID}/>
             </Grid>
 
-            <Grid item xs={12} sm={10} md={10} lg={10}>
+            <Grid item xs={12} sm={10} md={10} lg={12}>
                 <AssessmentForms documentType='TYPE_CASE_MANAGER_ASSESSMENT'
                                  generalAssessmentFormAction={setExistingEMGeneralAssessmentFormUUID}/>
             </Grid>

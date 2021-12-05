@@ -39,6 +39,7 @@ const Details = () => {
                     className="form-control"
                     label="Date"
                     guide={false}
+                    placeholder="YYYY-MM-DD"
                     onChange={formik.handleChange}
                     name='daily_workload_date'
                     id="daily_workload_date"
@@ -56,7 +57,7 @@ const Details = () => {
                         <Grid container spacing={gridSpacing}>
                             <Grid item xs={8} sm={8} lg={8} md={8}>
                                 <MaskedInput
-                                    mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
+                                    mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
                                     className="form-control"
                                     label="Service Recipient Travel"
                                     guide={false}
@@ -71,7 +72,7 @@ const Details = () => {
                             </Grid>
                             <Grid item xs={8} sm={8} lg={8} md={8}>
                                 <MaskedInput
-                                    mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
+                                    mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
                                     className="form-control"
                                     label="Functional Center"
                                     guide={false}

@@ -36,9 +36,9 @@ import VpnKeyTwoToneIcon from '@material-ui/icons/VpnKeyTwoTone';
 import {SNACKBAR_OPEN} from 'store/actionTypes';
 
 import caseManagerApi from 'store/api-calls/case-manager';
-import {listReferralsByReviewBoardID} from "store/actions/reviewBoard/referralActions";
 
 import ProgressCircularControlled from 'views/ui/ProgressCircularControlled';
+import {setDailyWorkLoadDetails, resetDailyWorkLoad} from "store/actions/caseManager/dailyWorkloadActions";
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -136,39 +136,97 @@ const tabsOption = [
 const DailyWorkload = () => {
     const classes = useStyles();
     const customization = useSelector((state) => state.customization);
+
     const [value, setValue] = React.useState(0);
     const [progressLoader, setProgressLoader] = React.useState(false);
     const dispatch = useDispatch();
+
+    const dailyWorkloadData = useSelector(state => state.caseManager.dailyWorkload.add)
+
+    const userAuthContext = React.useContext(JWTContext)
+    const {
+        user: {
+            user_type_pk: caseManagerUUID
+        }
+    } = userAuthContext;
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    const createDailyWorkload = async () => (caseManagerApi.createDailyWorkload())
-
     useEffect(() => {
-        setProgressLoader(true);  // Call this to show the loader for the current tab
-
-        dispatch({
-            type: SNACKBAR_OPEN,
-            open: true,
-            message: 'This is default message',
-            variant: 'alert',
-            alertSeverity: 'success', // error , success, warning
-            anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
-            transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
-            close: false
-        })
-
-        // console.log(createDailyWorkload())
+        dispatch(setDailyWorkLoadDetails({
+            casemanager: caseManagerUUID
+        }))
     }, []);
 
-    const userAuthContext = React.useContext(JWTContext)
+    const handleWorkloadSubmit = async (e) => {
+        setProgressLoader(true);  // Call this to show the loader for the current tab
+        dispatch(setDailyWorkLoadDetails({
+            casemanager: caseManagerUUID
+        }))
+        const response = await caseManagerApi.createDailyWorkload(dailyWorkloadData);
+        setProgressLoader(false);
+
+        if ('result' in response === true) {
+            if (response.result === true) {
+                dispatch({
+                    type: SNACKBAR_OPEN,
+                    open: true,
+                    message: 'Your Daily Workload entry has been created.',
+                    variant: 'alert',
+                    alertSeverity: 'success', // error , success, warning
+                    anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                    transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                    close: true,
+                })
+                dispatch(resetDailyWorkLoad())
+            } else {
+                dispatch({
+                    type: SNACKBAR_OPEN,
+                    open: true,
+                    message: 'Your Daily workload could not be added. Please try again',
+                    variant: 'alert',
+                    alertSeverity: 'error', // error , success, warning
+                    anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                    transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                    close: true,
+                })
+            }
+        }
+
+        if ('errors' in response === true) {
+            dispatch({
+                type: SNACKBAR_OPEN,
+                open: true,
+                message: 'Please provide all the fields with valid values and try submit again.',
+                variant: 'alert',
+                alertSeverity: 'error', // error , success, warning
+                anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                close: true,
+            })
+        }
+
+        if ('status' in response === true && response.status > 200) {
+            dispatch({
+                type: SNACKBAR_OPEN,
+                open: true,
+                message: 'Please provide all the fields with valid values and try submit again.',
+                variant: 'alert',
+                alertSeverity: 'error', // error , success, warning
+                anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                close: true,
+            })
+        }
+    }
 
     return (
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
-                <MainCard title='Daily Workload ' secondary={<ProgressCircularControlled display={progressLoader} />} content={false}>
+                <MainCard title='Daily Workload ' secondary={<ProgressCircularControlled display={progressLoader}/>}
+                          content={false}>
                     <Grid container spacing={gridSpacing}>
                         <Grid item xs={12} lg={4}>
                             <CardContent>
@@ -256,8 +314,8 @@ const DailyWorkload = () => {
                                 {value > 2 && (
                                     <AnimateButton>
                                         <Button color='secondary' variant='contained' size='large'
-                                                onClick={(e) => handleChange(e, 1 + parseInt(value, 10))}>
-                                            Submit
+                                                onClick={handleWorkloadSubmit}>
+                                            Submit <ProgressCircularControlled display={progressLoader}/>
                                         </Button>
                                     </AnimateButton>
                                 )}

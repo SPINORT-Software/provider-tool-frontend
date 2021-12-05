@@ -1,5 +1,7 @@
 import * as actionTypes from 'store/actionTypes';
 import {
+    CASE_MANAGER_SET_CLIENT_ASSESSMENT_CASEMANAGER_DETAIL,
+    CASE_MANAGER_SET_CLIENT_ASSESSMENT_CLIENT_DETAIL,
     CASE_MANAGER_SET_CLIENT_ASSESSMENT_SET_EXISTINGEM_GENERAL_ASSESSMENT_FORM_UUID,
     CASE_MANAGER_SET_CLIENT_ASSESSMENT_SET_EXISTINGEM_PROVIDER_SPECIFIC_FORM_UUID,
     CASE_MANAGER_SET_CLIENT_ASSESSMENT_SET_REASSESSMENT_GENERAL_ASSESSMENT_FORM_UUID,
@@ -9,7 +11,17 @@ import {
 export const setAssessmentClientStatus = (clientStatus) => ({
     type: actionTypes.CASE_MANAGER_SET_CLIENT_ASSESSMENT_CLIENT_STATUS,
     data: clientStatus
-})
+});
+
+export const setAssessmentClientDetail = (clientUUID) => ({
+    type: actionTypes.CASE_MANAGER_SET_CLIENT_ASSESSMENT_CLIENT_DETAIL,
+    data: clientUUID
+});
+
+export const setAssessmentCaseManagerDetail = (caseManagerUUID) => ({
+    type: actionTypes.CASE_MANAGER_SET_CLIENT_ASSESSMENT_CASEMANAGER_DETAIL,
+    data: caseManagerUUID
+});
 
 
 // ########################################################################################

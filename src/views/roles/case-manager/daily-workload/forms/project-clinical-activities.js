@@ -38,7 +38,7 @@ const ProjectClinicalActivities = () => {
                     <CardContent>
 
                         <MaskedInput
-                            mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
+                            mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
                             className="form-control"
                             label="Total time spent"
                             guide={false}
@@ -58,7 +58,7 @@ const ProjectClinicalActivities = () => {
                 <SubCard title='Administration (e.g., protocol, process, meetings, etc.)'>
                     <CardContent>
                         <MaskedInput
-                            mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
+                            mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
                             className="form-control"
                             label="Total time spent"
                             guide={false}
@@ -78,7 +78,7 @@ const ProjectClinicalActivities = () => {
                 <SubCard title='Other'>
                     <CardContent>
                         <MaskedInput
-                            mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
+                            mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
                             className="form-control"
                             label="Total time spent"
                             guide={false}

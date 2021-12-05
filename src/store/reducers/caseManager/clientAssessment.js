@@ -1,4 +1,8 @@
 import * as actionTypes from 'store/actionTypes';
+import {
+    CASE_MANAGER_SET_CLIENT_ASSESSMENT_CASEMANAGER_DETAIL,
+    CASE_MANAGER_SET_CLIENT_ASSESSMENT_CLIENT_DETAIL
+} from "store/actionTypes";
 
 export const initialState = {
     list: {},
@@ -39,7 +43,7 @@ export const initialState = {
                 provider_specific_forms: [],
                 assessment_forms: [],
             }
-        }
+        },
     },
     update: {},
     retrieve: {}
@@ -58,6 +62,36 @@ const clientAssessmentReducer = (state = initialState, action) => {
                     assessment: {
                         ...state.add.assessment,
                         client_status: clientAssessmentStatus
+                    }
+                }
+            };
+        }
+
+        case actionTypes.CASE_MANAGER_SET_CLIENT_ASSESSMENT_CLIENT_DETAIL: {
+            const clientUUID = action.data
+
+            return {
+                ...state,
+                add: {
+                    ...state.add,
+                    assessment: {
+                        ...state.add.assessment,
+                        client: clientUUID
+                    }
+                }
+            };
+        }
+
+        case actionTypes.CASE_MANAGER_SET_CLIENT_ASSESSMENT_CASEMANAGER_DETAIL: {
+            const caseManagerUUID = action.data
+
+            return {
+                ...state,
+                add: {
+                    ...state.add,
+                    assessment: {
+                        ...state.add.assessment,
+                        casemanager: caseManagerUUID
                     }
                 }
             };

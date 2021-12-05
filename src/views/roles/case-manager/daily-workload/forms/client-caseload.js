@@ -52,7 +52,7 @@ const ClientCaseload = () => {
 
                             <Grid item xs={12} sm={8}>
                                 <MaskedInput
-                                    mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
+                                    mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
                                     className="form-control"
                                     label="Total time spent"
                                     guide={false}
@@ -87,7 +87,7 @@ const ClientCaseload = () => {
                             </Grid>
                             <Grid item xs={12} sm={8}>
                                 <MaskedInput
-                                    mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
+                                    mask={[/[0-9]/, /[0-9]/, ':', /[0-9]/, /[0-9]/]}
                                     className="form-control"
                                     label="Total time spent"
                                     guide={false}

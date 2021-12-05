@@ -52,7 +52,17 @@ export default {
         } catch (error) {
             return error.response;
         }
-    }
+    },
+
+    async createClientAssessment(formData) {
+        try {
+            const response = await axios.post('casemanager/client-assessment-create', formData);
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    },
+
 }
 
 
