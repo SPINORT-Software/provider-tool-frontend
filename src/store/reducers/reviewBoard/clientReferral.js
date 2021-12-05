@@ -146,4 +146,3 @@ const clientReferralReducer = (state = initialState, action) => {
 };
 
 export default clientReferralReducer;
-

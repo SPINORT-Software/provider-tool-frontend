@@ -5,7 +5,7 @@ import clientReferralReducer from './clientReferral';
 // ===========================|| COMBINE REDUCER ||=========================== //
 
 const reviewBoardReducers = combineReducers({
-    referrals: clientReferralReducer
+    personalInformation: clientReferralReducer
 });
 
 export default reviewBoardReducers;
