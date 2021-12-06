@@ -155,16 +155,6 @@ const ProfileSection = () => {
             <Chip
                 classes={{ label: classes.profileLabel }}
                 className={classes.profileChip}
-                icon={
-                    <Avatar
-                        src={User1}
-                        className={classes.headerAvatar}
-                        ref={anchorRef}
-                        aria-controls={open ? 'menu-list-grow' : undefined}
-                        aria-haspopup="true"
-                        color="inherit"
-                    />
-                }
                 label={<IconSettings stroke={1.5} size="1.5rem" color={theme.palette.primary.main} />}
                 variant="outlined"
                 ref={anchorRef}
@@ -201,11 +191,11 @@ const ProfileSection = () => {
                                             <Grid item className={classes.flex}>
                                                 <Typography variant="h4">Good Morning,</Typography>
                                                 <Typography component="span" variant="h4" className={classes.name}>
-                                                    John
+                                                    User
                                                 </Typography>
                                             </Grid>
                                             <Grid item>
-                                                <Typography variant="subtitle2">Project Admin</Typography>
+                                                <Typography variant="subtitle2">Case Manager</Typography>
                                             </Grid>
                                         </Grid>
                                         <OutlinedInput

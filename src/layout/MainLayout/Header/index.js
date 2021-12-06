@@ -65,10 +65,11 @@ const Header = ({ handleLeftDrawerToggle }) => {
             <div className={classes.grow} />
             <div className={classes.grow} />
 
-            {/* live customization & localization */}
+            {/* live customization & localization
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                 <LocalizationSection />
             </Box>
+             */}
 
             {/* notification & profile */}
             <NotificationSection />
