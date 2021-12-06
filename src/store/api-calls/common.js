@@ -42,6 +42,19 @@ export default {
             return error.response;
         }
     },
+
+    async searchClientByEmail(searchEmail) {
+        try {
+            const response = await axios.get('core/search-client-email', {
+                params: {
+                    search: searchEmail
+                }
+            });
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    },
 }
 
 

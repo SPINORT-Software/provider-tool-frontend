@@ -13,11 +13,14 @@ import {useFormik, withFormik} from 'formik';
 import * as Yup from 'yup';
 import {useSelector, useDispatch} from "react-redux";
 import {setReferralDetails} from 'store/actions/reviewBoard/referralActions';
-
+import commonApi from 'store/api-calls/common';
+import ProgressCircularControlled from "../../../../ui/ProgressCircularControlled";
+import {SNACKBAR_OPEN} from "store/actionTypes";
 
 const ClientDetail = () => {
     const referralData = useSelector(state => state.reviewBoard.referrals.add.referralData)
     const dispatch = useDispatch()
+    const [progressLoader, setProgressLoader] = React.useState(false);
 
     const formik = useFormik({
         initialValues: {
@@ -34,9 +37,31 @@ const ClientDetail = () => {
         }
     });
 
+    const checkIfClientEmailExists = async (e) => {
+        setProgressLoader(true);
+        const email = e.target.value
+
+        if (email && email.length) {
+            const clients = await commonApi.searchClientByEmail(email)
+
+            if(clients.length > 0){
+                dispatch({
+                    type: SNACKBAR_OPEN,
+                    open: true,
+                    message: 'Client already exists with that email address',
+                    variant: 'alert',
+                    alertSeverity: 'error', // error , success, warning
+                    anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                    transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                })
+            }
+        }
+        setProgressLoader(false);
+    }
+
     return (<Grid container spacing={gridSpacing}>
         <Grid item xs={12} sm={12} lg={12} md={12}>
-            <SubCard title='Client Details'>
+            <SubCard title='Client Details' secondary={<ProgressCircularControlled display={progressLoader}/>}>
                 <CardContent>
                     <form onSubmit={formik.handleSubmit} noValidate>
                         <Grid container spacing={gridSpacing}>
@@ -66,6 +91,7 @@ const ClientDetail = () => {
                                                    label='Email'
                                                    value={formik.values.client_email}
                                                    onChange={formik.handleChange}
+                                                   onBlur={checkIfClientEmailExists}
                                         />
                                     </Grid>
                                 </Grid>

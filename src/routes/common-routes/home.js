@@ -7,11 +7,10 @@ import AuthGuard from 'utils/route-guard/AuthGuard';
 
 
 // application routing
-const AppChat = Loadable(lazy(() => import('views/chat')));
 const Dashboard = Loadable(lazy(() => import('views/dashboard')));
 
-const CommonRoutes = {
-    path: '/',
+const HomeRoute = {
+    path: '',
     element: (
         <AuthGuard>
             <MainLayout/>
@@ -19,18 +18,10 @@ const CommonRoutes = {
     ),
     children: [
         {
-            path: '/messaging',
-            element: <AppChat/>
-        },
-        {
-            path: '/dashboard',
-            element: <Dashboard/>
-        },
-        {
             path: '/',
             element: <Dashboard/>
         },
     ]
 };
 
-export default CommonRoutes;
+export default HomeRoute;

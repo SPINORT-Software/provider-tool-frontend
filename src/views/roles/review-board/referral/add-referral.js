@@ -26,6 +26,7 @@ import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
 import DescriptionTwoToneIcon from '@material-ui/icons/DescriptionTwoTone';
 import CreditCardTwoToneIcon from '@material-ui/icons/CreditCardTwoTone';
 import VpnKeyTwoToneIcon from '@material-ui/icons/VpnKeyTwoTone';
+import ProgressCircularControlled from "../../../ui/ProgressCircularControlled";
 
 
 
@@ -131,27 +132,16 @@ const ReviewBoardReferralCreate = () => {
     const classes = useStyles();
     const customization = useSelector((state) => state.customization);
     const [value, setValue] = React.useState(0);
+    const [progressLoader, setProgressLoader] = React.useState(false);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    const clientFormik = useFormik({
-        initialValues: {
-            referral_client_first_name: '',
-            referral_client_last_name: '',
-            referral_client_email: ''
-        },
-
-        onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
-        }
-    });
-
     return (
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
-                <MainCard title='Client Referral' content={false}>
+                <MainCard title='Client Referral' content={false} secondary={<ProgressCircularControlled display={progressLoader}/>}>
                     <Grid container spacing={gridSpacing}>
                         <Grid item xs={12} lg={3}>
                             <CardContent>
@@ -204,7 +194,7 @@ const ReviewBoardReferralCreate = () => {
                                     <CasePresentationForm />
                                 </TabPanel>
                                 <TabPanel value={value} index={4}>
-                                    <CaseManagementDecision />
+                                    <CaseManagementDecision setProgressLoader={setProgressLoader} />
                                 </TabPanel>
                             </CardContent>
                         </Grid>

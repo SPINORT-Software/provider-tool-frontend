@@ -24,6 +24,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setReferralDetails} from "store/actions/reviewBoard/referralActions";
 import reviewBoardApi from 'store/api-calls/review-board';
 import JWTContext from "contexts/JWTContext";
+import {SNACKBAR_OPEN} from "../../../../../store/actionTypes";
 
 const useStyles = makeStyles((theme) => ({
     card: {
@@ -33,13 +34,15 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const CaseManagementDecision = () => {
+const CaseManagementDecision = ({setProgressLoader}) => {
     const classes = useStyles();
+
     const referralData = useSelector(state => state.reviewBoard.referrals.add.referralData)
     const referralForms = useSelector(state => state.reviewBoard.referrals.add.referralForms)
     const dispatch = useDispatch()
     const jwtContext = React.useContext(JWTContext);
     const {user} = jwtContext;
+
 
     const formik = useFormik({
         initialValues: {
@@ -53,14 +56,39 @@ const CaseManagementDecision = () => {
             }
             dispatch(setReferralDetails(valuesData))
         },
-
     });
 
     const submitReferral = async event => {
+        setProgressLoader(true)
         // eslint-disable-next-line camelcase
         const {user_type_pk} = user;
         const response = await reviewBoardApi.createReferral(referralData, referralForms, user_type_pk)
-        console.log(response)
+
+        if (response && 'result' in response) {
+            if (response.result === true) {
+                dispatch({
+                    type: SNACKBAR_OPEN,
+                    open: true,
+                    message: 'Successfully created client referral',
+                    variant: 'alert',
+                    alertSeverity: 'success', // error , success, warning
+                    anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                    transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                })
+            }
+        } else {
+            dispatch({
+                type: SNACKBAR_OPEN,
+                open: true,
+                message: 'Failed to create client referral. Please try again',
+                variant: 'alert',
+                alertSeverity: 'error', // error , success, warning
+                anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+            })
+        }
+
+        setProgressLoader(false)
     }
 
     const saveAndContinueReferral = event => {

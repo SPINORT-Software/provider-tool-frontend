@@ -30,6 +30,9 @@ const Landing = () => {
     return (
         <>
             <div id="home" className={classes.header}>
+                <div>
+                    Home Index
+                </div>
                 <AppBar />
             </div>
         </>

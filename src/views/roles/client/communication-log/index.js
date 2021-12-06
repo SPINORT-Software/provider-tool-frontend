@@ -29,6 +29,7 @@ import ProgressCircularControlled from 'views/ui/ProgressCircularControlled';
 import setVisitorLogDetail from "store/actions/client/visitorLogActions";
 import MaskedInput from 'react-text-mask';
 import setCommunicationLogDetail from "../../../../store/actions/client/communicationLogActions";
+import clientApi from "../../../../store/api-calls/client";
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -113,26 +114,13 @@ const CommunicationLog = () => {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-    useEffect(() => {
-        setProgressLoader(true);  // Call this to show the loader for the current tab
 
-        dispatch({
-            type: SNACKBAR_OPEN,
-            open: true,
-            message: 'This is default message',
-            variant: 'alert',
-            alertSeverity: 'success', // error , success, warning
-            anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
-            transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
-            close: false
-        })
-
-        // console.log(createDailyWorkload())
-    }, []);
     const userAuthContext = React.useContext(JWTContext)
-    const {user: {
-        user_type_pk: clientUUID
-    }} = userAuthContext;
+    const {
+        user: {
+            user_type_pk: clientUUID
+        }
+    } = userAuthContext;
 
     const formik = useFormik({
         initialValues: {
@@ -146,6 +134,37 @@ const CommunicationLog = () => {
             dispatch(setCommunicationLogDetail(values))
         }
     });
+
+    const submitCommunicationLog = async (e) => {
+        setProgressLoader(true);
+        communicationLogData.person_completing = communicationLogData.person_completing.id
+        const response = await clientApi.createCommunicationLog(communicationLogData);
+
+        if (response && 'status' in response) {
+            if (response.status === true) {
+                dispatch({
+                    type: SNACKBAR_OPEN,
+                    open: true,
+                    message: 'Communication Log successfully created',
+                    variant: 'alert',
+                    alertSeverity: 'success', // error , success, warning
+                    anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                    transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                })
+            }
+        } else {
+            dispatch({
+                type: SNACKBAR_OPEN,
+                open: true,
+                message: 'Communication Log could not be created. Please try again',
+                variant: 'alert',
+                alertSeverity: 'error', // error , success, warning
+                anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+            })
+        }
+        setProgressLoader(false);
+    }
 
     return (
         <Grid container spacing={gridSpacing}>
@@ -185,7 +204,7 @@ const CommunicationLog = () => {
                                             onChange={(e, value) => {
                                                 formik.setFieldValue('person_completing', value)
                                             }}
-                                            renderInput={(params) => <TextField {...params} label="Organization"/>}
+                                            renderInput={(params) => <TextField {...params} label="Person Completing"/>}
                                         />
                                     </Grid>
 
@@ -228,7 +247,7 @@ const CommunicationLog = () => {
                             <Grid item alignContent='end'>
                                 <AnimateButton>
                                     <Button color='secondary' variant='contained' size='large'
-                                            onClick={(e) => handleChange(e, 1 + parseInt(value, 10))}>
+                                            onClick={submitCommunicationLog}>
                                         Submit
                                     </Button>
                                 </AnimateButton>

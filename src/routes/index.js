@@ -6,9 +6,10 @@ import ReviewBoardRoutes from './role-based-routes/ReviewBoardRoutes';
 import ClientRoutes from './role-based-routes/ClientRoutes';
 import LoginRoutes from './LoginRoutes';
 import CommonRoutes from './common-routes';
+import HomeRoute from './common-routes/home';
 
 // ===========================|| ROUTING RENDER ||=========================== //
 
 export default function ThemeRoutes() {
-    return useRoutes([LoginRoutes, CaseManagerRoutes, ReviewBoardRoutes, ClientRoutes, CommonRoutes]);
+    return useRoutes([LoginRoutes, CaseManagerRoutes, ReviewBoardRoutes, ClientRoutes, CommonRoutes, HomeRoute]);
 }
