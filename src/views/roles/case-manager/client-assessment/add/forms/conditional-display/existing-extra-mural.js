@@ -7,7 +7,7 @@ import { CardContent, Checkbox, FormControlLabel, Grid, MenuItem, TextField } fr
 import { gridSpacing } from 'store/constant';
 import SubCard from 'ui-component/cards/SubCard';
 import MaskedInput from 'react-text-mask';
-import FileInput from '../../../../common/file-input';
+import FileInput from 'views/roles/common/file-input';
 
 import {useFormik} from "formik";
 import {useDispatch, useSelector} from "react-redux";
@@ -16,8 +16,8 @@ import {
     setExistingEMProviderSpecificFormUUID,
     setExistingEMGeneralAssessmentFormUUID,
 } from "store/actions/caseManager/clientAssessmentActions";
-import ProviderSpecificForms from "../../../../common/provider-specific-forms";
-import AssessmentForms from "../../../../common/assessment-forms";
+import ProviderSpecificForms from "views/roles/common/provider-specific-forms";
+import AssessmentForms from "views/roles/common/assessment-forms";
 
 const ExistingExtraMural = () => {
     const clientAssessmentTypeData = useSelector(state => state.caseManager.clientAssessment.add.assessment_type_data)

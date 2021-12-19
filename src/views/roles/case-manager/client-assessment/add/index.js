@@ -24,7 +24,7 @@ import VpnKeyTwoToneIcon from '@material-ui/icons/VpnKeyTwoTone';
 import {setDailyWorkLoadDetails} from "store/actions/caseManager/dailyWorkloadActions";
 import caseManagerApi from "store/api-calls/case-manager";
 import ProgressCircularControlled from 'views/ui/ProgressCircularControlled';
-import {SNACKBAR_OPEN} from "../../../../store/actionTypes";
+import {SNACKBAR_OPEN} from "store/actionTypes";
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -103,9 +103,11 @@ const ClientAssessment = () => {
     const customization = useSelector((state) => state.customization);
     const [value, setValue] = React.useState(0);
     const [progressLoader, setProgressLoader] = React.useState(false);
+
+    // Redux
     const clientAssessmentStore = useSelector(state => state.caseManager.clientAssessment)
     const dispatch = useDispatch();
-    const clientAssessmentTypeStatus = clientAssessmentStore.add.assessment.client_status;
+    const clientAssessmentTypeStatus = clientAssessmentStore.add.assessment.assessment_status;
     const clientAssessmentAddData = clientAssessmentStore.add;
 
     const handleChange = (event, newValue) => {

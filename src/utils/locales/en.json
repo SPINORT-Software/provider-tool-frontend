@@ -141,6 +141,26 @@
     "change": "Change Language",
     "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiatnulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollitanim id est laborum.",
 
-    "Referral Activity": "Referral Activity"
+    "Referral Activity": "Referral Activity",
+    "daily_workload_date": "Date",
+    "service_recipient_travel": "Service Recipient Travel",
+    "functional_center": "Functional Center",
 
+    "workload_details": "Workload Details",
+    "workload-caseload": "Client Caseload",
+    "workload-project": "Project Related Clinical Activities",
+    "workload-research": "Research Related Activities",
+
+    "client_caseload_casemanagement_number_clients": "Caseload Number of Clients",
+    "client_caseload_casemanagement_total_time": "Caseload Total Time Spent",
+    "client_caseload_regular_number_clients": "Caseload Regular Number of Clients ",
+    "client_caseload_regular_total_time": "Caseload Regular Total Time Spent",
+
+    "project_case_management_total_time": "Project Total Time Spent",
+    "project_case_management_admin_total_time": "Administration Total Time",
+    "project_case_management_admin_other": "Administration (Other)",
+
+    "research_related_meetings_total_time": "Research Meetings Total Time Spent",
+    "research_related_administration_total_time": "Administration (e.g., data gathering, sharing institutional documents, etc.)",
+    "research_related_other": "Research Meetings Other Time Spent"
 }

@@ -1,16 +1,9 @@
 import * as actionTypes from 'store/actionTypes';
-import {
-    CASE_MANAGER_SET_CLIENT_ASSESSMENT_CASEMANAGER_DETAIL,
-    CASE_MANAGER_SET_CLIENT_ASSESSMENT_CLIENT_DETAIL,
-    CASE_MANAGER_SET_CLIENT_ASSESSMENT_SET_EXISTINGEM_GENERAL_ASSESSMENT_FORM_UUID,
-    CASE_MANAGER_SET_CLIENT_ASSESSMENT_SET_EXISTINGEM_PROVIDER_SPECIFIC_FORM_UUID,
-    CASE_MANAGER_SET_CLIENT_ASSESSMENT_SET_REASSESSMENT_GENERAL_ASSESSMENT_FORM_UUID,
-    CASE_MANAGER_SET_CLIENT_ASSESSMENT_SET_REASSESSMENT_PROVIDER_SPECIFIC_FORM_UUID
-} from "store/actionTypes";
 
-export const setAssessmentClientStatus = (clientStatus) => ({
+
+export const setAssessmentClientStatus = (assessmentStatus) => ({
     type: actionTypes.CASE_MANAGER_SET_CLIENT_ASSESSMENT_CLIENT_STATUS,
-    data: clientStatus
+    data: assessmentStatus
 });
 
 export const setAssessmentClientDetail = (clientUUID) => ({
@@ -115,4 +108,21 @@ export const setReassessmentEMGeneralAssessmentFormUUID = (formDocumentUUID) => 
     type: actionTypes.CASE_MANAGER_SET_CLIENT_ASSESSMENT_SET_REASSESSMENT_GENERAL_ASSESSMENT_FORM_UUID,
     data: formDocumentUUID
 });
+
+
+export const listCaseManagerClientAssessment = (responseData) => ({
+    type: actionTypes.CASE_MANAGER_LIST_CLIENT_ASSESSMENT_FOR_CASE_MANAGER,
+    data: {
+        ...responseData
+    }
+})
+
+
+export const setRetrievedClientAssessmentData = (retrievedAssessmentData, assessmentUUID) => ({
+    type: actionTypes.CASE_MANAGER_SET_RETRIEVED_CLIENT_ASSESSMENT_DATA,
+    data: {
+        retrievedAssessmentData,
+        assessmentUUID
+    }
+})
 

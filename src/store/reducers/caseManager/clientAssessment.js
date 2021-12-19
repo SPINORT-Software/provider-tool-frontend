@@ -1,14 +1,11 @@
 import * as actionTypes from 'store/actionTypes';
-import {
-    CASE_MANAGER_SET_CLIENT_ASSESSMENT_CASEMANAGER_DETAIL,
-    CASE_MANAGER_SET_CLIENT_ASSESSMENT_CLIENT_DETAIL
-} from "store/actionTypes";
+import {CASE_MANAGER_SET_RETRIEVED_CLIENT_ASSESSMENT_DATA} from "store/actionTypes";
 
 export const initialState = {
     list: {},
     add: {
         assessment: {
-            client_status: false,
+            assessment_status: false,
             casemanager: "",
             client: ""
         },
@@ -61,7 +58,7 @@ const clientAssessmentReducer = (state = initialState, action) => {
                     ...state.add,
                     assessment: {
                         ...state.add.assessment,
-                        client_status: clientAssessmentStatus
+                        assessment_status: clientAssessmentStatus
                     }
                 }
             };
@@ -273,6 +270,32 @@ const clientAssessmentReducer = (state = initialState, action) => {
                                 generalAssessmentFormUUID
                             ]
                         }
+                    }
+                }
+            }
+        }
+
+        case actionTypes.CASE_MANAGER_LIST_CLIENT_ASSESSMENT_FOR_CASE_MANAGER: {
+            const clientAssessmentlistData = action.data;
+
+            return {
+                ...state,
+                list: {
+                    ...state.list,
+                    ...clientAssessmentlistData
+                }
+            }
+        }
+
+        case actionTypes.CASE_MANAGER_SET_RETRIEVED_CLIENT_ASSESSMENT_DATA: {
+            const {assessmentUUID, retrievedAssessmentData} = action.data
+
+            return {
+                ...state,
+                retrieve: {
+                    ...state.retrieve,
+                    [assessmentUUID]: {
+                        ...retrievedAssessmentData
                     }
                 }
             }

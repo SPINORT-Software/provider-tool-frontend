@@ -10,6 +10,8 @@ import axios from './axios-client';
 
 export default {
     async createDailyWorkload(formData) {
+        // Modify the format of the date to YYYY-MM-DD
+        formData.daily_workload_date =  String(formData.daily_workload_date.toISOString().slice(0, 10));
         try {
             const response = await axios.post('casemanager/workload', formData);
             return response.data;
@@ -21,7 +23,7 @@ export default {
     async listDailyWorkloadByCaseManagerID(caseManagerID) {
         try {
             const response = await axios.get(`casemanager/${caseManagerID}/workload`);
-            return response.data.data.results;
+            return response.data;
         } catch (error) {
             return error.response;
         }
@@ -45,9 +47,10 @@ export default {
         }
     },
 
+
     async updateDailyWorkload(workloadID, formData) {
         try {
-            const response = await axios.put(`casemanager/workload/${workloadID}`);
+            const response = await axios.put(`casemanager/workload/${workloadID}`, formData);
             return response.data;
         } catch (error) {
             return error.response;
@@ -62,6 +65,25 @@ export default {
             return error.response;
         }
     },
+
+    async listClientAssessmentByCaseManagerID(caseManagerID) {
+        try {
+            const response = await axios.get(`casemanager/${caseManagerID}/client-assessment`);
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    },
+
+    async retrieveClientAssessmentData(assessmentUUID) {
+        try {
+            const response = await axios.get(`casemanager/client-assessment/${assessmentUUID}`);
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    },
+
 
 }
 

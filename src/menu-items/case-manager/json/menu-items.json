@@ -11,8 +11,8 @@
             "formatted_title": "Daily Workload",
             "uuid": "2e454e63-aa89-4194-a9fb-507e2ff94a42",
             "type": "item",
-            "url": "workload",
-            "breadcrumbs": false
+            "url": "workload/list",
+            "breadcrumbs": true
           }
         ]
       },
@@ -26,7 +26,7 @@
             "type": "item",
             "formatted_title": "Client Assessment",
             "uuid": "d90d44e8-480a-4748-9844-e03ff6b03647",
-            "url": "/assessment",
+            "url": "/assessment/list",
             "breadcrumbs": false
           }
         ]

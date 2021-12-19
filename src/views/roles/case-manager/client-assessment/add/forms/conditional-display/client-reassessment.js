@@ -6,17 +6,16 @@ import {CardContent, Checkbox, FormControlLabel, Grid, MenuItem, TextField} from
 // project imports
 import {gridSpacing} from 'store/constant';
 import SubCard from 'ui-component/cards/SubCard';
-import ProviderSpecificForms from '../../../../common/provider-specific-forms';
-import AssessmentForms from '../../../../common/assessment-forms';
+import ProviderSpecificForms from 'views/roles/common/provider-specific-forms';
+import AssessmentForms from 'views/roles/common/assessment-forms';
 import MaskedInput from 'react-text-mask';
 
-// Redux
 import {useFormik} from "formik";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    setNewEMAssessmentDetails,
-    setNewEMProviderSpecificFormUUID,
-    setNewEMGeneralAssessmentFormUUID
+    setReassessmentEMProviderSpecificFormUUID,
+    setReassessmentEMGeneralAssessmentFormUUID,
+    setReAssessmentDetails
 } from "store/actions/caseManager/clientAssessmentActions";
 
 const modeOfAssessmentSelectList = [
@@ -54,26 +53,28 @@ const modeOfAssessmentSelectList = [
     }
 ];
 
-const NewExtraMural = () => {
+const ClientReasessment = () => {
+    const clientAssessmentTypeData = useSelector(state => state.caseManager.clientAssessment.add.assessment_type_data)
+    const reAssessmentData = clientAssessmentTypeData.reassessment.data
 
-    const assessmentData = useSelector(state => state.caseManager.clientAssessment.add.assessment_type_data)
     const dispatch = useDispatch()
 
     const formik = useFormik({
         initialValues: {
-            date: assessmentData.date,
-            total_time: assessmentData.total_time,
-            mode_of_assessment: assessmentData.mode_of_assessment
+            date: reAssessmentData.date,
+            reason: reAssessmentData.reason,
+            total_time: reAssessmentData.total_time,
+            mode_of_assessment: reAssessmentData.mode_of_assessment
         },
         validate: values => {
-            dispatch(setNewEMAssessmentDetails(values));
+            dispatch(setReAssessmentDetails(values));
         }
     });
 
-
     return (
         <Grid container spacing={gridSpacing}>
-            <Grid item xs={12} sm={12} lg={6} md={6}>
+
+            <Grid item xs={12} sm={12} lg={8} md={8}>
                 <MaskedInput
                     mask={[/[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, '-', /[0-9]/, /[0-9]/, '-', /[0-9]/, /[0-9]/]}
                     className="form-control"
@@ -103,6 +104,20 @@ const NewExtraMural = () => {
 
                     render={(ref, props) => <TextField fullWidth inputRef={ref} {...props} defaultValue=""/>}
                 />
+
+            </Grid>
+
+            <Grid item xs={12} sm={12} lg={8} md={8}>
+                <TextField type='text'
+                           fullWidth
+                           label='Reason'
+                           defaultValue=''
+
+                           onChange={formik.handleChange}
+                           name='reason'
+                           id="reason"
+                           value={formik.values.reason}
+                />
             </Grid>
 
             <Grid item xs={12} sm={8}>
@@ -125,28 +140,21 @@ const NewExtraMural = () => {
             </Grid>
 
             <Grid item xs={12} sm={12} lg={8} md={8}>
-                <TextField
-                    type='text'
-                    fullWidth
-                    label='Other'
-                    defaultValue=''
-
-                    id='new-extra-mural-mode-of-assessment-other'
-                />
+                <TextField id='client-reassessment-mode-of-assessment-other' type='text' fullWidth label='Other'
+                           defaultValue=''/>
             </Grid>
 
             <Grid item xs={12} sm={8} lg={12}>
                 <ProviderSpecificForms documentType='TYPE_CASE_MANAGER_ASSESSMENT'
-                                       providerSpecificFormAction={setNewEMProviderSpecificFormUUID}/>
+                                       providerSpecificFormAction={setReassessmentEMProviderSpecificFormUUID}/>
             </Grid>
 
-            <Grid item xs={12} lg={12} sm={12}>
+            <Grid item xs={12} sm={10} md={10} lg={12}>
                 <AssessmentForms documentType='TYPE_CASE_MANAGER_ASSESSMENT'
-                                 generalAssessmentFormAction={setNewEMGeneralAssessmentFormUUID}/>
+                                 generalAssessmentFormAction={setReassessmentEMGeneralAssessmentFormUUID}/>
             </Grid>
-
         </Grid>
     );
 };
 
-export default NewExtraMural;
+export default ClientReasessment;
