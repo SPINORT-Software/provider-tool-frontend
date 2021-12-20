@@ -1,13 +1,10 @@
 import React from 'react';
 
 // material-ui
-import { CardContent, Checkbox, FormControlLabel, Grid, MenuItem, TextField } from '@material-ui/core';
+import {Grid, MenuItem, TextField} from '@material-ui/core';
 
 // project imports
-import { gridSpacing } from 'store/constant';
-import SubCard from 'ui-component/cards/SubCard';
-import AssessmentForms from '../../../common/assessment-forms';
-import MaskedInput from 'react-text-mask';
+import {gridSpacing} from 'store/constant';
 
 const typeOfTherapeuticInterventionList = [
     {
@@ -33,27 +30,19 @@ const typeOfTherapeuticInterventionList = [
 
 ];
 
-const TypeOfTherapeuticInterventions = () => {
-    const [city, setCity] = React.useState('1');
-    const handleChangeCity = (event) => {
-        setCity(event.target.value);
-    };
-
-    return (
-        <Grid container spacing={gridSpacing}>
-            <Grid item xs={12} sm={8}>
-                <TextField id='client-intervention-mode-of-assessment' select label='Mode of Therapeutic Intervention'
-                           value={city} fullWidth onChange={handleChangeCity}>
-                    {typeOfTherapeuticInterventionList.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
-            </Grid>
-
+const TypeOfTherapeuticInterventions = ({value, onChangeHandler, id}) => (
+    <Grid container spacing={gridSpacing}>
+        <Grid item xs={12} sm={12}>
+            <TextField id={id} name={id} select label='Mode of Therapeutic Intervention'
+                       value={value} fullWidth onChange={onChangeHandler}>
+                {typeOfTherapeuticInterventionList.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                    </MenuItem>
+                ))}
+            </TextField>
         </Grid>
-    );
-};
+    </Grid>
+);
 
 export default TypeOfTherapeuticInterventions;

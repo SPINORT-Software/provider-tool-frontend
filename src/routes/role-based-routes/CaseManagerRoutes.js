@@ -57,7 +57,7 @@ const CaseManagerRoutes = {
         },
         {
             path: '/assessment/:assessment_id/edit',
-            element: <ClientAssessmentDetail />
+            element: <ClientAssessmentAdd />
         },
         {
             path: '/assessment/list',

@@ -136,6 +136,11 @@ const TypeOfClinicalInterventions = () => {
                             <Autocomplete
                                 multiple
                                 options={clinicalInterventionList}
+                                onChange={(e, value) => {
+                                    formik.setFieldValue('clinical_type', value)
+                                }}
+                                name='clinical_type'
+                                id='clinical_type'
                                 getOptionLabel={(option) => option.label}
                                 renderInput={(params) => <TextField {...params} />}
                                 sx={{
@@ -143,13 +148,6 @@ const TypeOfClinicalInterventions = () => {
                                         pr: '30px !important'
                                     }
                                 }}
-
-                                onChange={(e, value) => {
-                                    formik.setFieldValue('clinical_type', value)
-                                }}
-                                value={formik.values.clinical_type}
-                                name='clinical_type'
-                                id='clinical_type'
                             />
 
                         </Grid>

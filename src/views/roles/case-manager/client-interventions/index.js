@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
@@ -16,10 +16,9 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 import { gridSpacing } from 'store/constant';
 
 // assets
-import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
 import DescriptionTwoToneIcon from '@material-ui/icons/DescriptionTwoTone';
-import CreditCardTwoToneIcon from '@material-ui/icons/CreditCardTwoTone';
-import VpnKeyTwoToneIcon from '@material-ui/icons/VpnKeyTwoTone';
+import JWTContext from "contexts/JWTContext";
+import {setInterventionCaseManagerDetail} from "store/actions/caseManager/clientInterventionActions";
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -99,11 +98,6 @@ const tabsOption = [
         label: 'Intervention Details',
         icon: <DescriptionTwoToneIcon />,
         caption: 'Fill in the intervention details'
-    },
-    {
-        label: 'Type of Clinical Intervention',
-        icon: <DescriptionTwoToneIcon />,
-        caption: 'List of clinial interventions'
     }
 ];
 
@@ -112,17 +106,27 @@ const ClientIntervention = () => {
     const classes = useStyles();
     const customization = useSelector((state) => state.customization);
     const [value, setValue] = React.useState(0);
+    const dispatch = useDispatch();
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+    const {
+        user: {
+            user_type_pk: caseManagerUUID
+        }
+    } = React.useContext(JWTContext);
+
+    useEffect(() => {
+        dispatch(setInterventionCaseManagerDetail(caseManagerUUID))
+    }, []);
 
     return (
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
                 <MainCard title='Client Intervention' content={false}>
                     <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} lg={4}>
+                        <Grid item xs={12} lg={3}>
                             <CardContent>
                                 <Tabs
                                     value={value}
@@ -164,15 +168,14 @@ const ClientIntervention = () => {
                                     <ClientSelect />
                                 </TabPanel>
                                 <TabPanel value={value} index={1}>
-                                    <InterventionDetails />
-                                </TabPanel>
-                                <TabPanel value={value} index={2}>
-                                    <TypeOfClinicalInterventions />
+                                    <InterventionDetails providerProfessionType="PROVIDER_TYPE_REGISTERED_NURSE"/>
                                 </TabPanel>
                             </CardContent>
                         </Grid>
                     </Grid>
+
                     <Divider />
+
                     <CardActions>
                         <Grid container justifyContent='space-between' spacing={0}>
                             <Grid item>
