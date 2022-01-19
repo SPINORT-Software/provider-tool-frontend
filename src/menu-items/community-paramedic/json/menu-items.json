@@ -1,0 +1,36 @@
+{
+  "roles": {
+    "community-paramedic": [
+      {
+        "id": "daily-workload",
+        "type": "group",
+        "children": [
+          {
+            "id": "daily-workload",
+            "title": "cp-daily-workload",
+            "formatted_title": "Daily Workload",
+            "uuid": "2e454e63-aa89-4194-a9fb-507e2ff94a42",
+            "type": "item",
+            "url": "cp/workload/list",
+            "breadcrumbs": true
+          }
+        ]
+      },
+      {
+        "id": "client-assessment",
+        "type": "group",
+        "children": [
+          {
+            "id": "cp-client-assessment",
+            "title": "cp-client-assessment",
+            "type": "item",
+            "formatted_title": "Client Assessment",
+            "uuid": "d90d44e8-480a-4748-9844-e03ff6b03647",
+            "url": "cp/assessment/list",
+            "breadcrumbs": false
+          }
+        ]
+      }
+    ]
+  }
+}

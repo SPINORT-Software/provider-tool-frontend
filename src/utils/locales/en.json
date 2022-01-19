@@ -132,6 +132,8 @@
 
     "daily-workload": "Daily Workload",
     "client-assessment": "Client Assessment",
+    "cp-daily-workload": "Daily Workload",
+    "cp-client-assessment": "Client Assessment",
     "client-intervention": "Client Intervention",
     "documentation": "Documentation",
     "roadmap": "Roadmap",

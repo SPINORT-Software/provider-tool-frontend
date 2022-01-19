@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import JWTContext from "contexts/JWTContext";
 import CaseManagerDashboard from "./casemanager"
+import ClientDashboard from "./client"
 
 // ===========================|| ANALYTICS DASHBOARD ||=========================== //
 
@@ -17,16 +18,19 @@ const RoleBasedDashboardIndex = () => {
         const {user_type: userType} = user;
 
         if (userType === 'TYPE_REVIEW_BOARD') {
-            return <></>
+            return <CaseManagerDashboard />;
         }
         if (userType === 'TYPE_CASE_MANAGER') {
             return <CaseManagerDashboard />;
         }
         if (userType === 'TYPE_CLIENT') {
-            return <></>
+            return <ClientDashboard />
         }
-        if (userType === 'TYPE_CLIENT') {
-            return <></>
+        if (userType === 'TYPE_COMMUNITY_PARAMEDIC') {
+            return <CaseManagerDashboard />
+        }
+        if (userType === 'TYPE_CLINICIAN') {
+            return <CaseManagerDashboard />
         }
     }
     return <></>

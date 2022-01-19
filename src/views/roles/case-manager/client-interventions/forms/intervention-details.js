@@ -182,7 +182,7 @@ const InterventionDetails = ({providerProfessionType}) => {
 
             </Grid>
 
-            <Grid item xs={12} sm={12} md={8} lg={8} >
+            <Grid item xs={12} sm={12} md={8} lg={12} >
                 <SubCard title='Mode of Clinical Intervention'>
                     <CardContent>
                         <Grid container spacing={gridSpacing}>
@@ -234,7 +234,7 @@ const InterventionDetails = ({providerProfessionType}) => {
                             getOptionLabel={(option) => option.label}
                             name='clinical_type'
                             id='clinical_type'
-                            renderInput={(params) => <TextField {...params} />}
+                            renderInput={(params) => <TextField {...params} label='Clinical Intervention'/>}
                             onChange={(e, value) => {
                                 formik.setFieldValue('clinical_type', value)
                             }}

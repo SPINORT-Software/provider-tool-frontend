@@ -7,7 +7,10 @@ import { makeStyles } from '@material-ui/styles';
 import { Box, Grid, Tab, Tabs } from '@material-ui/core';
 
 // project imports
-import MedicalDiagnosis from './medical-diagnosis';
+import Hopsitalizations from './hospitalizations';
+import Medication from './medication';
+import AmbulanceUse from './ambulance-use';
+import EmergencyRoomVisits from './emergency-room-visits';
 import ClinicalInformation from './clinical-information';
 
 import MainCard from 'ui-component/cards/MainCard';
@@ -76,19 +79,23 @@ function a11yProps(index) {
 const tabsOption = [
     {
         label: 'Clinical Information',
-        icon: <AccountCircleTwoToneIcon sx={{ fontSize: '1.3rem' }} />
+        icon: <AccountCircleTwoToneIcon sx={{ fontSize: '1.2rem' }} />
     },
     {
-        label: 'Medical Diagnosis',
-        icon: <DescriptionTwoToneIcon sx={{ fontSize: '1.3rem' }} />
+        label: 'Hospitalizations',
+        icon: <DescriptionTwoToneIcon sx={{ fontSize: '1.2rem' }} />
     },
     {
-        label: 'Home Support Services',
-        icon: <DescriptionTwoToneIcon sx={{ fontSize: '1.3rem' }} />
+        label: 'Emergency Room Visits',
+        icon: <DescriptionTwoToneIcon sx={{ fontSize: '1.2rem' }} />
+    },
+    {
+        label: 'Ambulance Use',
+        icon: <DescriptionTwoToneIcon sx={{ fontSize: '1.2rem' }} />
     },
     {
         label: 'Medication',
-        icon: <DescriptionTwoToneIcon sx={{ fontSize: '1.3rem' }} />
+        icon: <DescriptionTwoToneIcon sx={{ fontSize: '1.2rem' }} />
     }
 ];
 
@@ -123,7 +130,16 @@ const ClinicalInformationIndex = () => {
                         <ClinicalInformation />
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        <MedicalDiagnosis />
+                        <Hopsitalizations />
+                    </TabPanel>
+                    <TabPanel value={value} index={2}>
+                        <EmergencyRoomVisits />
+                    </TabPanel>
+                    <TabPanel value={value} index={3}>
+                        <AmbulanceUse />
+                    </TabPanel>
+                    <TabPanel value={value} index={4}>
+                        <Medication />
                     </TabPanel>
                 </Grid>
             </Grid>

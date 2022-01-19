@@ -218,7 +218,7 @@ const ReviewReferralDetails = ({referralDetails, setReferralDetail}) => {
                                         onChange={(e, value) => {
                                             formik.setFieldValue('referral_source', value)
                                         }}
-                                        renderInput={(params) => <TextField {...params} />}
+                                        renderInput={(params) => <TextField {...params} label='Referral Source'/>}
                                     />
                                 </Grid>
                             </Grid>
@@ -239,7 +239,7 @@ const ReviewReferralDetails = ({referralDetails, setReferralDetail}) => {
                                         onChange={(e, value) => {
                                             formik.setFieldValue('organizations_upon_referral', value)
                                         }}
-                                        renderInput={(params) => <TextField {...params} />}
+                                        renderInput={(params) => <TextField {...params} label='Organizations Involved Upon Referral'/>}
                                         name='organizations_upon_referral'
                                         id='organizations_upon_referral'
                                         sx={{
@@ -266,7 +266,7 @@ const ReviewReferralDetails = ({referralDetails, setReferralDetail}) => {
                                         value={formik.values.members_present_case_discussion}
                                         name='members_present_case_discussion'
                                         id='members_present_case_discussion'
-                                        renderInput={(params) => <TextField {...params} />}
+                                        renderInput={(params) => <TextField {...params} label='Members Present for Case Discussion' />}
                                         onChange={(e, value) => {
                                             formik.setFieldValue('members_present_case_discussion', value)
                                         }}

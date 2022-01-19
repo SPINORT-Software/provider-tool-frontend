@@ -12,7 +12,9 @@ import {
     MenuItem, Radio, RadioGroup, Slider,
     Switch,
     TextField,
-    Typography
+    Typography,
+    Tab,
+    Tabs, Box
 } from '@material-ui/core';
 
 // project imports
@@ -26,36 +28,105 @@ import DomainTwoToneIcon from "@material-ui/icons/DomainTwoTone";
 import MonetizationOnTwoToneIcon from "@material-ui/icons/MonetizationOnTwoTone";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import Accordion from 'ui-component/extended/Accordion';
+import MainCard from "ui-component/cards/MainCard";
+import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
+
+import {useFormik} from "formik";
+import {useDispatch, useSelector} from "react-redux";
+import {setPersonalInformationDetails} from "store/actions/client/personalInformationActions";
+
+function a11yProps(index) {
+    return {
+        id: `vertical-tab-${index}`,
+        'aria-controls': `vertical-tabpanel-${index}`
+    };
+}
+
+function TabPanel(props) {
+    const {children, value, index, ...other} = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`vertical-tabpanel-${index}`}
+            aria-labelledby={`vertical-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Box
+                    sx={{
+                        p: 0
+                    }}
+                >
+                    {children}
+                </Box>
+            )}
+        </div>
+    );
+}
 
 // style constant
 const useStyles = makeStyles((theme) => ({
-    deviceName: {
-        '& >span': {
-            fontSize: '90%',
-            fontWeight: '400'
+    root: {
+        flexGrow: 1,
+        backgroundColor: theme.palette.background.paper,
+        display: 'flex',
+        height: 'auto'
+    },
+    tabs: {
+        borderRight: `1px solid ${theme.palette.divider}`,
+        minWidth: 160
+    },
+    profileTab: {
+        '& .MuiTabs-flexContainer': {
+            borderBottom: 'none',
+            height: '400px'
+        },
+        '& button': {
+            color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : theme.palette.grey[600],
+            minHeight: 'auto',
+            minWidth: '100%',
+            padding: '12px 16px',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            textAlign: 'left',
+            justifyContent: 'flex-start'
+        },
+        '& button.Mui-selected': {
+            color: theme.palette.primary.main,
+            background: theme.palette.mode === 'dark' ? theme.palette.dark.main : theme.palette.grey[50]
+        },
+        '& button > svg': {
+            marginBottom: '0px !important',
+            marginRight: '10px',
+            marginTop: '10px',
+            height: '20px',
+            width: '20px'
+        },
+        '& button > div > span': {
+            display: 'block'
+        },
+        '& > div > span': {
+            display: 'none'
         }
-    },
-    deviceState: {
-        display: 'inline-flex',
-        alignItems: 'center',
-        '& >svg': {
-            width: '0.7em',
-            height: '0.7em',
-            marginRight: '5px'
-        }
-    },
-    textActive: {
-        color: theme.palette.success.main
-    },
-    textMuted: {
-        color: theme.palette.grey[400]
     }
 }));
 
-
 const HomeSafetyAssessment = () => {
+    const classes = useStyles();
+    const customization = useSelector((state) => state.customization);
+    const personalInfoData = useSelector(state => state.client.personalInformation);
+    const {home_safety_assessment = {}} = personalInfoData
+
     const theme = useTheme();
-    const [valueColor, setValueColor] = React.useState('default');
+    const dispatch = useDispatch()
+    const [value, setValue] = React.useState(0);
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
     const assessmentQuestions = {
         "outside": {
             "title": "Outside",
@@ -339,25 +410,54 @@ const HomeSafetyAssessment = () => {
         }
     }
 
+    const formik = useFormik({
+        enableReinitialize: true,
+        initialValues: {
+            ...home_safety_assessment
+        },
+        validate: values => {
+            dispatch(setPersonalInformationDetails({
+                home_safety_assessment: values
+            }))
+        }
+    });
+
+    console.log(home_safety_assessment)
+
+    const safetyAssessmentTabRender = Object.keys(assessmentQuestions).map((assessmentCategoryKey, index) => {
+        const {title: assessmentCategoryTitle} = assessmentQuestions[assessmentCategoryKey];
+
+        return (
+            <Tab
+                icon={<PersonOutlineTwoToneIcon/>}
+                label={
+                    <Grid container direction="column">
+                        <Typography variant="subtitle1" color="inherit">
+                            {assessmentCategoryTitle}
+                        </Typography>
+                    </Grid>}
+                {...a11yProps(index)}
+            />
+        )
+    })
+
     const safetyAssessmentQuestionsRender = Object.keys(assessmentQuestions).map((assessmentCategoryKey, index) => {
         const {title: assessmentCategoryTitle, questions} = assessmentQuestions[assessmentCategoryKey];
         const preparedAssessmentQuestionsRender = questions.map((question, index) => {
             const {question_text: questionText, radio_group_name: radioGroupName} = question;
+            const formikValueGroupName = formik.values[radioGroupName]
 
             return <Grid container spacing={gridSpacing} direction="column"
-                         alignItems="center">
-                <Grid item xs={4}>
+                         alignItems="left">
+                <Grid item xs={12}>
                     <Typography variant="subtitle1">{questionText}</Typography>
-                </Grid>
 
-                <Grid item xs={4}>
                     <FormControl>
                         <RadioGroup
                             row
-                            aria-label="gender"
-                            value={valueColor}
-                            onChange={(e) => setValueColor(e.target.value)}
+                            onChange={formik.handleChange}
                             name={radioGroupName}
+                            value={formikValueGroupName}
                         >
                             <FormControlLabel
                                 value={`home-safety-assessment-${radioGroupName}-yes`}
@@ -399,113 +499,54 @@ const HomeSafetyAssessment = () => {
                             />
                         </RadioGroup>
                     </FormControl>
+                    <Divider/>
                 </Grid>
-
             </Grid>
         })
 
         return (
-            <Grid item xs={12} md={10} lg={6}>
+            <TabPanel value={value} index={index}>
                 <SubCard title={assessmentCategoryTitle}>
                     <CardContent>
                         <Grid container spacing={gridSpacing}>
-                            <Grid item xs={6} sm={6} lg={6} md={6}>
+                            <Grid item xs={10} sm={6} lg={10} md={6}>
                                 {preparedAssessmentQuestionsRender}
                             </Grid>
                         </Grid>
                     </CardContent>
                 </SubCard>
-            </Grid>
+            </TabPanel>
         )
     })
 
-    const customContentData = [
-        {
-            id: 'basic1',
-            defaultExpand: false,
-            title: (
-                <>
-                    <FaceTwoToneIcon fontSize="small" color="primary" style={{marginRight: '4px'}}/>
-                    <Typography variant="subtitle1" color="primary">
-                        Outside
-                    </Typography>
-                </>
-            ),
-            content: (
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <Typography variant="subtitle1">Are the paths around the property in good repair?</Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Divider/>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="body2">
-                            <Grid item>
-                                <FormControl>
-                                    <RadioGroup
-                                        row
-                                        aria-label="gender"
-                                        value={valueColor}
-                                        onChange={(e) => setValueColor(e.target.value)}
-                                        name="row-radio-buttons-group"
-                                    >
-                                        <FormControlLabel
-                                            value="female"
-                                            control={
-                                                <Radio
-                                                    sx={{
-                                                        color: theme.palette.primary.main,
-                                                        '&.Mui-checked': {color: theme.palette.primary.main}
-                                                    }}
-                                                />
-                                            }
-                                            label="Yes"
-                                        />
-
-                                        <FormControlLabel
-                                            value="male"
-                                            control={
-                                                <Radio
-                                                    sx={{
-                                                        color: theme.palette.error.main,
-                                                        '&.Mui-checked': {color: theme.palette.error.main}
-                                                    }}
-                                                />
-                                            }
-                                            label="No"
-                                        />
-
-                                        <FormControlLabel
-                                            value="success"
-                                            control={
-                                                <Radio
-                                                    sx={{
-                                                        color: theme.palette.success.main,
-                                                        '&.Mui-checked': {color: theme.palette.success.main}
-                                                    }}
-                                                />
-                                            }
-                                            label="N/A"
-                                        />
-                                    </RadioGroup>
-                                </FormControl>
-                            </Grid>
-                        </Typography>
-                    </Grid>
-                </Grid>
-            )
-        }
-    ];
 
     return (
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
-                <SubCard title="Home Safety Assessment">
+                <MainCard>
                     <Grid container spacing={gridSpacing}>
-                        {safetyAssessmentQuestionsRender}
+                        <Grid item xs={4} sm={4} md={3}>
+                            <Tabs
+                                value={value}
+                                onChange={handleChange}
+                                orientation="vertical"
+                                className={classes.profileTab}
+                                variant="scrollable"
+                                sx={{
+                                    '& button': {
+                                        borderRadius: `${customization.borderRadius}px`
+                                    }
+                                }}
+                            >
+                                {safetyAssessmentTabRender}
+                            </Tabs>
+                        </Grid>
+
+                        <Grid item xs={12} sm={8} md={9} >
+                            {safetyAssessmentQuestionsRender}
+                        </Grid>
                     </Grid>
-                </SubCard>
+                </MainCard>
             </Grid>
         </Grid>
     );

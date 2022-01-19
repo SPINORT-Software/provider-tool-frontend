@@ -119,7 +119,7 @@ const ChatDrawer = ({ handleDrawerOpen, openChatDrawer, setActiveRecipient }) =>
                             </Grid>
                             <Grid item xs zeroMinWidth>
                                 <Typography align="left" variant="h4">
-                                    Logged In User
+                                    Test User
                                 </Typography>
                             </Grid>
                             <Grid item>

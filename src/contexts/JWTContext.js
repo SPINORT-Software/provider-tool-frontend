@@ -13,13 +13,15 @@ import accountReducer from 'store/reducers/accountReducer';
 import axios from 'store/api-calls/axios-client';
 import Loader from 'ui-component/Loader';
 
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
+import {w3cwebsocket as W3CWebSocket} from "websocket/lib/websocket";
 
 // constant
 const initialState = {
     isLoggedIn: false,
     isInitialized: false,
-    user: null
+    user: null,
+    ws: null
 };
 
 const verifyToken = (serviceToken) => {
@@ -39,6 +41,38 @@ const setSession = (serviceToken) => {
         delete axios.defaults.headers.common.Authorization;
     }
 };
+
+const check = (ws, user) => {
+    // eslint-disable-next-line no-use-before-define
+    if (!ws || ws.readyState === WebSocket.CLOSED) setWSClient(user);
+};
+
+const setWSClient = (user) => {
+    const {token} = user;
+    const socketChatClient = new W3CWebSocket(`ws://127.0.0.1:8000/ws/chat/?t=${token}`);
+    // let timeout = 0;
+    let connectInterval;
+
+    // websocket onopen event listener
+    socketChatClient.onopen = () => {
+        console.log("Connected")
+        // timeout = 250;
+        // clearTimeout(connectInterval);
+    };
+
+    // websocket onclose event listener
+    socketChatClient.onclose = e => {
+        // timeout += timeout;
+        // connectInterval = setTimeout(() => check(socketChatClient, user), Math.min(10000, timeout));
+    };
+
+    // websocket onerror event listener
+    socketChatClient.onerror = err => {
+        socketChatClient.close();
+    };
+
+    return socketChatClient;
+}
 
 const JWTContext = createContext({
     ...initialState,
@@ -62,21 +96,22 @@ export const JWTProvider = ({children}) => {
         });
         const {user} = await rawResponse.json();
         const {token} = user
+        const ws = setWSClient(user)
 
         setSession(token);
         dispatch({
             type: LOGIN,
             payload: {
-                user
+                user,
+                ws
             }
         });
     };
 
     const logout = () => {
-        console.log("LOGOUT")
         setSession(null);
         dispatch({type: LOGOUT});
-        navigate('login', { replace: true });
+        navigate('login', {replace: true});
     };
 
     useEffect(() => {
@@ -96,11 +131,30 @@ export const JWTProvider = ({children}) => {
                         }
                     });
                     const user = await rawResponse.json();
+
+                    const {token} = user;
+                    const socketChatClient = new WebSocket(`ws://127.0.0.1:8000/ws/chat/?t=${token}`);
+
+                    // websocket onopen event listener
+                    socketChatClient.onopen = () => {
+                        console.log("Connected")
+                    };
+
+                    socketChatClient.onclose = e => {
+                        console.log("Disconnected1")
+                    };
+
+                    // websocket onerror event listener
+                    socketChatClient.onerror = err => {
+                        socketChatClient.close();
+                    };
+
                     dispatch({
                         type: ACCOUNT_INITIALIZE,
                         payload: {
                             isLoggedIn: true,
-                            user
+                            user,
+                            ws:socketChatClient
                         }
                     });
                 } else {
@@ -108,7 +162,8 @@ export const JWTProvider = ({children}) => {
                         type: ACCOUNT_INITIALIZE,
                         payload: {
                             isLoggedIn: false,
-                            user: null
+                            user: null,
+                            ws: null
                         }
                     });
                 }
@@ -118,7 +173,8 @@ export const JWTProvider = ({children}) => {
                     type: ACCOUNT_INITIALIZE,
                     payload: {
                         isLoggedIn: false,
-                        user: null
+                        user: null,
+                        ws: null
                     }
                 });
             }

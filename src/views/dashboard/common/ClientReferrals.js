@@ -27,26 +27,26 @@ function createData(avtar, name, designation, product, date, badgeText, badgeTyp
 }
 
 const rows = [
-    createData(Avatar1, 'John Deo', 'Graphics Designer', 'Materially', 'Jun, 26', 'Low', 'secondary'),
-    createData(Avatar2, 'Jenifer Vintage', 'Web Designer', 'Mashable', 'March, 31', 'High', 'primary'),
-    createData(Avatar3, 'William Jem', 'Developer', 'Flatable', 'Aug, 02', 'Medium', 'secondary'),
-    createData(Avatar4, 'David Jones', 'Developer', 'Guruable', 'Sep, 22', 'High', 'primary')
+    createData(Avatar1, 'John Deo', '', 'Case Manager', 'Jun, 26', 'View', 'secondary'),
+    createData(Avatar2, 'Jenifer Vintage', '', 'Case Manager', 'March, 31', 'View', 'primary'),
+    createData(Avatar3, 'William Jem', '', 'Case Manager', 'Aug, 02', 'View', 'secondary'),
+    createData(Avatar4, 'David Jones', '', 'Case Manager', 'Sep, 22', 'View', 'primary')
 ];
 
 // ===========================|| DATA WIDGET - PROJECT TABLE CARD ||=========================== //
 
 const ClientReferrals = () => (
-    <MainCard title="Client Referrals" content={false}>
+    <MainCard title="Review Board Referrals" content={false}>
         <CardContent sx={{ p: 0 }}>
             <TableContainer>
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell sx={{pl: 3}}>Assigned</TableCell>
                             <TableCell>Name</TableCell>
-                            <TableCell>Due Date</TableCell>
+                            <TableCell sx={{pl: 3}}>Assigned</TableCell>
+                            <TableCell>Date</TableCell>
                             <TableCell align="right" sx={{pr: 3}}>
-                                Priority
+                                Action
                             </TableCell>
                         </TableRow>
                     </TableHead>
@@ -56,7 +56,7 @@ const ClientReferrals = () => (
                                 <TableCell sx={{pl: 3}}>
                                     <Grid container spacing={2} alignItems="center" sx={{flexWrap: 'nowrap'}}>
                                         <Grid item>
-                                            <Avatar alt="User 1" src={row.avtar}/>
+                                            <Avatar alt="User 1"/>
                                         </Grid>
                                         <Grid item xs zeroMinWidth>
                                             <Typography component="div" align="left" variant="subtitle1">

@@ -141,14 +141,11 @@ const AssessmentData = ({assessmentDetailData}) => {
                 title={
                     <Grid container spacing={2} alignItems="center">
                         <Grid item>
-                            <Avatar alt="User 1" src={Avatar3}/>
+                            <Avatar alt="User 1"/>
                         </Grid>
                         <Grid item xs zeroMinWidth>
                             <Typography align="left" variant="subtitle1">
-                                Suzan
-                            </Typography>
-                            <Typography align="left" variant="subtitle2">
-                                UI/UX Designer
+                                Client Name
                             </Typography>
                         </Grid>
                     </Grid>

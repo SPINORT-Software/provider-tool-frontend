@@ -12,7 +12,10 @@ import MaskedInput from "react-text-mask";
 import {useFormik} from "formik";
 import {useDispatch, useSelector} from "react-redux";
 
-import setPersonalInformationDetails from "store/actions/client/personalInformationActions";
+import {setPersonalInformationDetails} from "store/actions/client/personalInformationActions";
+import clientApi from "store/api-calls/client";
+import JWTContext from "contexts/JWTContext";
+import {SNACKBAR_OPEN} from "store/actionTypes";
 
 // select options
 const genders = [
@@ -275,11 +278,12 @@ const languageProficiencyOptions = [
     }
 ];
 
-const PersonalInformation = () => {
+const PersonalInformation = ({client, setProgressLoader}) => {
     const personalInfoData = useSelector(state => state.client.personalInformation)
     const dispatch = useDispatch()
 
     const formik = useFormik({
+        enableReinitialize: true,
         initialValues: {
             date_of_birth: personalInfoData.date_of_birth,
             gender: personalInfoData.gender,
@@ -323,6 +327,7 @@ const PersonalInformation = () => {
                                     fullWidth
                                     label="Gender"
                                     value={formik.values.gender}
+                                    selected={formik.values.gender}
                                     id='gender'
                                     name='gender'
                                     onChange={formik.handleChange}
@@ -367,12 +372,8 @@ const PersonalInformation = () => {
                                     }}
 
                                     getOptionLabel={(option) => option.label}
-                                    renderInput={(params) => <TextField {...params} />}
-                                    sx={{
-                                        '& .MuiOutlinedInput-root': {
-                                            pr: '30px !important'
-                                        }
-                                    }}
+                                    renderInput={(params) => <TextField {...params} label='Language Proficiency'/>}
+
                                 />
 
                             </Grid>
@@ -495,13 +496,6 @@ const PersonalInformation = () => {
                     </Grid>
 
                 </SubCard>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-                <Button color='secondary' variant='contained' size='large'
-                        onClick={(e) => console.log(e)}>
-                    Save
-                </Button>
             </Grid>
         </Grid>
     );

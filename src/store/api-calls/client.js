@@ -6,6 +6,7 @@ import axios from './axios-client';
 * 2. Detail API - retrieveMethodName()
 * 3. Update - updateMethodName()
 * 4. Add - createMethodName()
+* 5. Set/Update - createOrUpdateMethodName()
 * */
 
 export default {
@@ -26,6 +27,23 @@ export default {
         }
     },
 
-
-
+    /*
+    * Personal Information API
+    * */
+    async createOrUpdatePersonalInformation(formData) {
+        try {
+            const response = await axios.post('client/personal-create-update', formData);
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    },
+    async retrievePersonalInformation(clientUUID) {
+        try {
+            const response = await axios.get(`client/${clientUUID}/personal`);
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    }
 }

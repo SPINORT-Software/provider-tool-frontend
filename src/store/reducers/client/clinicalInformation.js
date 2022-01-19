@@ -1,4 +1,4 @@
-// action - state management
+ // action - state management
 import * as actionTypes from 'store/actionTypes';
 
 export const initialState = {

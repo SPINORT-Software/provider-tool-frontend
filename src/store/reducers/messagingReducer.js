@@ -81,6 +81,10 @@ const messagingReducer = (state = initialState, action) => {
         case actionTypes.MESSAGING_ADD_NEW_MESSAGE_SEND: {
             const {message, recipientUsername} = action.data
 
+            console.log(recipientUsername)
+            console.log(message)
+            console.log(state.activeChats)
+
             const recipientObject = {
                 [recipientUsername]: {
                     ...state.activeChats[recipientUsername],

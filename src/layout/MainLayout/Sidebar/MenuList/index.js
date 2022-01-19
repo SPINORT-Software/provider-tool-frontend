@@ -8,6 +8,7 @@ import NavGroup from './NavGroup';
 import caseManagerMenuItems from 'menu-items/case-manager';
 import reviewBoardMenuItems from 'menu-items/review-board';
 import clientMenuItems from 'menu-items/client';
+import comunityParamedicMenuItems from 'menu-items/community-paramedic';
 import JWTContext from "contexts/JWTContext";
 
 
@@ -35,6 +36,9 @@ const MenuList = () => {
                 break;
             case 'TYPE_CLIENT':
                 roleMenuItems = clientMenuItems
+                break;
+            case 'TYPE_COMMUNITY_PARAMEDIC':
+                roleMenuItems = comunityParamedicMenuItems
                 break;
             default:
                 roleMenuItems = caseManagerMenuItems

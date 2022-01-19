@@ -35,6 +35,8 @@ import useAuth from 'hooks/useAuth';
 // assets
 import { IconLogout, IconSearch, IconSettings } from '@tabler/icons';
 import User1 from 'assets/images/users/user-round.svg';
+import JWTContext from "contexts/JWTContext";
+import {lightGreen} from "@material-ui/core/colors";
 
 // style const
 const useStyles = makeStyles((theme) => ({
@@ -115,10 +117,24 @@ const useStyles = makeStyles((theme) => ({
 
 // ===========================|| PROFILE MENU ||=========================== //
 
+const USER_TYPES_MAP = {
+    'TYPE_CLIENT': 'Client',
+    'TYPE_CASE_MANAGER': 'Case Manager',
+    'TYPE_REVIEW_BOARD': 'Review Board',
+    'TYPE_COMMUNITY_PARAMEDIC': 'Community Paramedic',
+    'TYPE_CLINICIAN': 'Clinician',
+}
+
 const ProfileSection = () => {
     const classes = useStyles();
     const theme = useTheme();
     const customization = useSelector((state) => state.customization);
+    const jwtContext = React.useContext(JWTContext);
+    // const {user: {fullname, user_type}} = jwtContext
+    // const user_type_map_value = USER_TYPES_MAP[user_type]
+    const fullname = 'User'
+    const user_type_map_value = '';
+
 
     const [sdm, setSdm] = React.useState(true);
     const [value, setValue] = React.useState('');
@@ -189,13 +205,15 @@ const ProfileSection = () => {
                                     <CardContent className={classes.cardContent}>
                                         <Grid container direction="column" spacing={0}>
                                             <Grid item className={classes.flex}>
-                                                <Typography variant="h4">Good Morning,</Typography>
+                                                <Typography variant="h4">Hello,</Typography>
                                                 <Typography component="span" variant="h4" className={classes.name}>
-                                                    User
+                                                    {fullname}
                                                 </Typography>
                                             </Grid>
                                             <Grid item>
-                                                <Typography variant="subtitle2">Case Manager</Typography>
+                                                <Typography variant="subtitle2">
+                                                    {user_type_map_value}
+                                                </Typography>
                                             </Grid>
                                         </Grid>
                                         <OutlinedInput

@@ -5,10 +5,11 @@ import { useTheme, makeStyles } from '@material-ui/styles';
 import { Grid, Typography, useMediaQuery } from '@material-ui/core';
 
 // project imports
-import NewClients from './NewClients';
-import InternalReferrals from './InternalReferrals';
-import ExternalReferrals from './ExternalReferrals';
-import ClientReferrals from './ClientReferrals';
+import NewClients from '../common/NewClients';
+import Notifications from '../common/Notifications';
+import InternalReferrals from '../common/InternalReferrals';
+import ExternalReferrals from '../common/ExternalReferrals';
+import ClientReferrals from '../common/ClientReferrals';
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
 import IconNumberCard from 'ui-component/cards/IconNumberCard';
@@ -55,7 +56,7 @@ const Analytics = () => {
             <Grid item xs={12} lg={8} md={6}>
                 <Grid container spacing={gridSpacing}>
                     <Grid item xs={12}>
-                        <NewClients />
+                        <Notifications />
                     </Grid>
                     <Grid item xs={12}>
                         <ClientReferrals />
@@ -74,11 +75,11 @@ const Analytics = () => {
                     </Grid>
 
                     <Grid item xs={12} lg={6}>
-                        <IconNumberCard title="Clients" primary="120" color={theme.palette.primary.dark} iconPrimary={AccountCircleTwoTone} />
+                        <IconNumberCard title="Clients Added" primary="12" color={theme.palette.primary.dark} iconPrimary={AccountCircleTwoTone} />
                     </Grid>
 
                     <Grid item xs={12} lg={6}>
-                        <IconNumberCard title="Files" primary="120" color={theme.palette.primary.dark} iconPrimary={DescriptionTwoToneIcon} />
+                        <IconNumberCard title="Files Uploaded" primary="120" color={theme.palette.primary.dark} iconPrimary={DescriptionTwoToneIcon} />
                     </Grid>
 
                 </Grid>

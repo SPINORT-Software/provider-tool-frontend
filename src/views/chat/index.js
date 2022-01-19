@@ -68,8 +68,6 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const socketChatClient = new W3CWebSocket('ws://127.0.0.1:8000/ws/chat/');
-
 // drawer content element
 const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})(({theme, open}) => ({
     flexGrow: 1,
@@ -101,26 +99,16 @@ const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})(({th
  * @constructor
  */
 const ChatMainPage = () => {
-    const jwtContext = React.useContext(JWTContext);
-    const {user: currentUser} = jwtContext;
-    const {user_type_pk: currentUserUUID, username: currentUsername} = currentUser
-
     const classes = useStyles();
     const theme = useTheme();
     const dispatch = useDispatch();
+
+    const jwtContext = React.useContext(JWTContext);
+    const {user: currentUser, ws: socketChatClient} = jwtContext;
+    const {user_type_pk: currentUserUUID, username: currentUsername, token: currentUserToken} = currentUser
+
     const selectedRecipient = useSelector(store => store.messaging.selectedRecipient)
-
     const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
-
-    // handle right sidebar dropdown menu
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const handleClickSort = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleCloseSort = () => {
-        setAnchorEl(null);
-    };
 
     // set chat details page open when user is selected from sidebar
     const [emailDetails, setEmailDetails] = React.useState(false);
@@ -154,39 +142,25 @@ const ChatMainPage = () => {
 
     // fetch chat history for selected user
     React.useEffect(() => {
-        socketChatClient.onopen = () => {
-            console.log("Socket opened");
-        }
-
+        // Message received from websocket
         socketChatClient.onmessage = (e) => {
-            console.log("On message")
             const newMessageData = JSON.parse(e.data)
-
             if (newMessageData.message) {
-                console.log("Message received ", newMessageData.message)
-            } else {
-                console.log("Message is empty")
+                if(newMessageData.recipient === currentUsername){
+                    const d = new Date();
+                    const newMessage = {
+                        sender: newMessageData.sender,
+                        recipient: newMessageData.recipient,
+                        message: newMessageData.message,
+                        message_type: newMessageData.message_type,
+                        sent_at: newMessageData.sent_at,
+                    };
+                    dispatch(setNewMessageSend(newMessage, newMessageData.sender))
+                }
             }
-
-            const d = new Date();
-            const newMessage = {
-                sender: newMessageData.sender, 
-                recipient: newMessageData.recipient,
-                message: newMessageData.message,
-                message_type: newMessageData.message_type,
-                sent_at: newMessageData.sent_at,
-            };
-
-            console.log("Message received ")
-            console.log(newMessage)
-
-            // the newMessage could be from any user in the system. dispatch this message to a generic function to set
-            // it to 'activeChats' in messagingReducer.
-            // if the message is from the selectedRecipient - set it in selectedRecipientHistory and add it to selected
-            // setData((prevState) => [...prevState, newMessage]);
         }
 
-        // getData(user);
+        // getData(user); // Fetch messages for the selected recipient as API response
     }, [activeRecipient]);
 
     // handle new message form
