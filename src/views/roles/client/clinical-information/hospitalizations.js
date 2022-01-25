@@ -18,35 +18,30 @@ import {
 // project imports
 import {gridSpacing} from 'store/constant';
 import MainCard from 'ui-component/cards/MainCard';
-import MaskedInput from "react-text-mask";
 import {useFormik} from "formik";
-import JWTContext from "contexts/JWTContext";
 import {useDispatch, useSelector} from "react-redux";
-
-import DatePicker from '@material-ui/lab/DatePicker';
-import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
-import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import SubCard from 'ui-component/cards/SubCard';
 
 
 
-const Hospitalizations = () => {
-    const theme = useTheme();
-    const userAuthContext = React.useContext(JWTContext)
+const Hospitalizations = ({setClinicalInformationDetails}) => {
     const clinicalInfoData = useSelector(state => state.client.clinicalInformation)
     const dispatch = useDispatch()
-    const {
-        user: {
-            user_type_pk: clientUUID
-        }
-    } = userAuthContext;
 
     const formik = useFormik({
-        initialValues: {},
+        enableReinitialize: true,
+        initialValues: {
+            hospitalizations_six_months: clinicalInfoData.hospitalizations_six_months,
+            hospitalizations_twelve_months: clinicalInfoData.hospitalizations_twelve_months,
+            hospitalization_last_date: clinicalInfoData.hospitalization_last_date,
+            hospitalization_last_stay_length: clinicalInfoData.hospitalization_last_stay_length,
+            hospitalization_last_medical_reason: clinicalInfoData.hospitalization_last_medical_reason,
+        },
         validate: values => {
-            console.log(values)
+            dispatch(setClinicalInformationDetails(values))
         }
     });
+
     return (
         <MainCard>
             <Grid container spacing={gridSpacing}>
@@ -60,10 +55,9 @@ const Hospitalizations = () => {
                                         <Grid item xs={4} lg={12}>
                                             <TextField
                                                 fullWidth
-                                                label="Hospitalizations in last 6 months"
-                                                value={formik.values.gender}
-                                                id='gender'
-                                                name='gender'
+                                                value={formik.values.hospitalizations_six_months}
+                                                id='hospitalizations_six_months'
+                                                name='hospitalizations_six_months'
                                                 onChange={formik.handleChange}
                                             />
                                         </Grid>
@@ -80,10 +74,9 @@ const Hospitalizations = () => {
                                         <Grid item xs={4} lg={12}>
                                             <TextField
                                                 fullWidth
-                                                label="Hospitalizations in last 12 months"
-                                                value={formik.values.gender}
-                                                id='gender'
-                                                name='gender'
+                                                value={formik.values.hospitalizations_twelve_months}
+                                                id='hospitalizations_twelve_months'
+                                                name='hospitalizations_twelve_months'
                                                 onChange={formik.handleChange}
                                             />
                                         </Grid>
@@ -99,10 +92,9 @@ const Hospitalizations = () => {
                                         <Grid item xs={4} lg={12}>
                                             <TextField
                                                 fullWidth
-                                                label="Hospitalizations in last 12 months"
-                                                value={formik.values.gender}
-                                                id='gender'
-                                                name='gender'
+                                                value={formik.values.hospitalization_last_date}
+                                                id='hospitalization_last_date'
+                                                name='hospitalization_last_date'
                                                 onChange={formik.handleChange}
                                             />
                                         </Grid>
@@ -118,10 +110,9 @@ const Hospitalizations = () => {
                                         <Grid item xs={4} lg={12}>
                                             <TextField
                                                 fullWidth
-                                                label="Hospitalizations in last 12 months"
-                                                value={formik.values.gender}
-                                                id='gender'
-                                                name='gender'
+                                                value={formik.values.hospitalization_last_stay_length}
+                                                id='hospitalization_last_stay_length'
+                                                name='hospitalization_last_stay_length'
                                                 onChange={formik.handleChange}
                                             />
                                         </Grid>
@@ -138,9 +129,9 @@ const Hospitalizations = () => {
                                             <TextField
                                                 fullWidth
                                                 label="Hospitalizations in last 12 months"
-                                                value={formik.values.gender}
-                                                id='gender'
-                                                name='gender'
+                                                value={formik.values.hospitalization_last_medical_reason}
+                                                id='hospitalization_last_medical_reason'
+                                                name='hospitalization_last_medical_reason'
                                                 onChange={formik.handleChange}
                                             />
                                         </Grid>

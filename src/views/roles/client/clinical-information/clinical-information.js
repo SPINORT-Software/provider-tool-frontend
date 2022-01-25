@@ -27,7 +27,7 @@ import DatePicker from '@material-ui/lab/DatePicker';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import SubCard from 'ui-component/cards/SubCard';
-import {setAddDailyWorkLoadDate} from "../../../../store/actions/caseManager/dailyWorkloadActions";
+import {setAddDailyWorkLoadDate} from "store/actions/caseManager/dailyWorkloadActions";
 
 const medicalDiagnosisList = [
     {label: 'Type', id: 1, group: 'Cancer'},
@@ -143,6 +143,7 @@ const ClinicalInformation = ({setClinicalInformationDetails}) => {
     } = userAuthContext;
 
     const formik = useFormik({
+        enableReinitialize: true,
         initialValues: {
             completion_date: clinicalInfoData.completion_date,
             medical_diagnosis: clinicalInfoData.medical_diagnosis,
@@ -192,6 +193,7 @@ const ClinicalInformation = ({setClinicalInformationDetails}) => {
                             <SubCard title='Medical Diagnosis and/or Client Health Concerns (select all that apply)'>
                                 <CardContent>
                                     <Autocomplete
+                                        value={formik.values.medical_diagnosis}
                                         multiple
                                         options={medicalDiagnosisList}
                                         getOptionLabel={(option) => option.label}
@@ -218,6 +220,7 @@ const ClinicalInformation = ({setClinicalInformationDetails}) => {
                             <SubCard title='Current Home Support Services (select all that apply)'>
                                 <CardContent>
                                     <Autocomplete
+                                        value={formik.values.home_support_services}
                                         multiple
                                         options={homeSupportServicesList}
                                         getOptionLabel={(option) => option.label}

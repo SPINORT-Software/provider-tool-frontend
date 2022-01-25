@@ -3,7 +3,7 @@ import * as actionTypes from 'store/actionTypes';
 
 export const initialState = {
     client: "",
-    completion_date: "",
+    completion_date: new Date(),
     medical_diagnosis: [],
     home_support_services: [],
     current_medication: [],
@@ -16,7 +16,7 @@ export const initialState = {
 
     emergency_room_count_six_months: "",
     emergency_room_count_twelve_months: "",
-    emergency_room_last_date: "",
+    emergency_room_last_date: new Date(),
     emergency_room_last_medical_reason:"",
 
     ambulance_use_six_months: "",
@@ -32,6 +32,13 @@ export const initialState = {
 const clinicalInformationReducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.CLIENT_SET_CLINICAL_INFORMATION_DETAIL: {
+            const clinicalInformationData = action.data;
+            return {
+                ...state,
+                ...clinicalInformationData
+            }
+        }
+        case actionTypes.CLIENT_SET_RETRIEVED_CLINICAL_INFORMATION_DATA: {
             const clinicalInformationData = action.data;
             return {
                 ...state,

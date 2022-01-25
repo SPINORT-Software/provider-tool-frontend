@@ -28,25 +28,23 @@ import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import SubCard from 'ui-component/cards/SubCard';
 
-
-
-const EmergencyRoomVisits = () => {
-    const theme = useTheme();
-    const userAuthContext = React.useContext(JWTContext)
+const EmergencyRoomVisits = ({setClinicalInformationDetails}) => {
     const clinicalInfoData = useSelector(state => state.client.clinicalInformation)
     const dispatch = useDispatch()
-    const {
-        user: {
-            user_type_pk: clientUUID
-        }
-    } = userAuthContext;
 
     const formik = useFormik({
-        initialValues: {},
+        enableReinitialize: true,
+        initialValues: {
+            emergency_room_count_six_months: clinicalInfoData.emergency_room_count_six_months,
+            emergency_room_count_twelve_months: clinicalInfoData.emergency_room_count_twelve_months,
+            emergency_room_last_date: clinicalInfoData.emergency_room_last_date,
+            emergency_room_last_medical_reason: clinicalInfoData.emergency_room_last_medical_reason,
+        },
         validate: values => {
-            console.log(values)
+            dispatch(setClinicalInformationDetails(values))
         }
     });
+
     return (
         <MainCard>
             <Grid container spacing={gridSpacing}>
@@ -61,9 +59,9 @@ const EmergencyRoomVisits = () => {
                                             <TextField
                                                 fullWidth
                                                 label="emergency room visits in last 6 months"
-                                                value={formik.values.gender}
-                                                id='gender'
-                                                name='gender'
+                                                value={formik.values.emergency_room_count_six_months}
+                                                id='emergency_room_count_six_months'
+                                                name='emergency_room_count_six_months'
                                                 onChange={formik.handleChange}
                                             />
                                         </Grid>
@@ -81,9 +79,9 @@ const EmergencyRoomVisits = () => {
                                             <TextField
                                                 fullWidth
                                                 label="emergency room visits in last 12 months"
-                                                value={formik.values.gender}
-                                                id='gender'
-                                                name='gender'
+                                                value={formik.values.emergency_room_count_twelve_months}
+                                                id='emergency_room_count_twelve_months'
+                                                name='emergency_room_count_twelve_months'
                                                 onChange={formik.handleChange}
                                             />
                                         </Grid>
@@ -96,16 +94,19 @@ const EmergencyRoomVisits = () => {
                             <SubCard title='Date of last emergency room visit'>
                                 <CardContent>
                                     <Grid container spacing={gridSpacing}>
-                                        <Grid item xs={4} lg={12}>
-                                            <TextField
-                                                fullWidth
-                                                label="Date"
-                                                value={formik.values.gender}
-                                                id='gender'
-                                                name='gender'
-                                                onChange={formik.handleChange}
+                                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                            <DatePicker
+                                                renderInput={(props) => <TextField fullWidth {...props} />}
+                                                value={formik.values.emergency_room_last_date}
+                                                name='emergency_room_last_date'
+                                                id="emergency_room_last_date"
+                                                onChange={(date) => {
+                                                    dispatch(setClinicalInformationDetails({
+                                                        emergency_room_last_date: date
+                                                    }))
+                                                }}
                                             />
-                                        </Grid>
+                                        </LocalizationProvider>
                                     </Grid>
                                 </CardContent>
                             </SubCard>
@@ -119,9 +120,9 @@ const EmergencyRoomVisits = () => {
                                             <TextField
                                                 fullWidth
                                                 label="Reason"
-                                                value={formik.values.gender}
-                                                id='gender'
-                                                name='gender'
+                                                value={formik.values.emergency_room_last_medical_reason}
+                                                id='emergency_room_last_medical_reason'
+                                                name='emergency_room_last_medical_reason'
                                                 onChange={formik.handleChange}
                                             />
                                         </Grid>

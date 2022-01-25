@@ -30,7 +30,7 @@ import SubCard from 'ui-component/cards/SubCard';
 
 
 
-const AmbulanceUse = () => {
+const AmbulanceUse = ({setClinicalInformationDetails}) => {
     const theme = useTheme();
     const userAuthContext = React.useContext(JWTContext)
     const clinicalInfoData = useSelector(state => state.client.clinicalInformation)
@@ -42,11 +42,18 @@ const AmbulanceUse = () => {
     } = userAuthContext;
 
     const formik = useFormik({
-        initialValues: {},
+        enableReinitialize: true,
+        initialValues: {
+            ambulance_use_six_months: clinicalInfoData.ambulance_use_six_months,
+            ambulance_use_medical_reason_six_months: clinicalInfoData.ambulance_use_medical_reason_six_months,
+            ambulance_use_twelve_months: clinicalInfoData.ambulance_use_twelve_months,
+            ambulance_use_medical_reason_twelve_months: clinicalInfoData.ambulance_use_medical_reason_twelve_months,
+        },
         validate: values => {
-            console.log(values)
+            dispatch(setClinicalInformationDetails(values))
         }
     });
+
     return (
         <MainCard>
             <Grid container spacing={gridSpacing}>
@@ -61,9 +68,9 @@ const AmbulanceUse = () => {
                                             <TextField
                                                 fullWidth
                                                 label="Ambulance use in last 6 months"
-                                                value={formik.values.gender}
-                                                id='gender'
-                                                name='gender'
+                                                value={formik.values.ambulance_use_six_months}
+                                                id='ambulance_use_six_months'
+                                                name='ambulance_use_six_months'
                                                 onChange={formik.handleChange}
                                             />
                                         </Grid>
@@ -81,9 +88,9 @@ const AmbulanceUse = () => {
                                             <TextField
                                                 fullWidth
                                                 label="Reason"
-                                                value={formik.values.gender}
-                                                id='gender'
-                                                name='gender'
+                                                value={formik.values.ambulance_use_medical_reason_six_months}
+                                                id='ambulance_use_medical_reason_six_months'
+                                                name='ambulance_use_medical_reason_six_months'
                                                 onChange={formik.handleChange}
                                             />
                                         </Grid>
@@ -100,9 +107,9 @@ const AmbulanceUse = () => {
                                             <TextField
                                                 fullWidth
                                                 label="Ambulance use in last 12 months"
-                                                value={formik.values.gender}
-                                                id='gender'
-                                                name='gender'
+                                                value={formik.values.ambulance_use_twelve_months}
+                                                id='ambulance_use_twelve_months'
+                                                name='ambulance_use_twelve_months'
                                                 onChange={formik.handleChange}
                                             />
                                         </Grid>
@@ -119,9 +126,9 @@ const AmbulanceUse = () => {
                                             <TextField
                                                 fullWidth
                                                 label="Reason"
-                                                value={formik.values.gender}
-                                                id='gender'
-                                                name='gender'
+                                                value={formik.values.ambulance_use_medical_reason_twelve_months}
+                                                id='ambulance_use_medical_reason_twelve_months'
+                                                name='ambulance_use_medical_reason_twelve_months'
                                                 onChange={formik.handleChange}
                                             />
                                         </Grid>

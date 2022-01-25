@@ -130,10 +130,32 @@ const ClinicalInformationIndex = () => {
         }
     } = userAuthContext;
 
+    const fetchClinicalInformation = async () => {
+        setProgressLoader(true);  // Call this to show the loader for the current tab
+        const response = await clientApi.retrieveClinicalInformation(clientUUID)
+        if ('status' in response && response.status === 200) {
+            dispatch(setRetrievedClientClinicalInformationData(response.data))
+        } else if ('status' in response && response.status > 404) {
+            dispatch({
+                type: SNACKBAR_OPEN,
+                open: true,
+                message: 'Could not retrieve your clinical information. Please reload the page and try again',
+                variant: 'alert',
+                alertSeverity: 'warning', // error , success, warning
+                anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                close: true,
+            })
+        }
+        setProgressLoader(false);
+    }
+
     useEffect(() => {
             dispatch(setClinicalInformationDetails({
                 client: clientUUID
-            }))
+            }));
+
+            fetchClinicalInformation()
         }, []
     )
 
@@ -209,7 +231,7 @@ const ClinicalInformationIndex = () => {
                     <Grid item alignContent='end'>
                         <Button color='secondary' variant='contained' size='large'
                                 onClick={handleClinicalInfoSave}
-                                >
+                        >
                             Save
                         </Button>
                     </Grid>

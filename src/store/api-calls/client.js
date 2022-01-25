@@ -58,4 +58,12 @@ export default {
             return error.response;
         }
     },
+    async retrieveClinicalInformation(clientUUID) {
+        try {
+            const response = await axios.get(`client/${clientUUID}/clinical`);
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    },
 }

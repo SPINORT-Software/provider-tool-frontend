@@ -29,27 +29,13 @@ import SecondaryAction from 'ui-component/cards/CardSecondaryAction';
 // project imports
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import {gridSpacing} from "../../../../store/constant";
-import SubCard from "../../../../ui-component/cards/SubCard";
+import {gridSpacing} from "store/constant";
+import SubCard from "ui-component/cards/SubCard";
 
 import AddIcon from '@material-ui/icons/AddTwoTone';
-
-// table data
-function createData(name, calories, fat, carbs, protein) {
-    return {
-        name,
-        calories,
-        fat,
-        carbs,
-        protein
-    };
-}
-
-const rows = [
-    createData('Medication 1', '2020-01-20', '2020-01-20', 67, ''),
-    createData('Medication 2', '2020-01-20', '2020-01-20', 51, ''),
-    createData('Medication 3', '2020-01-20', '2020-01-20', 24, ''),
-];
+import {useFormik} from "formik";
+import {useDispatch, useSelector} from "react-redux";
+import AddMedicationDialog from "./add-medication";
 
 // table filter
 function descendingComparator(a, b, orderBy) {
@@ -209,9 +195,7 @@ const EnhancedTableToolbar = (props) => {
                     {numSelected} selected
                 </Typography>
             ) : (
-                <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-                    Nutrition
-                </Typography>
+                <></>
             )}
 
             {numSelected > 0 ? (
@@ -221,11 +205,7 @@ const EnhancedTableToolbar = (props) => {
                     </IconButton>
                 </Tooltip>
             ) : (
-                <Tooltip title="Filter list">
-                    <IconButton>
-                        <FilterListIcon/>
-                    </IconButton>
-                </Tooltip>
+                <></>
             )}
         </Toolbar>
     );
@@ -237,7 +217,7 @@ EnhancedTableToolbar.propTypes = {
 
 // ===========================|| TABLE - DATA TABLE ||=========================== //
 
-export default function EnhancedTable() {
+export default function Medication({setClinicalInformationDetails}) {
     const classes = useStyles();
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
@@ -245,6 +225,34 @@ export default function EnhancedTable() {
     const [page, setPage] = React.useState(0);
     const [dense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [addMedicationOpen, setAddMedicationOpen] = React.useState(false);
+
+    const handleAddMedicationOpen = () => {
+        setAddMedicationOpen(true);
+    };
+
+    const handleAddMedicationClose = () => {
+        setAddMedicationOpen(false);
+    };
+
+    // Redux
+    const clinicalInfoData = useSelector(state => state.client.clinicalInformation)
+    const dispatch = useDispatch()
+
+    const formik = useFormik({
+        enableReinitialize: true,
+        initialValues: {
+            past_medical_history: clinicalInfoData.past_medical_history,
+            current_medication: clinicalInfoData.current_medication,
+        },
+        validate: values => {
+            dispatch(setClinicalInformationDetails(values))
+        }
+    });
+
+    const handleMedicationAddClick = (event) => {
+        handleAddMedicationOpen()
+    }
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -254,7 +262,7 @@ export default function EnhancedTable() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelectedId = rows.map((n) => n.name);
+            const newSelectedId = formik.values.current_medication.map((n) => n.name);
             setSelected(newSelectedId);
             return;
         }
@@ -290,7 +298,7 @@ export default function EnhancedTable() {
     const isSelected = (name) => selected.indexOf(name) !== -1;
 
     // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - formik.values.current_medication.length) : 0;
 
     return (
         <Grid container spacing={gridSpacing}>
@@ -300,10 +308,12 @@ export default function EnhancedTable() {
                         <Grid container spacing={gridSpacing}>
                             <Grid item xs={4} lg={12}>
                                 <TextField
+                                    onChange={formik.handleChange}
+                                    value={formik.values.past_medical_history}
                                     fullWidth
                                     label="Provide details about your past medical history"
-                                    id='gender'
-                                    name='gender'
+                                    id='past_medical_history'
+                                    name='past_medical_history'
                                 />
                             </Grid>
                         </Grid>
@@ -312,14 +322,20 @@ export default function EnhancedTable() {
             </Grid>
 
             <Grid item xs={12} md={12} lg={12}>
-                <MainCard
+
+                <AddMedicationDialog setClinicalInformationDetails={setClinicalInformationDetails}
+                                     clinicalInfoData={clinicalInfoData} handleClose={handleAddMedicationClose}
+                                     open={addMedicationOpen}/>
+
+                <SubCard
                     content={false}
-                    title="Medication"
+                    title="Current Medication"
                     secondary={
                         <Tooltip title="Add Medication">
                             <Fab
                                 color="primary"
                                 size="small"
+                                onClick={handleMedicationAddClick}
                                 sx={{boxShadow: 'none', ml: 1, width: '32px', height: '32px', minHeight: '32px'}}
                             >
                                 <AddIcon fontSize="small"/>
@@ -336,7 +352,7 @@ export default function EnhancedTable() {
 
                                 {/* table */}
                                 <TableContainer>
-                                    <Table className={classes.table} aria-labelledby="tableTitle"
+                                    <Table className={classes.table}
                                            size={dense ? 'small' : 'medium'}>
                                         <EnhancedTableHead
                                             classes={classes}
@@ -345,10 +361,10 @@ export default function EnhancedTable() {
                                             orderBy={orderBy}
                                             onSelectAllClick={handleSelectAllClick}
                                             onRequestSort={handleRequestSort}
-                                            rowCount={rows.length}
+                                            rowCount={formik.values.current_medication.length}
                                         />
                                         <TableBody>
-                                            {stableSort(rows, getComparator(order, orderBy))
+                                            {stableSort(formik.values.current_medication, getComparator(order, orderBy))
                                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                                 .map((row, index) => {
                                                     const isItemSelected = isSelected(row.name);
@@ -361,7 +377,7 @@ export default function EnhancedTable() {
                                                             role="checkbox"
                                                             aria-checked={isItemSelected}
                                                             tabIndex={-1}
-                                                            key={row.name}
+                                                            key={row.medication_name}
                                                             selected={isItemSelected}
                                                         >
                                                             <TableCell padding="checkbox" sx={{pl: 3}}>
@@ -375,14 +391,15 @@ export default function EnhancedTable() {
                                                             </TableCell>
                                                             <TableCell component="th" id={labelId} scope="row"
                                                                        padding="none">
-                                                                {row.name}
+                                                                {row.medication_name}
                                                             </TableCell>
-                                                            <TableCell align="right">{row.calories}</TableCell>
-                                                            <TableCell align="right">{row.fat}</TableCell>
-                                                            <TableCell align="right">{row.carbs}</TableCell>
-                                                            <TableCell sx={{pr: 3}} align="right">
-                                                                {row.protein}
-                                                            </TableCell>
+                                                            <TableCell
+                                                                align="right">{row.medication_start_date}</TableCell>
+                                                            <TableCell
+                                                                align="right">{row.medication_end_date}</TableCell>
+                                                            <TableCell align="right">{row.medication_dosage}</TableCell>
+                                                            <TableCell
+                                                                align="right">{row.medication_frequency}</TableCell>
                                                         </TableRow>
                                                     );
                                                 })}
@@ -403,7 +420,7 @@ export default function EnhancedTable() {
                                 <TablePagination
                                     rowsPerPageOptions={[5, 10, 25]}
                                     component="div"
-                                    count={rows.length}
+                                    count={formik.values.current_medication.length}
                                     rowsPerPage={rowsPerPage}
                                     page={page}
                                     onPageChange={handleChangePage}
@@ -412,7 +429,7 @@ export default function EnhancedTable() {
                             </Paper>
                         </Grid>
                     </Grid>
-                </MainCard>
+                </SubCard>
             </Grid>
         </Grid>
     );
