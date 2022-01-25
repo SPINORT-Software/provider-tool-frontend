@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 
 import personalInformationReducer from "./personalInformation";
+import clinicalInformationReducer from "./clinicalInformation";
 import visitorLogReducer from "./visitorLog";
 import communicationLogReducer from "./communicationLog";
 
@@ -8,6 +9,7 @@ import communicationLogReducer from "./communicationLog";
 
 const clientReducers = combineReducers({
     personalInformation: personalInformationReducer,
+    clinicalInformation: clinicalInformationReducer,
     visitorLogs: visitorLogReducer,
     communicationLogs: communicationLogReducer
 });

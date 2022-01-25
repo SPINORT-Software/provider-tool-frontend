@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, {useEffect} from 'react';
+import {Link} from 'react-router-dom';
 
 // material-ui
-import { makeStyles } from '@material-ui/styles';
-import { Box, Grid, Tab, Tabs } from '@material-ui/core';
+import {makeStyles} from '@material-ui/styles';
+import {Box, Grid, Tab, Tabs, CardActions, CardContent, Button} from '@material-ui/core';
 
 // project imports
 import Hopsitalizations from './hospitalizations';
@@ -14,11 +14,21 @@ import EmergencyRoomVisits from './emergency-room-visits';
 import ClinicalInformation from './clinical-information';
 
 import MainCard from 'ui-component/cards/MainCard';
-import { gridSpacing } from 'store/constant';
+import {gridSpacing} from 'store/constant';
 
 // assets
 import AccountCircleTwoToneIcon from '@material-ui/icons/AccountCircleTwoTone';
 import DescriptionTwoToneIcon from '@material-ui/icons/DescriptionTwoTone';
+import {useSelector, useDispatch} from "react-redux";
+import JWTContext from "contexts/JWTContext";
+
+import {
+    setClinicalInformationDetails,
+    setRetrievedClientClinicalInformationData
+} from "store/actions/client/clinicalInformationActions";
+import {SNACKBAR_OPEN} from "store/actionTypes";
+import clientApi from "store/api-calls/client";
+import ProgressCircularControlled from 'views/ui/ProgressCircularControlled';
 
 const useStyles = makeStyles((theme) => ({
     accountTab: {
@@ -46,9 +56,10 @@ const useStyles = makeStyles((theme) => ({
 
 // tabs panel
 function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+    const {children, value, index, ...other} = props;
     return (
-        <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`} aria-labelledby={`simple-tab-${index}`} {...other}>
+        <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`}
+             aria-labelledby={`simple-tab-${index}`} {...other}>
             {value === index && (
                 <Box
                     sx={{
@@ -79,23 +90,23 @@ function a11yProps(index) {
 const tabsOption = [
     {
         label: 'Clinical Information',
-        icon: <AccountCircleTwoToneIcon sx={{ fontSize: '1.2rem' }} />
+        icon: <AccountCircleTwoToneIcon sx={{fontSize: '1.2rem'}}/>
     },
     {
         label: 'Hospitalizations',
-        icon: <DescriptionTwoToneIcon sx={{ fontSize: '1.2rem' }} />
+        icon: <DescriptionTwoToneIcon sx={{fontSize: '1.2rem'}}/>
     },
     {
         label: 'Emergency Room Visits',
-        icon: <DescriptionTwoToneIcon sx={{ fontSize: '1.2rem' }} />
+        icon: <DescriptionTwoToneIcon sx={{fontSize: '1.2rem'}}/>
     },
     {
         label: 'Ambulance Use',
-        icon: <DescriptionTwoToneIcon sx={{ fontSize: '1.2rem' }} />
+        icon: <DescriptionTwoToneIcon sx={{fontSize: '1.2rem'}}/>
     },
     {
         label: 'Medication',
-        icon: <DescriptionTwoToneIcon sx={{ fontSize: '1.2rem' }} />
+        icon: <DescriptionTwoToneIcon sx={{fontSize: '1.2rem'}}/>
     }
 ];
 
@@ -103,46 +114,107 @@ const tabsOption = [
 
 const ClinicalInformationIndex = () => {
     const classes = useStyles();
+    const clinicalInfoData = useSelector(state => state.client.clinicalInformation)
+    const dispatch = useDispatch();
 
+    const [progressLoader, setProgressLoader] = React.useState(false);
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
+    const userAuthContext = React.useContext(JWTContext)
+    const {
+        user: {
+            user_type_pk: clientUUID
+        }
+    } = userAuthContext;
+
+    useEffect(() => {
+            dispatch(setClinicalInformationDetails({
+                client: clientUUID
+            }))
+        }, []
+    )
+
+    const handleClinicalInfoSave = async (e) => {
+        setProgressLoader(true)
+        clinicalInfoData.client = clientUUID
+        const response = await clientApi.createOrUpdateClinicalInformation(clinicalInfoData)
+
+        if (response.status === 200) {
+            dispatch({
+                type: SNACKBAR_OPEN,
+                open: true,
+                message: 'Your clinical information has been updated!',
+                variant: 'alert',
+                alertSeverity: 'success', // error , success, warning
+                anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                close: true,
+            })
+        } else {
+            dispatch({
+                type: SNACKBAR_OPEN,
+                open: true,
+                message: 'There was an error while saving your clinical information.',
+                variant: 'alert',
+                alertSeverity: 'error', // error , success, warning
+                anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                close: true,
+            })
+        }
+        setProgressLoader(false)
+    }
+
     return (
-        <MainCard>
-            <Grid container spacing={gridSpacing}>
-                <Grid item xs={12}>
-                    <Tabs
-                        value={value}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        onChange={handleChange}
-                        className={classes.accountTab}
-                        aria-label="simple tabs example"
-                        variant="scrollable"
-                    >
-                        {tabsOption.map((tab, index) => (
-                            <Tab key={index} component={Link} to="#" icon={tab.icon} label={tab.label} {...a11yProps(index)} />
-                        ))}
-                    </Tabs>
-                    <TabPanel value={value} index={0}>
-                        <ClinicalInformation />
-                    </TabPanel>
-                    <TabPanel value={value} index={1}>
-                        <Hopsitalizations />
-                    </TabPanel>
-                    <TabPanel value={value} index={2}>
-                        <EmergencyRoomVisits />
-                    </TabPanel>
-                    <TabPanel value={value} index={3}>
-                        <AmbulanceUse />
-                    </TabPanel>
-                    <TabPanel value={value} index={4}>
-                        <Medication />
-                    </TabPanel>
+        <MainCard title='Clinical Information' secondary={<ProgressCircularControlled display={progressLoader}/>}>
+            <CardContent>
+                <Grid container spacing={gridSpacing}>
+                    <Grid item xs={12}>
+                        <Tabs
+                            value={value}
+                            indicatorColor="primary"
+                            textColor="primary"
+                            onChange={handleChange}
+                            className={classes.accountTab}
+                            variant="scrollable"
+                        >
+                            {tabsOption.map((tab, index) => (
+                                <Tab key={index} component={Link} to="#" icon={tab.icon}
+                                     label={tab.label} {...a11yProps(index)} />
+                            ))}
+                        </Tabs>
+                        <TabPanel value={value} index={0}>
+                            <ClinicalInformation setClinicalInformationDetails={setClinicalInformationDetails}/>
+                        </TabPanel>
+                        <TabPanel value={value} index={1}>
+                            <Hopsitalizations setClinicalInformationDetails={setClinicalInformationDetails}/>
+                        </TabPanel>
+                        <TabPanel value={value} index={2}>
+                            <EmergencyRoomVisits setClinicalInformationDetails={setClinicalInformationDetails}/>
+                        </TabPanel>
+                        <TabPanel value={value} index={3}>
+                            <AmbulanceUse setClinicalInformationDetails={setClinicalInformationDetails}/>
+                        </TabPanel>
+                        <TabPanel value={value} index={4}>
+                            <Medication setClinicalInformationDetails={setClinicalInformationDetails}/>
+                        </TabPanel>
+                    </Grid>
                 </Grid>
-            </Grid>
+            </CardContent>
+            <CardActions>
+                <Grid container justifyContent='space-between' spacing={0}>
+                    <Grid item alignContent='end'>
+                        <Button color='secondary' variant='contained' size='large'
+                                onClick={handleClinicalInfoSave}
+                                >
+                            Save
+                        </Button>
+                    </Grid>
+                </Grid>
+            </CardActions>
         </MainCard>
     );
 };

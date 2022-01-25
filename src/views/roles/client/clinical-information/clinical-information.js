@@ -27,6 +27,7 @@ import DatePicker from '@material-ui/lab/DatePicker';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import SubCard from 'ui-component/cards/SubCard';
+import {setAddDailyWorkLoadDate} from "../../../../store/actions/caseManager/dailyWorkloadActions";
 
 const medicalDiagnosisList = [
     {label: 'Type', id: 1, group: 'Cancer'},
@@ -130,7 +131,7 @@ const homeSupportServicesList = [
 ]
 
 
-const ClinicalInformation = () => {
+const ClinicalInformation = ({setClinicalInformationDetails}) => {
     const theme = useTheme();
     const userAuthContext = React.useContext(JWTContext)
     const clinicalInfoData = useSelector(state => state.client.clinicalInformation)
@@ -142,9 +143,15 @@ const ClinicalInformation = () => {
     } = userAuthContext;
 
     const formik = useFormik({
-        initialValues: {},
+        initialValues: {
+            completion_date: clinicalInfoData.completion_date,
+            medical_diagnosis: clinicalInfoData.medical_diagnosis,
+            home_support_services: clinicalInfoData.home_support_services,
+            nurse_practitioner: clinicalInfoData.nurse_practitioner,
+            family_physician: clinicalInfoData.family_physician,
+        },
         validate: values => {
-            console.log(values)
+            dispatch(setClinicalInformationDetails(values))
         }
     });
     return (
@@ -165,22 +172,14 @@ const ClinicalInformation = () => {
                                                     renderInput={(props) => <TextField fullWidth {...props} />}
                                                     label="Date of Completion"
                                                     value={formik.values.daily_workload_date}
-                                                    name='daily_workload_date'
-                                                    id="daily_workload_date"
+                                                    name='completion_date'
+                                                    id="completion_date"
                                                     format="YYYY-MM-DD"
-                                                />
-                                            </LocalizationProvider>
-                                        </Grid>
-
-                                        <Grid item xs={4} lg={3}>
-                                            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                                <DatePicker
-                                                    renderInput={(props) => <TextField fullWidth {...props} />}
-                                                    label="Date of Revision"
-                                                    value={formik.values.daily_workload_date}
-                                                    name='daily_workload_date'
-                                                    id="daily_workload_date"
-                                                    format="YYYY-MM-DD"
+                                                    onChange={(date) => {
+                                                        dispatch(setClinicalInformationDetails({
+                                                            completion_date: date
+                                                        }))
+                                                    }}
                                                 />
                                             </LocalizationProvider>
                                         </Grid>
@@ -199,12 +198,15 @@ const ClinicalInformation = () => {
                                         groupBy={(option) => String(option.group)}
                                         renderInput={(params) => <TextField {...params}
                                                                             label='Medical Diagnosis'/>}
-                                        name='organizations_upon_referral'
-                                        id='organizations_upon_referral'
+                                        name='medical_diagnosis'
+                                        id='medical_diagnosis'
                                         sx={{
                                             '& .MuiOutlinedInput-root': {
                                                 pr: '30px !important'
                                             }
+                                        }}
+                                        onChange={(e, value) => {
+                                            formik.setFieldValue('medical_diagnosis', value)
                                         }}
                                     />
                                 </CardContent>
@@ -222,12 +224,15 @@ const ClinicalInformation = () => {
                                         groupBy={(option) => String(option.group)}
                                         renderInput={(params) => <TextField {...params}
                                                                             label='Home Support Services'/>}
-                                        name='organizations_upon_referral'
-                                        id='organizations_upon_referral'
+                                        name='home_support_services'
+                                        id='home_support_services'
                                         sx={{
                                             '& .MuiOutlinedInput-root': {
                                                 pr: '30px !important'
                                             }
+                                        }}
+                                        onChange={(e, value) => {
+                                            formik.setFieldValue('home_support_services', value)
                                         }}
                                     />
                                 </CardContent>
@@ -244,9 +249,9 @@ const ClinicalInformation = () => {
                                             <TextField
                                                 fullWidth
                                                 label="Name of your Family Physician"
-                                                value={formik.values.gender}
-                                                id='gender'
-                                                name='gender'
+                                                value={formik.values.family_physician}
+                                                id='family_physician'
+                                                name='family_physician'
                                                 onChange={formik.handleChange}
                                             />
                                         </Grid>
@@ -255,9 +260,9 @@ const ClinicalInformation = () => {
                                             <TextField
                                                 fullWidth
                                                 label="Name of your Nurse Practitioner"
-                                                value={formik.values.gender}
-                                                id='gender'
-                                                name='gender'
+                                                value={formik.values.nurse_practitioner}
+                                                id='nurse_practitioner'
+                                                name='nurse_practitioner'
                                                 onChange={formik.handleChange}
                                             />
                                         </Grid>

@@ -101,7 +101,7 @@ const PersonalInformationIndex = () => {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-    const [progressLoader, setProgressLoader] = React.useState(true);
+    const [progressLoader, setProgressLoader] = React.useState(false);
 
     const {
         user: {
@@ -114,8 +114,7 @@ const PersonalInformationIndex = () => {
         const response = await clientApi.retrievePersonalInformation(clientUUID)
         if ('status' in response && response.status === 200) {
             dispatch(setRetrievedClientPersonalInformationData(response.data))
-            setProgressLoader(false);
-        } else {
+        } else  if ('status' in response && response.status > 404){
             dispatch({
                 type: SNACKBAR_OPEN,
                 open: true,
@@ -127,6 +126,7 @@ const PersonalInformationIndex = () => {
                 close: true,
             })
         }
+        setProgressLoader(false);
     }
 
     useEffect(() => {
@@ -193,10 +193,14 @@ const PersonalInformationIndex = () => {
                 </Grid>
             </CardContent>
             <CardActions>
-                <Button color='secondary' variant='contained' size='large'
-                        onClick={handlePersonalInfoSave}>
-                    Save
-                </Button>
+                <Grid container justifyContent='space-between' spacing={0}>
+                    <Grid item alignContent='end'>
+                        <Button color='secondary' variant='contained' size='large'
+                                onClick={handlePersonalInfoSave}>
+                            Save
+                        </Button>
+                    </Grid>
+                </Grid>
             </CardActions>
         </MainCard>
     );

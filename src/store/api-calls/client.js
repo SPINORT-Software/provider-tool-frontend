@@ -45,5 +45,17 @@ export default {
         } catch (error) {
             return error.response;
         }
-    }
+    },
+
+    /*
+     * Clinical Information API
+     * */
+    async createOrUpdateClinicalInformation(formData) {
+        try {
+            const response = await axios.post('client/clinical-create-update', formData);
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    },
 }
