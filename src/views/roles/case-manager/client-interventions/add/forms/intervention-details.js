@@ -8,7 +8,7 @@ import {gridSpacing} from 'store/constant';
 import SubCard from 'ui-component/cards/SubCard';
 import TypeOfTherapeuticInterventions from './type-therapeutic-intervention';
 import MaskedInput from 'react-text-mask';
-import FileInput from '../../../common/file-input';
+import FileInput from 'views/roles/common/file-input';
 import {useFormik} from "formik";
 import {useDispatch, useSelector} from "react-redux";
 import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
@@ -182,7 +182,7 @@ const InterventionDetails = ({providerProfessionType}) => {
 
             </Grid>
 
-            <Grid item xs={12} sm={12} md={8} lg={12} >
+            <Grid item xs={12} sm={12} md={8} lg={6} >
                 <SubCard title='Mode of Clinical Intervention'>
                     <CardContent>
                         <Grid container spacing={gridSpacing}>
@@ -217,7 +217,7 @@ const InterventionDetails = ({providerProfessionType}) => {
                 </SubCard>
             </Grid>
 
-            <Grid item xs={12} sm={6} md={8} lg={8}>
+            <Grid item xs={12} sm={6} md={8} lg={6}>
                 <SubCard title='Therapeutic Intervention'>
                     <CardContent>
                         <TypeOfTherapeuticInterventions id='therapeutic_type' value={formik.values.therapeutic_type} onChangeHandler={formik.handleChange}/>
@@ -225,7 +225,7 @@ const InterventionDetails = ({providerProfessionType}) => {
                 </SubCard>
             </Grid>
 
-            <Grid item xs={12} sm={12} md={8} lg={8}>
+            <Grid item xs={12} sm={12} md={8} lg={6}>
                 <SubCard title='Clinical Intervention'>
                     <CardContent>
                         <Autocomplete
@@ -247,20 +247,6 @@ const InterventionDetails = ({providerProfessionType}) => {
                     </CardContent>
                 </SubCard>
             </Grid>
-
-            <Grid item xs={12} sm={12}>
-                <SubCard title='Assessment Forms'>
-                    <CardContent>
-                        <Grid container spacing={gridSpacing}>
-                            <FileInput title='EMP Progress Notes' setDocumentUUID={setInterventionFormUUID} fileType='TYPE_CASE_MANAGER_ASSESSMENT'/>
-
-                            <FileInput title='Team Communication' setDocumentUUID={setInterventionFormUUID}
-                                       fileType='TYPE_CASE_MANAGER_ASSESSMENT'/>
-                        </Grid>
-                    </CardContent>
-                </SubCard>
-            </Grid>
-
         </Grid>
     );
 };

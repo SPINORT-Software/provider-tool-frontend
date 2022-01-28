@@ -10,6 +10,7 @@ import { Button, CardActions, CardContent, Divider, Grid, Tab, Tabs, Typography 
 import ClientSelect from './forms/client';
 import InterventionDetails from './forms/intervention-details';
 import TypeOfClinicalInterventions from './forms/type-clinical-interventions';
+import InterventionAssessmentForms from './forms/assessment-forms';
 
 import MainCard from 'ui-component/cards/MainCard';
 import AnimateButton from 'ui-component/extended/AnimateButton';
@@ -92,12 +93,17 @@ const tabsOption = [
     {
         label: 'Client Select',
         icon: <DescriptionTwoToneIcon />,
-        caption: 'Caption here'
+        caption: 'Select a client for intervention'
     },
     {
         label: 'Intervention Details',
         icon: <DescriptionTwoToneIcon />,
         caption: 'Fill in the intervention details'
+    },
+    {
+        label: 'Assessment Forms',
+        icon: <DescriptionTwoToneIcon />,
+        caption: 'Add Assessment files'
     }
 ];
 
@@ -170,6 +176,9 @@ const ClientIntervention = () => {
                                 <TabPanel value={value} index={1}>
                                     <InterventionDetails providerProfessionType="PROVIDER_TYPE_REGISTERED_NURSE"/>
                                 </TabPanel>
+                                <TabPanel value={value} index={2}>
+                                    <InterventionAssessmentForms providerProfessionType="PROVIDER_TYPE_REGISTERED_NURSE"/>
+                                </TabPanel>
                             </CardContent>
                         </Grid>
                     </Grid>
@@ -189,11 +198,19 @@ const ClientIntervention = () => {
                                 )}
                             </Grid>
                             <Grid item>
-                                {value < 2 && (
+                                {value < 1 && (
                                     <AnimateButton>
                                         <Button variant='contained' size='large'
                                                 onClick={(e) => handleChange(e, 1 + parseInt(value, 10))}>
                                             Continue
+                                        </Button>
+                                    </AnimateButton>
+                                )}
+                                {value === 1 && (
+                                    <AnimateButton>
+                                        <Button variant='contained' size='large'
+                                                onClick={(e) => handleChange(e, 1 + parseInt(value, 10))}>
+                                            Submit
                                         </Button>
                                     </AnimateButton>
                                 )}

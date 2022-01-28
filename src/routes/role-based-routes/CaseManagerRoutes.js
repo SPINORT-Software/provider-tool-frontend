@@ -8,7 +8,7 @@ import AuthGuard from 'utils/route-guard/AuthGuard';
 // =================== Add Components ====================
 const DailyWorkloadAdd = Loadable(lazy(() => import('views/roles/case-manager/daily-workload/add')));
 const ClientAssessmentAdd = Loadable(lazy(() => import('views/roles/case-manager/client-assessment/add')));
-const ClientIntervention = Loadable(lazy(() => import('views/roles/case-manager/client-interventions')));
+const ClientInterventionAdd = Loadable(lazy(() => import('views/roles/case-manager/client-interventions/add')));
 
 // =================== Detail Components ====================
 const DailyWorkloadDetail = Loadable(lazy(() => import('views/roles/case-manager/daily-workload/detail')));
@@ -18,6 +18,7 @@ const ClientAssessmentDetail = Loadable(lazy(() => import('views/roles/case-mana
 // =================== List Components ====================
 const DailyWorkloadList = Loadable(lazy(() => import('views/roles/case-manager/daily-workload/list')));
 const ClientAssessmentList = Loadable(lazy(() => import('views/roles/case-manager/client-assessment/list')));
+const ClientInterventionList = Loadable(lazy(() => import('views/roles/case-manager/client-interventions/list')));
 
 
 // =================== Edit Components ===============
@@ -64,8 +65,12 @@ const CaseManagerRoutes = {
             element: <ClientAssessmentList />
         },
         {
-            path: '/intervention',
-            element: <ClientIntervention />
+            path: '/intervention/list',
+            element: <ClientInterventionList />
+        },
+        {
+            path: '/intervention/add',
+            element: <ClientInterventionAdd />
         }
     ]
 };

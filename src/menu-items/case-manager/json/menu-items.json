@@ -41,7 +41,7 @@
             "formatted_title": "Client Intervention",
             "uuid": "cbc8a7ab-9e76-4a3e-b478-6fe8b419da23",
             "type": "item",
-            "url": "/intervention",
+            "url": "/intervention/list",
             "breadcrumbs": false
           }
         ]

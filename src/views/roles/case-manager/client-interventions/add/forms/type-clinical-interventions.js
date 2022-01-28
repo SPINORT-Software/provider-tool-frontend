@@ -17,16 +17,16 @@ import {
 // project imports
 import {gridSpacing} from 'store/constant';
 import SubCard from 'ui-component/cards/SubCard';
-import AssessmentForms from '../../../common/assessment-forms';
+import AssessmentForms from 'views/roles/common/assessment-forms';
 import MaskedInput from 'react-text-mask';
 
 import {makeStyles} from '@material-ui/styles';
-import ProviderGenericForm from "../../../common/provider-specific-forms/generic-form";
-import FileInput from "../../../common/file-input";
+import ProviderGenericForm from "views/roles/common/provider-specific-forms/generic-form";
+import FileInput from "views/roles/common/file-input";
 
 import {connect, useDispatch, useSelector} from "react-redux";
 import {useFormik} from "formik";
-import {setReferralDetails} from "../../../../../store/actions/reviewBoard/referralActions";
+import {setReferralDetails} from "store/actions/reviewBoard/referralActions";
 
 const useStyles = makeStyles((theme) => ({
     card: {
