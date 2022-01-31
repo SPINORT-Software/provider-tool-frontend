@@ -51,6 +51,7 @@ import JWTContext from "contexts/JWTContext";
 import VisibilityTwoToneIcon from "@material-ui/icons/VisibilityTwoTone";
 import EditTwoToneIcon from "@material-ui/icons/EditTwoTone";
 import {listCaseManagerClientAssessment} from "store/actions/caseManager/clientAssessmentActions";
+import {listCaseManagerClientInterventions} from "../../../../../store/actions/caseManager/clientInterventionActions";
 
 // table data
 function createData(id, name, category, price, date, qty) {
@@ -85,27 +86,21 @@ function stableSort(array, comparator) {
 // table header options
 const headCells = [
     {
-        id: 'assessment_date',
+        id: 'intervention_date',
         numeric: false,
         label: 'Intervention Date',
         align: 'center'
     },
     {
-        id: 'assessment_client',
+        id: 'intervention_client',
         numeric: false,
         label: 'Client',
         align: 'left'
     },
     {
-        id: 'client_status',
+        id: 'intervention_total_time',
         numeric: false,
-        label: 'Client Status',
-        align: 'left'
-    },
-    {
-        id: 'assessment_type',
-        numeric: false,
-        label: 'Assessment Type',
+        label: 'Total Time Spent',
         align: 'left'
     },
 ];
@@ -242,7 +237,7 @@ EnhancedTableToolbar.propTypes = {
 
 // ===========================|| PRODUCT LIST ||=========================== //
 
-const ReviewBoardReferralList = () => {
+const CaseManagerClientInterventionList = () => {
     const userAuthContext = React.useContext(JWTContext)
     const {
         user: {
@@ -257,13 +252,8 @@ const ReviewBoardReferralList = () => {
     const classes = useStyles();
     const theme = useTheme();
 
-    // show a right sidebar when clicked on new product
-    const [open, setOpen] = React.useState(false);
     const handleClickOpenDialog = () => {
-        navigate('/assessment/add');
-    };
-    const handleCloseDialog = () => {
-        setOpen(false);
+        navigate('/intervention/add');
     };
 
     const [order, setOrder] = React.useState('asc');
@@ -318,8 +308,8 @@ const ReviewBoardReferralList = () => {
         setSelected([]);
     };
 
-    const handleClick = (event, workloadUUID) => {
-        navigate(`/assessment/${workloadUUID}`)
+    const handleClick = (event, interventionUUID) => {
+        navigate(`/intervetion/${interventionUUID}`)
     };
 
     const handleChangePage = (event, newPage) => {
@@ -332,11 +322,11 @@ const ReviewBoardReferralList = () => {
     };
 
     const fetchListData = async () => {
-        const response = await caseManagerApi.listClientAssessmentByCaseManagerID(caseManagerUUID);
+        const response = await caseManagerApi.listClientInterventionByCaseManagerID(caseManagerUUID);
         if ('result' in response && response.result === true) {
             setRows(response.data)
             setRowsInitial(response.data)
-            dispatch(listCaseManagerClientAssessment(response.data))
+            dispatch(listCaseManagerClientInterventions(response.data))
         }
     }
 
@@ -438,7 +428,7 @@ const ReviewBoardReferralList = () => {
                                                 sx={{color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900'}}
                                             >
                                                 {' '}
-                                                {row.assessment_date}{' '}
+                                                {row.date}{' '}
                                             </Typography>
                                         </TableCell>
 
@@ -454,7 +444,7 @@ const ReviewBoardReferralList = () => {
                                                 sx={{color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900'}}
                                             >
                                                 {' '}
-                                                {row?.client_fullname}{' '}
+                                                {row?.client?.user?.fullname}{' '}
                                             </Typography>
                                         </TableCell>
 
@@ -470,25 +460,10 @@ const ReviewBoardReferralList = () => {
                                                 sx={{color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900'}}
                                             >
                                                 {' '}
-                                                {row?.client_status}{' '}
+                                                {row?.total_time}{' '}
                                             </Typography>
                                         </TableCell>
 
-                                        <TableCell
-                                            component="th"
-                                            align="left"
-                                            id={labelId}
-                                            scope="row"
-                                            sx={{cursor: 'pointer'}}
-                                        >
-                                            <Typography
-                                                variant="subtitle1"
-                                                sx={{color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900'}}
-                                            >
-                                                {' '}
-                                                {row?.assessment_status}{' '}
-                                            </Typography>
-                                        </TableCell>
 
                                         <TableCell align="center" sx={{pr: 3}}>
                                             <IconButton
@@ -533,4 +508,4 @@ const ReviewBoardReferralList = () => {
     );
 };
 
-export default ReviewBoardReferralList;
+export default CaseManagerClientInterventionList;

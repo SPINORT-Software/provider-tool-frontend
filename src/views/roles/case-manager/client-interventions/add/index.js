@@ -9,7 +9,6 @@ import { Button, CardActions, CardContent, Divider, Grid, Tab, Tabs, Typography 
 // project imports
 import ClientSelect from './forms/client';
 import InterventionDetails from './forms/intervention-details';
-import TypeOfClinicalInterventions from './forms/type-clinical-interventions';
 import InterventionAssessmentForms from './forms/assessment-forms';
 
 import MainCard from 'ui-component/cards/MainCard';
@@ -19,7 +18,13 @@ import { gridSpacing } from 'store/constant';
 // assets
 import DescriptionTwoToneIcon from '@material-ui/icons/DescriptionTwoTone';
 import JWTContext from "contexts/JWTContext";
-import {setInterventionCaseManagerDetail} from "store/actions/caseManager/clientInterventionActions";
+import {
+    setInterventionCaseManagerDetail,
+    setInterventionClientDetail
+} from "store/actions/caseManager/clientInterventionActions";
+import caseManagerApi from "store/api-calls/case-manager";
+import {SNACKBAR_OPEN} from "store/actionTypes";
+import ProgressCircularControlled from "../../../../ui/ProgressCircularControlled";
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -113,6 +118,10 @@ const ClientIntervention = () => {
     const customization = useSelector((state) => state.customization);
     const [value, setValue] = React.useState(0);
     const dispatch = useDispatch();
+    const [progressLoader, setProgressLoader] = React.useState(false);
+
+    const clientInterventionData = useSelector(state => state.caseManager.clientIntervention.add)
+    const clientInterventionAddData = clientInterventionData.intervention
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -126,6 +135,55 @@ const ClientIntervention = () => {
     useEffect(() => {
         dispatch(setInterventionCaseManagerDetail(caseManagerUUID))
     }, []);
+
+    const handleSubmit = async (event) => {
+        setProgressLoader(true);  // Call this to show the loader for the current tab
+
+        // Make a new helper method to validate if all the required fields are non empty
+
+        // temporary fix to put case manager id in the data
+
+        const response = await caseManagerApi.createClientIntervention(clientInterventionData);
+
+        if (response && 'result' in response) {
+            if (response.result === true) {
+                dispatch({
+                    type: SNACKBAR_OPEN,
+                    open: true,
+                    message: 'Client Intervention has been successfully added.',
+                    variant: 'alert',
+                    alertSeverity: 'success', // error , success, warning
+                    anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                    transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                    close: true,
+                })
+            } else {
+                dispatch({
+                    type: SNACKBAR_OPEN,
+                    open: true,
+                    message: 'Client Intervention could not be added. Please try again',
+                    variant: 'alert',
+                    alertSeverity: 'error', // error , success, warning
+                    anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                    transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                    close: true,
+                })
+            }
+        } else {
+            dispatch({
+                type: SNACKBAR_OPEN,
+                open: true,
+                message: 'Client Intervention could not be added. Please try again',
+                variant: 'alert',
+                alertSeverity: 'error', // error , success, warning
+                anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
+                transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                close: true,
+            })
+        }
+
+        setProgressLoader(false);
+    }
 
     return (
         <Grid container spacing={gridSpacing}>
@@ -171,7 +229,7 @@ const ClientIntervention = () => {
                         <Grid item xs={12} lg={8}>
                             <CardContent className={classes.cardPanels}>
                                 <TabPanel value={value} index={0}>
-                                    <ClientSelect />
+                                    <ClientSelect setSelectedClientValueToStore={setInterventionClientDetail} storeData={clientInterventionAddData}/>
                                 </TabPanel>
                                 <TabPanel value={value} index={1}>
                                     <InterventionDetails providerProfessionType="PROVIDER_TYPE_REGISTERED_NURSE"/>
@@ -198,7 +256,7 @@ const ClientIntervention = () => {
                                 )}
                             </Grid>
                             <Grid item>
-                                {value < 1 && (
+                                {value < 2 && (
                                     <AnimateButton>
                                         <Button variant='contained' size='large'
                                                 onClick={(e) => handleChange(e, 1 + parseInt(value, 10))}>
@@ -206,13 +264,20 @@ const ClientIntervention = () => {
                                         </Button>
                                     </AnimateButton>
                                 )}
-                                {value === 1 && (
-                                    <AnimateButton>
-                                        <Button variant='contained' size='large'
-                                                onClick={(e) => handleChange(e, 1 + parseInt(value, 10))}>
-                                            Submit
-                                        </Button>
-                                    </AnimateButton>
+                                {value === 2 && (
+                                    <Grid container justify="space-around" spacing={gridSpacing}>
+                                        <Grid item>
+                                            <ProgressCircularControlled display={progressLoader}/>
+                                        </Grid>
+                                        <Grid item>
+                                            <AnimateButton>
+                                                <Button variant='contained' size='large'
+                                                        onClick={handleSubmit}>
+                                                    Save
+                                                </Button>
+                                            </AnimateButton>
+                                        </Grid>
+                                    </Grid>
                                 )}
                             </Grid>
                         </Grid>

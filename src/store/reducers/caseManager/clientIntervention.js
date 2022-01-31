@@ -17,13 +17,26 @@ export const initialState = {
             progress_notes: []
         }
     },
-    update: {},
     retrieve: {}
 }
 
 
 const clientInterventionReducer = (state = initialState, action) => {
     switch (action.type) {
+        case actionTypes.CASE_MANAGER_SET_CLIENT_INTERVENTION_CLIENT_DETAIL: {
+            const clientUUID = action.data
+
+            return {
+                ...state,
+                add: {
+                    ...state.add,
+                    intervention: {
+                        ...state.add.intervention,
+                        client: clientUUID
+                    }
+                }
+            }
+        }
         case actionTypes.CASE_MANAGER_SET_CLIENT_INTERVENTION_DETAILS: {
             const interventionData = action.data
 
@@ -66,8 +79,31 @@ const clientInterventionReducer = (state = initialState, action) => {
                 }
             }
         }
+        case actionTypes.CASE_MANAGER_SET_CLIENT_INTERVENTION_FORM_UUID: {
+            const formID = action.data
 
+            return {
+                ...state,
+                add: {
+                    ...state.add,
+                    forms: [
+                        ...state.add.forms,
+                        formID
+                    ]
+                }
+            }
+        }
+        case actionTypes.CASE_MANAGER_LIST_CLIENT_INTERVENTION_FOR_CASE_MANAGER: {
+            const clientInterventionlistData = action.data;
 
+            return {
+                ...state,
+                list: {
+                    ...state.list,
+                    ...clientInterventionlistData
+                }
+            }
+        }
         default: {
             return {...state};
         }

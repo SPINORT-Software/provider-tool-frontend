@@ -57,6 +57,8 @@ export default {
         }
     },
 
+
+    /* Client Assessment API Calls */
     async createClientAssessment(formData) {
         try {
             const response = await axios.post('casemanager/client-assessment-create', formData);
@@ -84,6 +86,24 @@ export default {
         }
     },
 
+    /* Client Intervention API Calls */
+    async createClientIntervention(formData) {
+        try {
+            const response = await axios.post('casemanager/client-intervention-create', formData);
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    },
+
+    async listClientInterventionByCaseManagerID(caseManagerID) {
+        try {
+            const response = await axios.get(`casemanager/${caseManagerID}/client-intervention`);
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    },
 
 }
 

@@ -132,8 +132,6 @@ const InterventionDetails = ({providerProfessionType}) => {
 
     const formik = useFormik({
         initialValues: {
-            casemanager: '',
-            client: clientInterventionAddData.client,
             date: clientInterventionAddData.date,
             total_time: clientInterventionAddData.total_time,
             mode_of_clinical_intervention: clientInterventionAddData.mode_of_clinical_intervention,
@@ -229,6 +227,11 @@ const InterventionDetails = ({providerProfessionType}) => {
                 <SubCard title='Clinical Intervention'>
                     <CardContent>
                         <Autocomplete
+                            sx={{
+                                '& .MuiOutlinedInput-root': {
+                                    pr: '30px !important'
+                                }
+                            }}
                             multiple
                             options={providerTypeClinicalInterventionTypes[providerProfessionType]}
                             getOptionLabel={(option) => option.label}
@@ -237,11 +240,6 @@ const InterventionDetails = ({providerProfessionType}) => {
                             renderInput={(params) => <TextField {...params} label='Clinical Intervention'/>}
                             onChange={(e, value) => {
                                 formik.setFieldValue('clinical_type', value)
-                            }}
-                            sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    pr: '30px !important'
-                                }
                             }}
                         />
                     </CardContent>
