@@ -113,22 +113,22 @@ const tabsOption = [
     {
         label: 'Details',
         icon: <DescriptionTwoToneIcon/>,
-        caption: 'Caption here'
+        caption: 'Workload Details'
     },
     {
         label: 'Client Caseload',
         icon: <DescriptionTwoToneIcon/>,
-        caption: 'Billing Information'
+        caption: 'Caseload Information'
     },
     {
         label: 'Project Related Clinical Activities',
         icon: <CreditCardTwoToneIcon/>,
-        caption: 'Add & Update Card'
+        caption: 'Project Information'
     },
     {
         label: 'Research Related Activities',
         icon: <VpnKeyTwoToneIcon/>,
-        caption: 'Update Profile Security'
+        caption: 'Research Information'
     }
 ];
 

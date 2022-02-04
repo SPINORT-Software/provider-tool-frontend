@@ -18,8 +18,6 @@ import {
 
 // project imports
 import ClientCaseLoad from '../add/forms/client-caseload';
-import ProjectClinicalActivities from '../add/forms/project-clinical-activities';
-import ProjectActivities from '../add/forms/project-activities';
 import Details from '../add/forms/details';
 
 import {useSelector, useDispatch} from "react-redux";
@@ -29,13 +27,10 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 import {gridSpacing} from 'store/constant';
 
 // assets
-import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
 import DescriptionTwoToneIcon from '@material-ui/icons/DescriptionTwoTone';
-import CreditCardTwoToneIcon from '@material-ui/icons/CreditCardTwoTone';
-import VpnKeyTwoToneIcon from '@material-ui/icons/VpnKeyTwoTone';
 import {SNACKBAR_OPEN} from 'store/actionTypes';
 
-import caseManagerApi from 'store/api-calls/case-manager';
+import clinicianApi from 'store/api-calls/clinician';
 
 import ProgressCircularControlled from 'views/ui/ProgressCircularControlled';
 import {
@@ -43,7 +38,7 @@ import {
     resetDailyWorkLoad,
     retrieveDailyWorkload,
     setRetrievedDailyWorkLoadDetailsUpdate
-} from "store/actions/caseManager/dailyWorkloadActions";
+} from "store/actions/clinician/dailyWorkloadActions";
 import {useNavigate, useParams} from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 import InfoTwoTone from "@material-ui/icons/InfoTwoTone";
@@ -121,23 +116,13 @@ const tabsOption = [
     {
         label: 'Details',
         icon: <DescriptionTwoToneIcon/>,
-        caption: 'Caption here'
+        caption: 'Workload Information'
     },
     {
         label: 'Client Caseload',
         icon: <DescriptionTwoToneIcon/>,
-        caption: 'Billing Information'
+        caption: 'Caseload Information'
     },
-    {
-        label: 'Project Related Clinical Activities',
-        icon: <CreditCardTwoToneIcon/>,
-        caption: 'Add & Update Card'
-    },
-    {
-        label: 'Research Related Activities',
-        icon: <VpnKeyTwoToneIcon/>,
-        caption: 'Update Profile Security'
-    }
 ];
 
 // ===========================|| PROFILE 2 ||=========================== //
@@ -154,12 +139,12 @@ const DailyWorkloadEdit = () => {
     const userAuthContext = React.useContext(JWTContext)
     const {
         user: {
-            user_type_pk: caseManagerUUID
+            user_type_pk: clinicianUUID
         }
     } = userAuthContext;
 
     const {workload_id} = useParams();
-    const dailyWorkloadDataEdit = useSelector(state => state.caseManager.dailyWorkload.add)
+    const dailyWorkloadDataEdit = useSelector(state => state.clinician.dailyWorkload.add)
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -171,20 +156,20 @@ const DailyWorkloadEdit = () => {
 
     useEffect(async () => {
         setProgressLoader(true);
-        const response = await caseManagerApi.retrieveDailyWorkload(workload_id);
+        const response = await clinicianApi.retrieveDailyWorkload(workload_id);
 
         if ('result' in response && response.result === true && 'data' in response) {
             dispatch(setRetrievedDailyWorkLoadDetailsUpdate(response.data))
-            setProgressLoader(false);
         }
+        setProgressLoader(false);
     }, []);
 
     const handleWorkloadUpdate = async (e) => {
         setProgressLoader(true);  // Call this to show the loader for the current tab
         dispatch(setDailyWorkLoadDetails({
-            casemanager: caseManagerUUID
+            clinician: clinicianUUID
         }))
-        const response = await caseManagerApi.updateDailyWorkload(workload_id, dailyWorkloadDataEdit);
+        const response = await clinicianApi.updateDailyWorkload(workload_id, dailyWorkloadDataEdit);
         setProgressLoader(false);
 
         if ('result' in response === true) {
@@ -306,12 +291,6 @@ const DailyWorkloadEdit = () => {
                                 <TabPanel value={value} index={1}>
                                     <ClientCaseLoad editMode/>
                                 </TabPanel>
-                                <TabPanel value={value} index={2}>
-                                    <ProjectClinicalActivities editMode/>
-                                </TabPanel>
-                                <TabPanel value={value} index={3}>
-                                    <ProjectActivities editMode/>
-                                </TabPanel>
                             </CardContent>
                         </Grid>
                     </Grid>
@@ -321,7 +300,7 @@ const DailyWorkloadEdit = () => {
                             <Grid item>
                                 <Grid container justifyContent='space-between' spacing={1}>
                                     <Grid item>
-                                        {value < 3 && (
+                                        {value < 1 && (
                                             <AnimateButton>
                                                 <Button variant='contained' size='large'
                                                         onClick={(e) => handleChange(e, 1 + parseInt(value, 10))}>
@@ -345,7 +324,7 @@ const DailyWorkloadEdit = () => {
                             </Grid>
 
                             <Grid item alignContent='end'>
-                                {value > 2 && (
+                                {value === 1 && (
                                     <AnimateButton>
                                         <Button color='secondary' variant='contained' size='large'
                                                 onClick={handleWorkloadUpdate}>

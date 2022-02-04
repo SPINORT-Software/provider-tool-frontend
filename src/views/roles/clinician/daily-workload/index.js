@@ -13,14 +13,14 @@ import {
     Grid,
     Tab,
     Tabs,
-    Typography, IconButton
+    Typography
 } from '@material-ui/core';
 
 // project imports
-import ClientCaseLoad from '../add/forms/client-caseload';
-import ProjectClinicalActivities from '../add/forms/project-clinical-activities';
-import ProjectActivities from '../add/forms/project-activities';
-import Details from '../add/forms/details';
+import ClientCaseLoad from './forms/client-caseload';
+import ProjectClinicalActivities from './forms/project-clinical-activities';
+import ProjectActivities from './forms/project-activities';
+import Details from './forms/details';
 
 import {useSelector, useDispatch} from "react-redux";
 
@@ -38,16 +38,7 @@ import {SNACKBAR_OPEN} from 'store/actionTypes';
 import caseManagerApi from 'store/api-calls/case-manager';
 
 import ProgressCircularControlled from 'views/ui/ProgressCircularControlled';
-import {
-    setDailyWorkLoadDetails,
-    resetDailyWorkLoad,
-    retrieveDailyWorkload,
-    setRetrievedDailyWorkLoadDetailsUpdate
-} from "store/actions/caseManager/dailyWorkloadActions";
-import {useNavigate, useParams} from "react-router-dom";
-import Tooltip from "@material-ui/core/Tooltip";
-import InfoTwoTone from "@material-ui/icons/InfoTwoTone";
-
+import {setDailyWorkLoadDetails, resetDailyWorkLoad} from "store/actions/caseManager/dailyWorkloadActions";
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -142,14 +133,15 @@ const tabsOption = [
 
 // ===========================|| PROFILE 2 ||=========================== //
 
-const DailyWorkloadEdit = () => {
+const DailyWorkload = () => {
     const classes = useStyles();
-    const navigate = useNavigate();
     const customization = useSelector((state) => state.customization);
-    const dispatch = useDispatch();
 
     const [value, setValue] = React.useState(0);
     const [progressLoader, setProgressLoader] = React.useState(false);
+    const dispatch = useDispatch();
+
+    const dailyWorkloadData = useSelector(state => state.caseManager.dailyWorkload.add)
 
     const userAuthContext = React.useContext(JWTContext)
     const {
@@ -158,43 +150,30 @@ const DailyWorkloadEdit = () => {
         }
     } = userAuthContext;
 
-    const {workload_id} = useParams();
-    const dailyWorkloadDataEdit = useSelector(state => state.caseManager.dailyWorkload.add)
-
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    const navigateWorkloadDetail = () => {
-        navigate(`/workload/${workload_id}`)
-    }
-
-    useEffect(async () => {
-        setProgressLoader(true);
-        const response = await caseManagerApi.retrieveDailyWorkload(workload_id);
-
-        if ('result' in response && response.result === true && 'data' in response) {
-            dispatch(setRetrievedDailyWorkLoadDetailsUpdate(response.data))
-            setProgressLoader(false);
-        }
+    useEffect(() => {
+        dispatch(setDailyWorkLoadDetails({
+            casemanager: caseManagerUUID
+        }))
     }, []);
 
-    const handleWorkloadUpdate = async (e) => {
+    const handleWorkloadSubmit = async (e) => {
         setProgressLoader(true);  // Call this to show the loader for the current tab
         dispatch(setDailyWorkLoadDetails({
             casemanager: caseManagerUUID
         }))
-        const response = await caseManagerApi.updateDailyWorkload(workload_id, dailyWorkloadDataEdit);
+        const response = await caseManagerApi.createDailyWorkload(dailyWorkloadData);
         setProgressLoader(false);
 
         if ('result' in response === true) {
             if (response.result === true) {
-                navigate(`/workload/${workload_id}`)
-
                 dispatch({
                     type: SNACKBAR_OPEN,
                     open: true,
-                    message: 'Your Daily Workload entry has been updated.',
+                    message: 'Your Daily Workload entry has been created.',
                     variant: 'alert',
                     alertSeverity: 'success', // error , success, warning
                     anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
@@ -206,7 +185,7 @@ const DailyWorkloadEdit = () => {
                 dispatch({
                     type: SNACKBAR_OPEN,
                     open: true,
-                    message: 'Your Daily workload could not be updated. Please try again',
+                    message: 'Your Daily workload could not be added. Please try again',
                     variant: 'alert',
                     alertSeverity: 'error', // error , success, warning
                     anchorOrigin: {vertical: 'bottom', horizontal: 'right'},  // vertical - top, bottom, // horizontal - left, center, right
@@ -246,20 +225,7 @@ const DailyWorkloadEdit = () => {
     return (
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
-                <MainCard title={
-                    <>
-                        <>Edit Daily Workload</>
-                        <ProgressCircularControlled display={progressLoader}/>
-                    </>
-                } secondary={
-                    <>
-                        <Tooltip title="View Workload Detail" onClick={navigateWorkloadDetail}>
-                            <IconButton color="secondary">
-                                <InfoTwoTone sx={{fontSize: '1.5rem'}}/>
-                            </IconButton>
-                        </Tooltip>
-                    </>
-                }
+                <MainCard title='Daily Workload ' secondary={<ProgressCircularControlled display={progressLoader}/>}
                           content={false}>
                     <Grid container spacing={gridSpacing}>
                         <Grid item xs={12} lg={4}>
@@ -301,16 +267,16 @@ const DailyWorkloadEdit = () => {
                         <Grid item xs={12} lg={8}>
                             <CardContent className={classes.cardPanels}>
                                 <TabPanel value={value} index={0}>
-                                    <Details editMode/>
+                                    <Details/>
                                 </TabPanel>
                                 <TabPanel value={value} index={1}>
-                                    <ClientCaseLoad editMode/>
+                                    <ClientCaseLoad/>
                                 </TabPanel>
                                 <TabPanel value={value} index={2}>
-                                    <ProjectClinicalActivities editMode/>
+                                    <ProjectClinicalActivities/>
                                 </TabPanel>
                                 <TabPanel value={value} index={3}>
-                                    <ProjectActivities editMode/>
+                                    <ProjectActivities/>
                                 </TabPanel>
                             </CardContent>
                         </Grid>
@@ -348,8 +314,8 @@ const DailyWorkloadEdit = () => {
                                 {value > 2 && (
                                     <AnimateButton>
                                         <Button color='secondary' variant='contained' size='large'
-                                                onClick={handleWorkloadUpdate}>
-                                            Update <ProgressCircularControlled display={progressLoader}/>
+                                                onClick={handleWorkloadSubmit}>
+                                            Submit <ProgressCircularControlled display={progressLoader}/>
                                         </Button>
                                     </AnimateButton>
                                 )}
@@ -363,4 +329,4 @@ const DailyWorkloadEdit = () => {
     );
 };
 
-export default DailyWorkloadEdit;
+export default DailyWorkload;

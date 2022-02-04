@@ -10,6 +10,7 @@ import sectionFormReducer from './reducers/sectionFormReducer';
 import accountReducer from './reducers/accountReducer';
 import reviewBoardReducers from './reducers/reviewBoard';
 import caseManagerReducers from './reducers/caseManager';
+import clinicianReducers from './reducers/clinician';
 import messagingReducer from './reducers/messagingReducer';
 import clientReducers from './reducers/client';
 
@@ -23,6 +24,7 @@ const reducer = combineReducers({
     account: accountReducer,
     reviewBoard: reviewBoardReducers,
     caseManager: caseManagerReducers,
+    clinician: clinicianReducers,
     messaging: messagingReducer,
     client: clientReducers,
     cart: persistReducer(
