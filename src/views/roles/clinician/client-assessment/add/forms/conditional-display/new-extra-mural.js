@@ -17,7 +17,7 @@ import {
     setNewEMAssessmentDetails,
     setNewEMProviderSpecificFormUUID,
     setNewEMGeneralAssessmentFormUUID
-} from "store/actions/caseManager/clientAssessmentActions";
+} from "store/actions/clinician/clientAssessmentActions";
 
 const modeOfAssessmentSelectList = [
     {
@@ -56,7 +56,7 @@ const modeOfAssessmentSelectList = [
 
 const NewExtraMural = () => {
 
-    const assessmentData = useSelector(state => state.caseManager.clientAssessment.add.assessment_type_data)
+    const assessmentData = useSelector(state => state.clinician.clientAssessment.add.assessment_type_data)
     const dispatch = useDispatch()
 
     const formik = useFormik({

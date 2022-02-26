@@ -16,7 +16,7 @@ import {
     setReassessmentEMProviderSpecificFormUUID,
     setReassessmentEMGeneralAssessmentFormUUID,
     setReAssessmentDetails
-} from "store/actions/caseManager/clientAssessmentActions";
+} from "store/actions/clinician/clientAssessmentActions";
 
 const modeOfAssessmentSelectList = [
     {
@@ -54,7 +54,7 @@ const modeOfAssessmentSelectList = [
 ];
 
 const ClientReasessment = () => {
-    const clientAssessmentTypeData = useSelector(state => state.caseManager.clientAssessment.add.assessment_type_data)
+    const clientAssessmentTypeData = useSelector(state => state.clinician.clientAssessment.add.assessment_type_data)
     const reAssessmentData = clientAssessmentTypeData.reassessment.data
 
     const dispatch = useDispatch()

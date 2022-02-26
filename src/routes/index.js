@@ -3,6 +3,7 @@ import React, {useContext} from 'react';
 
 // project imports
 import CaseManagerRoutes from './role-based-routes/CaseManagerRoutes';
+import ExternalPartnerRoutes from './role-based-routes/ExternalPartnerRoutes';
 import ClinicianRoutes from './role-based-routes/ClinicianRoutes';
 import CommunityParamedicRoutes from './role-based-routes/CommunityParamedicRoutes';
 import ReviewBoardRoutes from './role-based-routes/ReviewBoardRoutes';
@@ -12,13 +13,6 @@ import CommonRoutes from './common-routes';
 import HomeRoute from './common-routes/home';
 
 import JWTContext from "contexts/JWTContext";
-import reviewBoardMenuItems from "../menu-items/review-board";
-import caseManagerMenuItems from "../menu-items/case-manager";
-import clientMenuItems from "../menu-items/client";
-import comunityParamedicMenuItems from "../menu-items/community-paramedic";
-import clinicianMenuItems from "../menu-items/clinician";
-
-// ===========================|| ROUTING RENDER ||=========================== //
 
 // export default function ThemeRoutes() {
 //     return useRoutes([LoginRoutes, CaseManagerRoutes, CommunityParamedicRoutes, ReviewBoardRoutes, ClientRoutes, CommonRoutes, HomeRoute]);
@@ -66,6 +60,12 @@ const makeRoutes = (user) => {
                     ReviewBoardRoutes
                 ]
                 break;
+            case 'TYPE_EXTERNAL_PARTNER':
+                routes = [
+                    ...routes,
+                    ExternalPartnerRoutes
+                ]
+                break;
             default:
                 routes = [
                     ...routes
@@ -81,8 +81,6 @@ const Routes = () => {
     const {user} = jwtContext;
 
     const routes = makeRoutes(user)
-
-    // return useRoutes([LoginRoutes, CaseManagerRoutes, CommunityParamedicRoutes, ReviewBoardRoutes, ClientRoutes, CommonRoutes, HomeRoute]);
     return useRoutes(routes);
 }
 

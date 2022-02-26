@@ -1,8 +1,12 @@
 import React from 'react';
 
 // material-ui
-import { useTheme, makeStyles } from '@material-ui/styles';
-import { Grid, Typography, useMediaQuery } from '@material-ui/core';
+import {useTheme, makeStyles} from '@material-ui/styles';
+import {Grid, Typography, useMediaQuery} from '@material-ui/core';
+import MainCard from 'ui-component/cards/MainCard';
+import {gridSpacing} from 'store/constant';
+import IconNumberCard from 'ui-component/cards/IconNumberCard';
+
 
 // project imports
 import NewClients from '../common/NewClients';
@@ -10,15 +14,15 @@ import Notifications from '../common/Notifications';
 import InternalReferrals from '../common/InternalReferrals';
 import ExternalReferrals from '../common/ExternalReferrals';
 import ClientReferrals from '../common/ClientReferrals';
-import MainCard from 'ui-component/cards/MainCard';
-import { gridSpacing } from 'store/constant';
-import IconNumberCard from 'ui-component/cards/IconNumberCard';
+import InternalFollowUp from "../common/InternalFollowUp";
 
 // assets
-import { IconShare, IconAccessPoint, IconCircles, IconCreditCard } from '@tabler/icons';
+import {IconShare, IconAccessPoint, IconCircles, IconCreditCard} from '@tabler/icons';
 import MonetizationOnTwoToneIcon from '@material-ui/icons/MonetizationOnTwoTone';
 import AccountCircleTwoTone from '@material-ui/icons/AccountCircleTwoTone';
 import DescriptionTwoToneIcon from '@material-ui/icons/DescriptionTwoTone';
+import ExternalFollowUp from "../common/ExternalFollowUp";
+
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -53,37 +57,46 @@ const Analytics = () => {
 
     return (
         <Grid container spacing={gridSpacing}>
-            <Grid item xs={12} lg={8} md={6}>
+            <Grid item xs={12} lg={12} md={12}>
                 <Grid container spacing={gridSpacing}>
-                    <Grid item xs={12}>
-                        <Notifications />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <ClientReferrals />
-                    </Grid>
-                </Grid>
-            </Grid>
 
-            <Grid item xs={12} lg={4} md={6}>
-                <Grid container spacing={gridSpacing}>
-                    <Grid item xs={12}>
-                        <InternalReferrals  />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <ExternalReferrals  />
+                    <Grid item xs={12} lg={6}>
+                        <IconNumberCard title="Clients Added" primary="12" color={theme.palette.primary.dark}
+                                        iconPrimary={AccountCircleTwoTone}/>
                     </Grid>
 
                     <Grid item xs={12} lg={6}>
-                        <IconNumberCard title="Clients Added" primary="12" color={theme.palette.primary.dark} iconPrimary={AccountCircleTwoTone} />
+                        <IconNumberCard title="Files Uploaded" primary="120" color={theme.palette.primary.dark}
+                                        iconPrimary={DescriptionTwoToneIcon}/>
                     </Grid>
 
-                    <Grid item xs={12} lg={6}>
-                        <IconNumberCard title="Files Uploaded" primary="120" color={theme.palette.primary.dark} iconPrimary={DescriptionTwoToneIcon} />
+                    <Grid item xs={12} lg={6} md={6}>
+                        <Notifications/>
+                    </Grid>
+
+                    <Grid item xs={12} lg={6} md={6}>
+                        <ClientReferrals/>
+                    </Grid>
+
+                    <Grid item xs={12} lg={6} md={6}>
+                        <InternalReferrals/>
+                    </Grid>
+
+                    <Grid item xs={12} lg={6} md={6}>
+                        <ExternalReferrals/>
+                    </Grid>
+
+                    <Grid item xs={12} lg={6} md={6}>
+                        <InternalFollowUp/>
+                    </Grid>
+
+                    <Grid item xs={12} lg={6} md={6}>
+                        <ExternalFollowUp/>
                     </Grid>
 
                 </Grid>
             </Grid>
+
         </Grid>
     );
 };

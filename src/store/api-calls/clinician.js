@@ -69,9 +69,9 @@ export default {
         }
     },
 
-    async listClientAssessmentByCaseManagerID(caseManagerID) {
+    async listClientAssessmentByCaseManagerID(clinicianID) {
         try {
-            const response = await axios.get(`clinician/${caseManagerID}/client-assessment`);
+            const response = await axios.get(`clinician/${clinicianID}/client-assessment`);
             return response.data;
         } catch (error) {
             return error.response;
@@ -97,9 +97,9 @@ export default {
         }
     },
 
-    async listClientInterventionByCaseManagerID(caseManagerID) {
+    async listClientInterventionByClinicianID(clinicianID) {
         try {
-            const response = await axios.get(`clinician/${caseManagerID}/client-intervention`);
+            const response = await axios.get(`clinician/${clinicianID}/client-intervention`);
             return response.data;
         } catch (error) {
             return error.response;

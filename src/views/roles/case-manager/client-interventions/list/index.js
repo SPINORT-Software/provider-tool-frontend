@@ -136,8 +136,10 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 // ===========================|| TABLE HEADER ||=========================== //
 
-function EnhancedTableHead({classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, theme,
-                               selected }) {
+function EnhancedTableHead({
+                               classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, theme,
+                               selected
+                           }) {
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
@@ -327,6 +329,10 @@ const CaseManagerClientInterventionList = () => {
             setRows(response.data)
             setRowsInitial(response.data)
             dispatch(listCaseManagerClientInterventions(response.data))
+        } else {
+            // console.log("Could not fetch list")
+            setRows([])
+            setRowsInitial([])
         }
     }
 
@@ -468,7 +474,7 @@ const CaseManagerClientInterventionList = () => {
                                         <TableCell align="center" sx={{pr: 3}}>
                                             <IconButton
                                                 color="primary"
-                                                onClick={(event) => handleClick(event, row.client_assessment_id)}
+                                                onClick={(event) => handleClick(event, row.intervention_id)}
                                             >
                                                 <VisibilityTwoToneIcon sx={{fontSize: '1.3rem'}}/>
                                             </IconButton>

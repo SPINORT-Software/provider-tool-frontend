@@ -46,11 +46,13 @@ import MoreHorizOutlinedIcon from '@material-ui/icons/MoreHorizOutlined';
 import {useContext, useEffect} from "react";
 
 // axios api
-import caseManagerApi from 'store/api-calls/case-manager';
+import clinicianApi from 'store/api-calls/clinician';
 import JWTContext from "contexts/JWTContext";
 import VisibilityTwoToneIcon from "@material-ui/icons/VisibilityTwoTone";
 import EditTwoToneIcon from "@material-ui/icons/EditTwoTone";
-import {listCaseManagerClientAssessment} from "store/actions/caseManager/clientAssessmentActions";
+import {
+    listClinicianClientAssessment,
+} from "store/actions/clinician/clientAssessmentActions";
 
 // table data
 function createData(id, name, category, price, date, qty) {
@@ -242,16 +244,15 @@ EnhancedTableToolbar.propTypes = {
 
 // ===========================|| PRODUCT LIST ||=========================== //
 
-const ReviewBoardReferralList = () => {
+const ClientAssessmentList = () => {
     const userAuthContext = React.useContext(JWTContext)
     const {
         user: {
-            user_type_pk: caseManagerUUID
+            user_type_pk: clinicianUUID
         }
     } = userAuthContext;
 
     const navigate = useNavigate();
-    const reviewBoardRedux = useSelector(state => state.reviewBoard)
     const dispatch = useDispatch();
 
     const classes = useStyles();
@@ -332,11 +333,11 @@ const ReviewBoardReferralList = () => {
     };
 
     const fetchListData = async () => {
-        const response = await caseManagerApi.listClientAssessmentByCaseManagerID(caseManagerUUID);
+        const response = await clinicianApi.listClientAssessmentByCaseManagerID(clinicianUUID);
         if ('result' in response && response.result === true) {
             setRows(response.data)
             setRowsInitial(response.data)
-            dispatch(listCaseManagerClientAssessment(response.data))
+            dispatch(listClinicianClientAssessment(response.data))
         }
     }
 
@@ -533,4 +534,4 @@ const ReviewBoardReferralList = () => {
     );
 };
 
-export default ReviewBoardReferralList;
+export default ClientAssessmentList;

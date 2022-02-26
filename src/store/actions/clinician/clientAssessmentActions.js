@@ -110,7 +110,7 @@ export const setReassessmentEMGeneralAssessmentFormUUID = (formDocumentUUID) => 
 });
 
 
-export const listCaseManagerClientAssessment = (responseData) => ({
+export const listClinicianClientAssessment = (responseData) => ({
     type: actionTypes.CLINICIAN_LIST_CLIENT_ASSESSMENT_FOR_CLINICIAN,
     data: {
         ...responseData

@@ -13,7 +13,10 @@ import caseManagerReducers from './reducers/caseManager';
 import clinicianReducers from './reducers/clinician';
 import messagingReducer from './reducers/messagingReducer';
 import clientReducers from './reducers/client';
-
+import externalPartnerReducers from './reducers/externalPartner';
+import dashboardReducers from "./reducers/dashboard";
+import searchReducers from "./reducers/search";
+import shareReducers from "./reducers/share";
 
 // ===========================|| COMBINE REDUCER ||=========================== //
 
@@ -27,6 +30,10 @@ const reducer = combineReducers({
     clinician: clinicianReducers,
     messaging: messagingReducer,
     client: clientReducers,
+    externalPartner: externalPartnerReducers,
+    dashboard: dashboardReducers,
+    search: searchReducers,
+    share: shareReducers,
     cart: persistReducer(
         {
             key: 'cart',

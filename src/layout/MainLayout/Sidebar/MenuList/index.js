@@ -6,6 +6,7 @@ import {Typography} from '@material-ui/core';
 // project imports
 import NavGroup from './NavGroup';
 import caseManagerMenuItems from 'menu-items/case-manager';
+import externalPartnerItems from 'menu-items/external-partner';
 import clinicianMenuItems from 'menu-items/clinician';
 import reviewBoardMenuItems from 'menu-items/review-board';
 import clientMenuItems from 'menu-items/client';
@@ -43,6 +44,9 @@ const MenuList = () => {
                 break;
             case 'TYPE_CLINICIAN':
                 roleMenuItems = clinicianMenuItems
+                break;
+            case 'TYPE_EXTERNAL_PARTNER':
+                roleMenuItems = externalPartnerItems
                 break;
             default:
                 roleMenuItems = caseManagerMenuItems

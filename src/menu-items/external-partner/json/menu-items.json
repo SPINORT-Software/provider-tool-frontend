@@ -1,0 +1,20 @@
+{
+  "roles": {
+    "external-partner": [
+      {
+        "id": "client-intervention",
+        "type": "group",
+        "children": [
+          {
+            "id": "client-intervention",
+            "title": "client-intervention",
+            "formatted_title": "Client Intervention",
+            "type": "item",
+            "url": "/intervention/list",
+            "breadcrumbs": false
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -125,7 +125,6 @@ const ClientReasessment = () => {
                     select
                     label="Mode of Assessment"
                     fullWidth
-
                     onChange={formik.handleChange}
                     name='mode_of_assessment'
                     id="mode_of_assessment"

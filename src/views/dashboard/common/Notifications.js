@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
         verticalAlign: 'sub'
     },
     ScrollHeight: {
-        height: '250px'
+        height: '270px'
     }
 }));
 

@@ -1,88 +1,98 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, {useEffect} from 'react';
 
 // material-ui
-import { makeStyles } from '@material-ui/styles';
-import { Button, CardActions, CardContent, Divider, Grid, Typography } from '@material-ui/core';
-
-// project imports
-import Avatar from 'ui-component/extended/Avatar';
-import MainCard from 'ui-component/cards/MainCard';
-import { gridSpacing } from 'store/constant';
+import {
+    Avatar, Button, CardActions, CardContent,
+    Chip, Divider,
+    Grid,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography
+} from '@material-ui/core';
 
 // assets
-import TwitterIcon from '@material-ui/icons/Twitter';
-import BusinessCenterTwoToneIcon from '@material-ui/icons/BusinessCenterTwoTone';
-import DoneAllTwoToneIcon from '@material-ui/icons/DoneAllTwoTone';
-import AccountCircleTwoToneIcon from '@material-ui/icons/AccountCircleTwoTone';
+import MainCard from 'ui-component/cards/MainCard';
 
-// style constant
-const useStyles = makeStyles({
-    projectTableMain: {
-        position: 'relative',
-        '&>*': {
-            position: 'relative',
-            zIndex: '5'
-        },
-        '&:after': {
-            content: '""',
-            position: 'absolute',
-            top: '0',
-            left: '110px',
-            width: '2px',
-            height: '100%',
-            background: '#ebebeb',
-            zIndex: '1'
-        }
-    }
-});
-
-// ==========================|| DATA WIDGET - LATEST MESSAGES CARD ||========================== //
+import notificationsApi from 'store/api-calls/share';
+import {useDispatch, useSelector} from "react-redux";
+import {setInternalReferralData} from "store/actions/dashboard/dashboardActions";
+import {convert_backend_datetime_to_ui} from "utils/helpers/datetime";
 
 const InternalReferrals = () => {
-    const classes = useStyles();
+    const dispatch = useDispatch();
+    const internalReferralStore = useSelector(state => state.dashboard.internalReferrals.list)
 
-    return (
-        <MainCard title='Internal Referrals' content={false}>
-            <CardContent>
-                <Grid container spacing={gridSpacing} alignItems="center" className={classes.projectTableMain}>
-                    <Grid item xs={12}>
-                        <Grid container spacing={2}>
-                            <Grid item>
-                                <Grid container spacing={2} alignItems="center">
-                                    <Grid item xs zeroMinWidth>
-                                        <Typography align="left" variant="caption">
-                                            2 hrs ago
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item>
-                                        <Avatar alt="coverimage"/>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
+    const fetchInternalReferralData = async () => {
+        const response = await notificationsApi.listReferralsForCurrentUser('internal');
+        if ('result' in response && response.result) {
+            console.log(response.data)
+            dispatch(setInternalReferralData(response.data))
+        } else {
+            dispatch(setInternalReferralData([]))
+        }
+    }
+
+    useEffect(() => {
+        fetchInternalReferralData()
+    }, []);
+
+    function getTableHead() {
+        return <TableHead>
+            <TableRow>
+                <TableCell>Sender</TableCell>
+                <TableCell sx={{pl: 3}}>Type</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell align="right" sx={{pr: 3}}>
+                    Action
+                </TableCell>
+            </TableRow>
+        </TableHead>;
+    }
+
+    function getTableBody() {
+        return <TableBody>
+            {internalReferralStore.slice(0, 3).map((row, index) => (
+                <TableRow hover key={index}>
+                    <TableCell sx={{pl: 3}}>
+                        <Grid container spacing={2} alignItems="center" sx={{flexWrap: 'nowrap'}}>
                             <Grid item xs zeroMinWidth>
-                                <Grid container spacing={1}>
-                                    <Grid item xs={12}>
-                                        <Typography component="div" align="left" variant="subtitle1">
-                                           John Doe
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
+                                <Typography component="div" variant="subtitle1">
+                                    {row.communication_by.first_name}
+                                </Typography>
                             </Grid>
                         </Grid>
-                    </Grid>
-                </Grid>
-            </CardContent>
-            <Divider />
-            <CardActions sx={{ justifyContent: 'flex-end' }}>
-                <Button variant="text" size="small">
-                    View all Internal Referrals
-                </Button>
-            </CardActions>
-        </MainCard>
-    );
-};
+                    </TableCell>
+                    <TableCell>{row.content_type}</TableCell>
+                    <TableCell>{convert_backend_datetime_to_ui(row.communication_datetime)}</TableCell>
+                    <TableCell align="right" sx={{pr: 3}}>
+                        <Chip color="secondary" label="View" size="small"/>
+                    </TableCell>
+                </TableRow>
+            ))}
+        </TableBody>;
+    }
 
+    return (<MainCard title="Internal Referrals" content={false}>
+        <CardContent sx={{p: 0}}>
+            <TableContainer>
+                <Table>
+                    {getTableHead()}
+
+                    {getTableBody()}
+                </Table>
+            </TableContainer>
+        </CardContent>
+        <Divider/>
+        <CardActions sx={{justifyContent: 'flex-end'}}>
+            <Button variant="text" size="small">
+                View all Referrals
+            </Button>
+        </CardActions>
+    </MainCard>)
+};
 
 export default InternalReferrals;
