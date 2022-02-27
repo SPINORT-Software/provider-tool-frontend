@@ -139,6 +139,7 @@ export const SHARE_COMMUNICATION_TYPE = {
     DEFAULT: 4
 }
 
+
 /*
  * ================================================
  * Search Constants

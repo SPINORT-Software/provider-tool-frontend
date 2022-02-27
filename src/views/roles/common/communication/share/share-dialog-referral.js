@@ -36,9 +36,11 @@ import {
     userSearchParamsForExternalReferralAndFollowUp, SHARE_COMMUNICATION_TYPE
 } from "store/constant";
 import searchApi from 'store/api-calls/search';
+import shareApi from 'store/api-calls/share';
 import {useDispatch, useSelector} from "react-redux";
 import {setApplicationUserSearchList, setApplicationUserSearchParams} from "store/actions/search/applicationUser";
 import {setExternalReferralShareData, setInternalReferralShareData} from "store/actions/share/referrals";
+import {SNACKBAR_OPEN} from "../../../../../store/actionTypes";
 
 
 function TabPanel(props) {
@@ -91,6 +93,7 @@ const Transition = React.forwardRef((props, ref) => <Slide direction="left" ref=
 export default function ShareDialogReferral({open, handleClose, share_object_id, instance_type, from_user}) {
     const classes = useStyles();
     const [selectedTabValue, setSelectedTabValue] = React.useState(0);
+    const [progressLoader, setProgressLoader] = React.useState(false);
 
     const dispatch = useDispatch();
     const applicationUserSearchList = useSelector(state => state.search.applicationUser.list)
@@ -103,7 +106,9 @@ export default function ShareDialogReferral({open, handleClose, share_object_id,
     })
 
     useEffect(() => {
-        // Set the Default values for the selected Object
+        /*
+         * Set the Default values in Internal and External Referrals for the Selected Object
+         */
         dispatch(setInternalReferralShareData({
             from_user,
             instance_type,
@@ -132,7 +137,6 @@ export default function ShareDialogReferral({open, handleClose, share_object_id,
             organization: ''
         },
         validate: values => {
-            console.log(values)
             dispatch(setApplicationUserSearchParams(values))
             dispatch(setApplicationUserSearchList([]))
         }
@@ -150,12 +154,50 @@ export default function ShareDialogReferral({open, handleClose, share_object_id,
         }
     };
 
-    const handleSendInternalReferralClick = (event) => {
+    const handleSendReferralClick = async (event, referralType) => {
+        const formData = referralType === SHARE_COMMUNICATION_TYPE.INTERNAL_REFERRAL ? internalReferralData : externalReferralData;
 
-    }
+        setProgressLoader(true);
+        const response = await shareApi.sendCommunicationShare(formData);
 
-    const handleSendExternalReferralClick = (event) => {
-        console.log(externalReferralData)
+        if (response && 'result' in response) {
+            if (response.result === true) {
+                dispatch({
+                    type: SNACKBAR_OPEN,
+                    open: true,
+                    message: 'Referral request is sent.',
+                    variant: 'alert',
+                    alertSeverity: 'success', // error , success, warning
+                    anchorOrigin: {vertical: 'bottom', horizontal: 'left'},  // vertical - top, bottom, // horizontal - left, center, right
+                    transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                    close: true,
+                })
+            } else {
+                dispatch({
+                    type: SNACKBAR_OPEN,
+                    open: true,
+                    message: 'Referral request could not be sent. Please try again',
+                    variant: 'alert',
+                    alertSeverity: 'error', // error , success, warning
+                    anchorOrigin: {vertical: 'bottom', horizontal: 'left'},  // vertical - top, bottom, // horizontal - left, center, right
+                    transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                    close: true,
+                })
+            }
+        } else {
+            dispatch({
+                type: SNACKBAR_OPEN,
+                open: true,
+                message: 'Referral request could not be sent. Please try again',
+                variant: 'alert',
+                alertSeverity: 'error', // error , success, warning
+                anchorOrigin: {vertical: 'bottom', horizontal: 'left'},  // vertical - top, bottom, // horizontal - left, center, right
+                transition: 'SlideUp', // SlideRight, SlideUp, SlideDown, Grow, SlideLeft, Fade
+                close: true,
+            })
+        }
+
+        setProgressLoader(false);
     }
 
     const fetchSearchUsersList = async (formData) => {
@@ -180,15 +222,11 @@ export default function ShareDialogReferral({open, handleClose, share_object_id,
                 ...applicationUserSearchParams,
                 name: searchValue
             }
-
-            console.log(updatedNameAndFormData)
-
             fetchSearchUsersList(updatedNameAndFormData)
         } else {
             dispatch(setApplicationUserSearchList([]))
         }
     }
-
 
     function getExternalReferralTabGrid() {
         return <Grid container spacing={gridSpacing}>
@@ -252,14 +290,12 @@ export default function ShareDialogReferral({open, handleClose, share_object_id,
                     </CardContent>
 
                     <CardActions>
-                        <Button variant="contained" startIcon={<SendIcon/>} onClick={handleSendExternalReferralClick}>
+                        <Button variant="contained" startIcon={<SendIcon/>} onClick={(event) => handleSendReferralClick(event, SHARE_COMMUNICATION_TYPE.EXTERNAL_REFERRAL)}>
                             Send External Referral
                         </Button>
                     </CardActions>
                 </MainCard>
             </Grid>
-
-
         </Grid>;
     }
 
@@ -274,7 +310,6 @@ export default function ShareDialogReferral({open, handleClose, share_object_id,
                                     select
                                     label="Provider Type"
                                     fullWidth
-
                                     onChange={formik_internal.handleChange}
                                     name='provider_type'
                                     id="provider_type"
@@ -325,7 +360,7 @@ export default function ShareDialogReferral({open, handleClose, share_object_id,
                     </CardContent>
 
                     <CardActions>
-                        <Button variant="contained" startIcon={<SendIcon/>} onClick={handleSendInternalReferralClick}>
+                        <Button variant="contained" startIcon={<SendIcon/>} onClick={(event) => handleSendReferralClick(event, SHARE_COMMUNICATION_TYPE.INTERNAL_REFERRAL)}>
                             Send Internal Referral
                         </Button>
                     </CardActions>
