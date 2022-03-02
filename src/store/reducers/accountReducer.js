@@ -5,22 +5,24 @@ import { ACCOUNT_INITIALIZE, LOGIN, LOGOUT } from '../actionTypes';
 const accountReducer = (state, action) => {
     switch (action.type) {
         case ACCOUNT_INITIALIZE: {
-            const { isLoggedIn, user, ws } = action.payload;
+            const { isLoggedIn, user, ws, ns } = action.payload;
             return {
                 ...state,
                 isLoggedIn,
                 isInitialized: true,
                 user,
-                ws
+                ws,
+                ns
             };
         }
         case LOGIN: {
-            const { user, ws } = action.payload;
+            const { user, ws, ns } = action.payload;
             return {
                 ...state,
                 isLoggedIn: true,
                 user,
-                ws
+                ws,
+                ns
             };
         }
         case LOGOUT: {

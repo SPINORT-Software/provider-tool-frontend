@@ -12,30 +12,6 @@
             "type": "item",
             "url": "messaging",
             "breadcrumbs": false
-          },
-          {
-            "id": "profile-app",
-            "title": "Profile",
-            "formatted_title": "Profile",
-            "type": "item",
-            "url": "profile",
-            "breadcrumbs": false
-          },
-          {
-            "id": "files-app",
-            "title": "My Files",
-            "formatted_title": "My Files",
-            "type": "item",
-            "url": "files",
-            "breadcrumbs": false
-          },
-          {
-            "id": "settings-app",
-            "title": "Settings",
-            "formatted_title": "Settings",
-            "type": "item",
-            "url": "settings",
-            "breadcrumbs": false
           }
         ]
       }

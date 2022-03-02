@@ -29,7 +29,7 @@ export default {
 
     async listReferralsForCurrentUser(referral_type = "") {
         try {
-            if(referral_type.length > 0){
+            if (referral_type.length > 0) {
                 referral_type = `/${referral_type}`
             }
             const response = await axios.get(`share/referrals${referral_type}`);
@@ -41,10 +41,19 @@ export default {
 
     async listFollowUpsForCurrentUser(followup_type = "") {
         try {
-            if(followup_type.length > 0){
+            if (followup_type.length > 0) {
                 followup_type = `/${followup_type}`
             }
             const response = await axios.get(`share/followups${followup_type}`);
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    },
+
+    async listAllActivityNotifications(page = 1) {
+        try {
+            const response = await axios.get(`share/notifications/all?page=${page}`);
             return response.data;
         } catch (error) {
             return error.response;

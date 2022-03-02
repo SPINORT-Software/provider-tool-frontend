@@ -29,7 +29,6 @@ const InternalReferrals = () => {
     const fetchInternalReferralData = async () => {
         const response = await notificationsApi.listReferralsForCurrentUser('internal');
         if ('result' in response && response.result) {
-            console.log(response.data)
             dispatch(setInternalReferralData(response.data))
         } else {
             dispatch(setInternalReferralData([]))

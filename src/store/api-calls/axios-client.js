@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const fetchClient = () => {
     const config = {
-        baseURL: 'http://127.0.0.1:8000/',
+        baseURL: `${process.env.REACT_APP_DJANGO_SERVER_API}/`,
         headers: {
             'Content-Type': 'application/json'
         }

@@ -139,6 +139,13 @@ export const SHARE_COMMUNICATION_TYPE = {
     DEFAULT: 4
 }
 
+export const NOTIFICATION_OBJECT_TYPE = {
+    ClinicianClientAssessment: 'ClinicianClientAssessment',
+    CaseManagerClientAssessment: 'CaseManagerClientAssessment',
+    ClientIntervention: 'ClientIntervention',
+    ClinicianClientInterventions: 'ClinicianClientInterventions'
+}
+
 
 /*
  * ================================================

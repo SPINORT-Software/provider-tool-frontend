@@ -28,9 +28,6 @@ function createData(avtar, name, designation, product, date, badgeText, badgeTyp
 
 const rows = [
     createData(Avatar1, 'John Deo', '', 'Case Manager', 'Jun, 26', 'View', 'secondary'),
-    createData(Avatar2, 'Jenifer Vintage', '', 'Case Manager', 'March, 31', 'View', 'primary'),
-    createData(Avatar3, 'William Jem', '', 'Case Manager', 'Aug, 02', 'View', 'secondary'),
-    createData(Avatar4, 'David Jones', '', 'Case Manager', 'Sep, 22', 'View', 'primary')
 ];
 
 // ===========================|| DATA WIDGET - PROJECT TABLE CARD ||=========================== //

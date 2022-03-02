@@ -88,7 +88,7 @@ const ExternalFollowUp = () => {
         <Divider/>
         <CardActions sx={{justifyContent: 'flex-end'}}>
             <Button variant="text" size="small">
-                View all Referrals
+                View all Follow Up Requests
             </Button>
         </CardActions>
     </MainCard>)

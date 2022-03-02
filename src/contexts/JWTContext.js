@@ -15,6 +15,7 @@ import Loader from 'ui-component/Loader';
 
 import {useNavigate} from 'react-router-dom';
 import {w3cwebsocket as W3CWebSocket} from "websocket/lib/websocket";
+import {setNewMessageSend} from "../store/actions/messagingActions";
 
 // constant
 const initialState = {
@@ -49,6 +50,7 @@ const check = (ws, user) => {
 
 const setWSClient = (user) => {
     const {token} = user;
+
     const socketChatClient = new W3CWebSocket(`ws://127.0.0.1:8000/ws/chat/?t=${token}`);
     // let timeout = 0;
     let connectInterval;
@@ -86,7 +88,7 @@ export const JWTProvider = ({children}) => {
     const navigate = useNavigate();
 
     const login = async (email, password) => {
-        const rawResponse = await fetch('http://127.0.0.1:8000/auth/users/login', {
+        const rawResponse = await fetch(`${process.env.REACT_APP_DJANGO_SERVER_API}/auth/users/login`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -122,7 +124,7 @@ export const JWTProvider = ({children}) => {
                 if (serviceToken && verifyToken(serviceToken)) {
                     setSession(serviceToken);
 
-                    const rawResponse = await fetch('http://127.0.0.1:8000/auth/user/profile', {
+                    const rawResponse = await fetch(`${process.env.REACT_APP_DJANGO_SERVER_API}/auth/user/profile`, {
                         method: 'GET',
                         headers: {
                             'Accept': 'application/json',
@@ -133,20 +135,27 @@ export const JWTProvider = ({children}) => {
                     const user = await rawResponse.json();
 
                     const {token} = user;
-                    const socketChatClient = new WebSocket(`ws://127.0.0.1:8000/ws/chat/?t=${token}`);
+                    const socketChatClient = new WebSocket(`wss://${process.env.REACT_APP_DJANGO_WS}/ws/chat/?t=${token}`);
+                    const socketNotificationClient = new WebSocket(`wss://${process.env.REACT_APP_DJANGO_WS}/ws/notifications/?t=${token}`);
+
+                    socketNotificationClient.onmessage = (e) => {
+                        const notificationData = JSON.parse(e.data)
+                        console.log(notificationData)
+                    }
 
                     // websocket onopen event listener
                     socketChatClient.onopen = () => {
-                        console.log("Connected")
+
+                        // console.log("Connected")
                     };
 
                     socketChatClient.onclose = e => {
-                        console.log("Disconnected1")
+                        // console.log("Disconnected1")
                     };
 
                     // websocket onerror event listener
                     socketChatClient.onerror = err => {
-                        socketChatClient.close();
+                        // socketChatClient.close();
                     };
 
                     dispatch({
@@ -154,7 +163,8 @@ export const JWTProvider = ({children}) => {
                         payload: {
                             isLoggedIn: true,
                             user,
-                            ws:socketChatClient
+                            ws: socketChatClient,
+                            ns: socketNotificationClient
                         }
                     });
                 } else {

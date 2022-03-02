@@ -9,7 +9,7 @@ import {Box, Grid, IconButton, Tab, Tabs} from '@material-ui/core';
 // project imports
 import AssessmentData from './assessment-data';
 import MainCard from 'ui-component/cards/MainCard';
-import {gridSpacing} from 'store/constant';
+import {gridSpacing, SHARE_INSTANCE_TYPE} from 'store/constant';
 import caseManagerApi from 'store/api-calls/case-manager';
 
 // assets
@@ -20,6 +20,7 @@ import {useDispatch} from "react-redux";
 import Tooltip from "@material-ui/core/Tooltip";
 import EditTwoToneIcon from "@material-ui/icons/EditTwoTone";
 import IosShareOutlined  from "@material-ui/icons/IosShareOutlined";
+import ShareIndex from "../../../common/communication/share";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -129,11 +130,11 @@ const ClientAssessmentDetail = () => {
                                   <EditTwoToneIcon sx={{fontSize: '1.5rem'}}/>
                               </IconButton>
                           </Tooltip>
-                          <Tooltip title="Send Assessment">
-                              <IconButton color="secondary">
-                                  <IosShareOutlined sx={{fontSize: '1.5rem'}}/>
-                              </IconButton>
-                          </Tooltip>
+                          <ShareIndex share_object_id={assessment_id}
+                                      instance_type={SHARE_INSTANCE_TYPE.CaseManagerClientAssessment}
+                                      followup_tooltip="Send Assessment Follow Up"
+                                      referral_tooltip="Send Assessment Referral"
+                          />
                       </>
                   }
         >
