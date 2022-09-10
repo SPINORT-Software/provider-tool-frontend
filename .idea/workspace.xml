@@ -7,7 +7,7 @@
     <list default="true" id="39d7ce37-5e4e-4f5f-b5f9-b0d13e0acaa9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/menu-items/case-manager/json/menu-items.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/menu-items/case-manager/json/menu-items.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/menu-items/common/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/menu-items/common/utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/menu-items/common/json/menu-items.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/menu-items/common/json/menu-items.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

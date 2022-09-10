@@ -4,7 +4,31 @@
       {
         "id": "common-menu-items",
         "type": "group",
+        "title": "Reports",
         "children": [
+          {
+            "id": "lab-results",
+            "title": "Lab Results",
+            "formatted_title": "Lab Results",
+            "type": "item",
+            "url": "referrals",
+            "breadcrumbs": false
+          }
+        ]
+      },
+      {
+        "id": "common-menu-items",
+        "type": "group",
+        "title": "Notifications",
+        "children": [
+          {
+            "id": "referrals",
+            "title": "Referrals",
+            "formatted_title": "Referrals",
+            "type": "item",
+            "url": "referrals",
+            "breadcrumbs": false
+          },
           {
             "id": "chat-app",
             "title": "Messaging",
