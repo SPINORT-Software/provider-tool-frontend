@@ -3,28 +3,15 @@ import React from 'react';
 // material-ui
 import {useTheme, makeStyles} from '@material-ui/styles';
 import {Grid, Typography, useMediaQuery} from '@material-ui/core';
-import MainCard from 'ui-component/cards/MainCard';
 import {gridSpacing} from 'store/constant';
-import IconNumberCard from 'ui-component/cards/IconNumberCard';
-
 
 // project imports
-import NewClients from '../common/NewClients';
 import Notifications from '../common/Notifications';
-import InternalReferrals from '../common/InternalReferrals';
-import ExternalReferrals from '../common/ExternalReferrals';
-import ClientReferrals from '../common/ClientReferrals';
+import AnalyticsDashboard from '../common/AnalyticsDashboard';
 import ClientRecordsTable from '../common/ClientRecordsTable';
 import ClientMonitoringTable from '../common/ClientMonitoringTable';
 import ClientReferralsTable from '../common/ClientReferralsTable';
-import InternalFollowUp from "../common/InternalFollowUp";
-
-// assets
-import {IconShare, IconAccessPoint, IconCircles, IconCreditCard} from '@tabler/icons';
-import MonetizationOnTwoToneIcon from '@material-ui/icons/MonetizationOnTwoTone';
-import AccountCircleTwoTone from '@material-ui/icons/AccountCircleTwoTone';
-import DescriptionTwoToneIcon from '@material-ui/icons/DescriptionTwoTone';
-import ExternalFollowUp from "../common/ExternalFollowUp";
+import MessagesDashboard from '../common/MessagesDashboard';
 
 
 // style constant
@@ -55,27 +42,37 @@ const useStyles = makeStyles((theme) => ({
 
 const Analytics = () => {
     const theme = useTheme();
-    const classes = useStyles();
-    const matchDownXs = useMediaQuery(theme.breakpoints.down('xs'));
 
     return (
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12} lg={12} md={12}>
                 <Grid container spacing={gridSpacing}>
-
-
-                    <Grid item xs={4} lg={4} md={4}>
-                        <Notifications/>
-
-                        <Notifications/>
-
-                        <Notifications/>
+                    <Grid item xs={3} lg={3} md={3}>
+                        <Grid container spacing={gridSpacing}>
+                            <Grid item >
+                                <Notifications/>
+                            </Grid>
+                            <Grid item >
+                                <MessagesDashboard />
+                            </Grid>
+                            <Grid item >
+                                <AnalyticsDashboard/>
+                            </Grid>
+                        </Grid>
                     </Grid>
 
-                    <Grid item xs={8} lg={8} md={8}>
-                        <ClientMonitoringTable/>
-                        <ClientReferralsTable/>
-                        <ClientRecordsTable/>
+                    <Grid item xs={9} lg={9} md={9}>
+                        <Grid container spacing={gridSpacing}>
+                            <Grid item lg={12}>
+                                <ClientMonitoringTable/>
+                            </Grid>
+                            <Grid item lg={12}>
+                                <ClientReferralsTable/>
+                            </Grid>
+                            <Grid item lg={12}>
+                                <ClientRecordsTable/>
+                            </Grid>
+                        </Grid>
                     </Grid>
 
                 </Grid>

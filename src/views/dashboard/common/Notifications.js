@@ -45,13 +45,18 @@ const ActivityNotifications = () => {
     const dispatch = useDispatch();
     const dashboard_notifications = useSelector(store => store.dashboard.generalNotifications.list_dashboard)
 
-    const jwtContext = React.useContext(JWTContext);
-    const {ns: notificationServiceClient} = jwtContext;
+    try {
+        const jwtContext = React.useContext(JWTContext);
+        const {ns: notificationServiceClient} = jwtContext;
 
-    notificationServiceClient.onmessage = (e) => {
-        const notificationData = JSON.parse(e.data)
-        dashboard_notifications.unshift(notificationData.value)
-        dispatch(setNewActivityNotificationForDashboard(dashboard_notifications))
+        notificationServiceClient.onmessage = (e) => {
+            const notificationData = JSON.parse(e.data)
+            dashboard_notifications.unshift(notificationData.value)
+            dispatch(setNewActivityNotificationForDashboard(dashboard_notifications))
+        }
+    } catch (e) {
+        console.log("There was an error connecting to the Websocket")
+        dispatch(setNewActivityNotificationForDashboard([]))
     }
 
     const fetchAllNotifications = async () => {
