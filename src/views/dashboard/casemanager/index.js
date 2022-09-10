@@ -7,6 +7,7 @@ import {gridSpacing} from 'store/constant';
 
 // project imports
 import Notifications from '../common/Notifications';
+import NotificationsDashboard from '../common/NotificationsDashboard';
 import AnalyticsDashboard from '../common/AnalyticsDashboard';
 import ClientRecordsTable from '../common/ClientRecordsTable';
 import ClientMonitoringTable from '../common/ClientMonitoringTable';
@@ -47,10 +48,10 @@ const Analytics = () => {
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12} lg={12} md={12}>
                 <Grid container spacing={gridSpacing}>
-                    <Grid item xs={3} lg={3} md={3}>
+                    <Grid item xs={12} lg={3} md={3}>
                         <Grid container spacing={gridSpacing}>
-                            <Grid item >
-                                <Notifications/>
+                            <Grid item xs={12}>
+                                <NotificationsDashboard/>
                             </Grid>
                             <Grid item >
                                 <MessagesDashboard />
@@ -63,13 +64,13 @@ const Analytics = () => {
 
                     <Grid item xs={9} lg={9} md={9}>
                         <Grid container spacing={gridSpacing}>
-                            <Grid item lg={12}>
+                            <Grid item xs={12} md={12}>
                                 <ClientMonitoringTable/>
                             </Grid>
-                            <Grid item lg={12}>
+                            <Grid item lg={12} xs={12} md={12}>
                                 <ClientReferralsTable/>
                             </Grid>
-                            <Grid item lg={12}>
+                            <Grid item lg={12} xs={12} md={12}>
                                 <ClientRecordsTable/>
                             </Grid>
                         </Grid>
