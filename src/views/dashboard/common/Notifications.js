@@ -67,9 +67,10 @@ const ActivityNotifications = () => {
 
 
     const makeNotificationItem = () => {
-        const notificationListForDashboard = dashboard_notifications.slice(0, 5)
+        const notificationListForDashboard = dashboard_notifications.slice(0, 2)
+
         if (notificationListForDashboard.length > 0) {
-            return dashboard_notifications.map((notification) => (
+            return notificationListForDashboard.map((notification) => (
                 <Grid item xs={12}>
                     <Grid container spacing={2}>
                         <Grid item>

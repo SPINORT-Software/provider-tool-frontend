@@ -14,6 +14,9 @@ import Notifications from '../common/Notifications';
 import InternalReferrals from '../common/InternalReferrals';
 import ExternalReferrals from '../common/ExternalReferrals';
 import ClientReferrals from '../common/ClientReferrals';
+import ClientRecordsTable from '../common/ClientRecordsTable';
+import ClientMonitoringTable from '../common/ClientMonitoringTable';
+import ClientReferralsTable from '../common/ClientReferralsTable';
 import InternalFollowUp from "../common/InternalFollowUp";
 
 // assets
@@ -60,38 +63,19 @@ const Analytics = () => {
             <Grid item xs={12} lg={12} md={12}>
                 <Grid container spacing={gridSpacing}>
 
-                    <Grid item xs={12} lg={6}>
-                        <IconNumberCard title="Clients Added" primary="12" color={theme.palette.primary.dark}
-                                        iconPrimary={AccountCircleTwoTone}/>
-                    </Grid>
 
-                    <Grid item xs={12} lg={6}>
-                        <IconNumberCard title="Files Uploaded" primary="120" color={theme.palette.primary.dark}
-                                        iconPrimary={DescriptionTwoToneIcon}/>
-                    </Grid>
+                    <Grid item xs={4} lg={4} md={4}>
+                        <Notifications/>
 
-                    <Grid item xs={12} lg={6} md={6}>
+                        <Notifications/>
+
                         <Notifications/>
                     </Grid>
 
-                    <Grid item xs={12} lg={6} md={6}>
-                        <ClientReferrals/>
-                    </Grid>
-
-                    <Grid item xs={12} lg={6} md={6}>
-                        <InternalReferrals/>
-                    </Grid>
-
-                    <Grid item xs={12} lg={6} md={6}>
-                        <ExternalReferrals/>
-                    </Grid>
-
-                    <Grid item xs={12} lg={6} md={6}>
-                        <InternalFollowUp/>
-                    </Grid>
-
-                    <Grid item xs={12} lg={6} md={6}>
-                        <ExternalFollowUp/>
+                    <Grid item xs={8} lg={8} md={8}>
+                        <ClientMonitoringTable/>
+                        <ClientReferralsTable/>
+                        <ClientRecordsTable/>
                     </Grid>
 
                 </Grid>
