@@ -4,6 +4,7 @@
       {
         "id": "daily-workload",
         "type": "group",
+        "title": "Clients",
         "children": [
           {
             "id": "daily-workload",
@@ -13,13 +14,7 @@
             "type": "item",
             "url": "workload/list",
             "breadcrumbs": true
-          }
-        ]
-      },
-      {
-        "id": "client-assessment",
-        "type": "group",
-        "children": [
+          },
           {
             "id": "client-assessment",
             "title": "client-assessment",
@@ -28,13 +23,7 @@
             "uuid": "d90d44e8-480a-4748-9844-e03ff6b03647",
             "url": "/assessment/list",
             "breadcrumbs": false
-          }
-        ]
-      },
-      {
-        "id": "client-intervention",
-        "type": "group",
-        "children": [
+          },
           {
             "id": "client-intervention",
             "title": "client-intervention",

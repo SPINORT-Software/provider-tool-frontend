@@ -18,6 +18,7 @@ export default {
         return {
             id: menuItem.id,
             type: menuItem.type,
+            title: menuItem.title,
             children: [...menuItemChildren]
         };
     }
